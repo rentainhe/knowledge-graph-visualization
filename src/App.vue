@@ -31,15 +31,13 @@
                         <!-- 节点信息区域-->
                         <el-col class="article"></el-col>
                         <!-- 基本功能按钮区域-->
-                        <el-col class="buttons">
-                            <el-button type="primary">文本导入</el-button>
-                            <el-button type="primary" round=1 class="el-button-check">人工审核
-                                <i class="el-icon-user el-icon--right"></i>
-                            </el-button>
-                            <el-button type="primary" round=1 class="el-button–mysql">数据库导入
-                                <i class="el-icon-coin el-icon--right"></i>
-                            </el-button>
-                        </el-col>
+                        <el-button type="primary" round=1 @click="Submit_text" class="el-button–upload">文本导入</el-button>
+                        <el-button type="primary" round=1 @click="user_Check" class="el-button-check">人工审核
+                            <i class="el-icon-user el-icon--right"></i>
+                        </el-button>
+                        <el-button type="primary" round=1  @click="put_into_Database" class="el-button–mysql">数据库导入
+                            <i class="el-icon-coin el-icon--right"></i>
+                        </el-button>
                         <!--              <el-row class="col1"></el-row>-->
                     </el-col>
                 </el-main>
@@ -56,16 +54,19 @@
         top: 60px;
     }
 
-    /*.el-button–upload{*/
-    /*    position: relative;*/
-    /*    color: #fff;*/
-    /*    background-color: #303252;*/
-    /*    border-color: #9593A7;*/
-    /*    border-width: 2px;*/
-    /*}*/
+    .el-button–upload{
+        position: absolute;
+        top:400px;
+        left:90px;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+
     .el-button-check {
         position: absolute;
-        top: 120px;
+        top: 600px;
         left: 90px;
         color: #fff;
         background-color: #303252;
@@ -145,7 +146,7 @@
 
 <!-- 查询框-->
 <script>
-    <!--    画图-->
+    // 画图
     import * as d3 from 'd3'
 
     export default {
@@ -852,35 +853,23 @@
                     .on("start", dragstarted)
                     .on("drag", dragged)
                     .on("end", dragended);
+            },
+            onSubmit() {
+                console.log('节点搜索');
+            },
+            Submit_text(){
+                console.log('文本导入')
+            },
+            user_Check(){
+                console.log('人工审核')
+            },
+            put_into_Database() {
+                console.log('导入数据库')
             }
         }
     }
 </script>
 
-<!--上传文件-->
-<!--<script>-->
-<!--  export default {-->
-<!--    data() {-->
-<!--      return {-->
-<!--        fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]-->
-<!--      };-->
-<!--    },-->
-<!--    methods: {-->
-<!--      handleRemove(file, fileList) {-->
-<!--        console.log(file, fileList);-->
-<!--      },-->
-<!--      handlePreview(file) {-->
-<!--        console.log(file);-->
-<!--      },-->
-<!--      handleExceed(files, fileList) {-->
-<!--        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);-->
-<!--      },-->
-<!--      beforeRemove(file, fileList) {-->
-<!--        return this.$confirm(`确定移除 ${ file.name }？`);-->
-<!--      }-->
-<!--    }-->
-<!--  }-->
-<!--</script>-->
 <style>
     #app {
         font-family: Helvetica, sans-serif;
