@@ -9,7 +9,7 @@
                     <el-container>
                         <el-form :inline="true" :model="formInline" class="text_search">
                             <el-form-item>
-                                <el-input v-model="formInline.user" placeholder="查询" clearable=1></el-input>
+                                <el-input v-model="formInline.user" placeholder="查询"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
@@ -31,60 +31,19 @@
                         <!-- 节点信息区域-->
                         <el-col class="article"></el-col>
                         <!-- 基本功能按钮区域-->
-                        <el-button type="primary" round=1 @click="Submit_text" class="el-button–upload">文本导入</el-button>
-                        <el-button type="primary" round=1 @click="user_Check" class="el-button-check">人工审核
+                        <el-button type="primary" round=true @click="printData" class="el-button–upload">文本导入
+                            <i class="el-icon-upload el-icon--right"></i>
+                        </el-button>
+                        <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
                             <i class="el-icon-user el-icon--right"></i>
                         </el-button>
-                        <el-button type="primary" round=1  @click="put_into_Database" class="el-button–mysql">数据库导入
+                        <el-button type="primary" round=true @click="put_into_Database" class="el-button–mysql">数据库导入
                             <i class="el-icon-coin el-icon--right"></i>
                         </el-button>
-                        <!--              <el-row class="col1"></el-row>-->
+                        <el-row class="col1"></el-row>
                     </el-col>
                 </el-main>
-  <div id="app">
-    <el-container style="height : 100%">
-      <el-header height="48px">
-          知识图谱展示
-      </el-header>
-      <el-container>
-        <el-aside width="200px">
-          <el-container>
-          <el-form :inline="true" :model="formInline" class="text_search">
-            <el-form-item>
-              <el-input v-model="formInline.user" placeholder="查询" clearable=1></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
-            </el-form-item>
-          </el-form>
-          <el-switch
-                  v-model="value1" active-text="Text" inactive-text="Nodes">
-          </el-switch>
-          </el-container>
-        </el-aside>
-          <!--主要区域-->
-          <el-main>
-            <!--图谱放置的主要区域-->
-            <el-col :span="18" class="graph"></el-col>
-            <el-col :span="5" :offset="1" class="right-side">
-                <!-- 节点信息区域-->
-                <el-col class="article"></el-col>
-                <!-- 基本功能按钮区域-->
-                <el-button type="primary" round=1 @click="Submit_text" class="el-button–upload">文本导入
-                    <i class="el-icon-upload el-icon--right"></i>
-                </el-button>
-                <el-button type="primary" round=1 @click="user_Check" class="el-button-check">人工审核
-                    <i class="el-icon-user el-icon--right"></i>
-                </el-button>
-                <el-button type="primary" round=1  @click="put_into_Database" class="el-button–mysql">数据库导入
-                    <i class="el-icon-coin el-icon--right"></i>
-                </el-button>
-              <el-row class="col1"></el-row>
-            </el-col>
-          </el-main>
-
             </el-container>
-
         </el-container>
     </div>
 </template>
@@ -189,7 +148,6 @@
 <script>
     // 画图
     import * as d3 from 'd3'
-
     export default {
         data() {
             return {
@@ -794,15 +752,28 @@
                         "target": "Gavroche",
                         "value": 1
                     }, {"source": "Mme.Hucheloup", "target": "Enjolras", "value": 1}]
-                }
-
-
+                },
+                newGraph: []
             }
         },
         mounted() {
+            this.getData()
             this.initGraph(this.testGraph)
         },
         methods: {
+            // axios读取本地static文件夹下的json文件
+            printData(){
+                console.log(this.newGraph)
+            },
+            // setData(),
+            getData(){
+                this.$axios.get("http://localhost:8081/initNodes").then(function(response){
+                    // this.newGraph = response.data.data
+                    console.log(response.data.data)
+                },response=>{
+                    console.log("error")
+                })
+            },
             initGraph(data) {
                 var _this = this
                 const links = data.links.map(d => Object.create(d));
