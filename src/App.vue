@@ -28,22 +28,13 @@
                 <!-- 节点信息区域-->
                 <el-col class="article"></el-col>
                 <!-- 基本功能按钮区域-->
-                <el-col class="buttons">
-                    <el-form>
-                        <el-form-item>
-                            <el-button type="primary">文本导入</el-button>
-                        </el-form-item>
-
-                    </el-form>
-
-
-                    <el-button type="primary" round=1 class="el-button-check">人工审核
-                        <i class="el-icon-user el-icon--right"></i>
-                    </el-button>
-                    <el-button type="primary" round=1 class="el-button–mysql">数据库导入
-                        <i class="el-icon-coin el-icon--right"></i>
-                    </el-button>
-                </el-col>
+                <el-button type="primary" round=1 @click="Submit_text" class="el-button–upload">文本导入</el-button>
+                <el-button type="primary" round=1 @click="user_Check" class="el-button-check">人工审核
+                    <i class="el-icon-user el-icon--right"></i>
+                </el-button>
+                <el-button type="primary" round=1  @click="put_into_Database" class="el-button–mysql">数据库导入
+                    <i class="el-icon-coin el-icon--right"></i>
+                </el-button>
               <el-row class="col1"></el-row>
             </el-col>
           </el-main>
@@ -59,16 +50,18 @@
         position: absolute;
         top:60px;
     }
-    /*.el-button–upload{*/
-    /*    position: relative;*/
-    /*    color: #fff;*/
-    /*    background-color: #303252;*/
-    /*    border-color: #9593A7;*/
-    /*    border-width: 2px;*/
-    /*}*/
+    .el-button–upload{
+        position: absolute;
+        top:400px;
+        left:90px;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
     .el-button-check{
         position: absolute;
-        top:120px;
+        top:600px;
         left:90px;
         color: #fff;
         background-color: #303252;
@@ -157,6 +150,12 @@
       },
       Submit_text(){
         console.log('文本导入')
+      },
+      user_Check(){
+          console.log('人工审核')
+      },
+      put_into_Database(){
+          console.log('导入数据库')
       }
     }
   }
