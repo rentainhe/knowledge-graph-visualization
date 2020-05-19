@@ -28,7 +28,9 @@
                 <!-- 节点信息区域-->
                 <el-col class="article"></el-col>
                 <!-- 基本功能按钮区域-->
-                <el-button type="primary" round=1 @click="Submit_text" class="el-button–upload">文本导入</el-button>
+                <el-button type="primary" round=1 @click="Submit_text" class="el-button–upload">文本导入
+                    <i class="el-icon-upload el-icon--right"></i>
+                </el-button>
                 <el-button type="primary" round=1 @click="user_Check" class="el-button-check">人工审核
                     <i class="el-icon-user el-icon--right"></i>
                 </el-button>
@@ -52,8 +54,8 @@
     }
     .el-button–upload{
         position: absolute;
-        top:400px;
-        left:90px;
+        top:380px;
+        left:79px;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -61,8 +63,8 @@
     }
     .el-button-check{
         position: absolute;
-        top:600px;
-        left:90px;
+        top:470px;
+        left:70px;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -70,8 +72,8 @@
     }
     .el-button–mysql{
         position: absolute;
-        top:200px;
-        left: 85px;
+        top:560px;
+        left: 63px;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
