@@ -101,7 +101,7 @@
     }
 
     .el-aside {
-        background-color: #D3DCE6;
+        background-color: #15161F;
         color: #333;
         position: relative;
         text-align: center;
@@ -109,7 +109,7 @@
     }
 
     .el-main {
-        background-color: #E9EEF3;
+        background-color: #15161F;
         color: #333;
         text-align: center;
         line-height: 160px;
