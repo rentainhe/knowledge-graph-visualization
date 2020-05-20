@@ -31,7 +31,7 @@
                         <!-- 节点信息区域-->
                         <el-col class="article"></el-col>
                         <!-- 基本功能按钮区域-->
-                        <el-button type="primary" round=true @click="getData" class="el-button–upload">文本导入
+                        <el-button type="primary" round=true @click="printData" class="el-button–upload">文本导入
                             <i class="el-icon-upload el-icon--right"></i>
                         </el-button>
                         <el-button type="primary" round=1 @click="user_Check" class="el-button-check">人工审核
@@ -161,7 +161,7 @@
                 value1: true,
                 width: 600,
                 height: 600,
-                //放数据的地方
+                //示例数据的地方
                 testGraph: {
                     "nodes": [{"id": "a", "group": 1}, {"id": "b", "group": 1}, {
                         "id": "c",
@@ -177,32 +177,45 @@
                     }, {"source": "b", "target": "d", "value": 10} ]
                 },
                 newGraph: {
-                    "nodes" : [],
-                    "links" : []
+                    "nodes" : [{"id":"巴塞罗那","group":1},{"id":"皮克","group":2},{"id":"菲尔波","group":2},{"id":"格里兹曼","group":2},
+                        {"id":"弗兰基·德容","group":2},{"id":"阿图尔","group":2},{"id":"乌姆蒂蒂","group":2},{"id":"罗贝托","group":2},{"id":"朗格莱","group":2},
+                        {"id":"卡尔莱斯·佩雷兹","group":2},{"id":"塞梅多","group":2},{"id":"布斯克茨","group":2},{"id":"安苏·法蒂","group":2},
+                        {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}],
+                    "links" : [{"source":"皮克","target":"巴塞罗那","value":"效力"},{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
+                        {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"},{"source":"卡尔莱斯·佩雷兹","target":"巴塞罗那","value":"效力"},
+                        {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
+                        {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
+                        {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}]
+                },
+                myGraph:{
+                    "nodes": [],
+                    "links": []
                 }
 
             }
         },
         mounted() {
+            // var _this = this
             this.getData()
-            this.initGraph(this.testGraph)
+            this.initGraph(this.newGraph)
         },
         methods: {
             // axios读取本地static文件夹下的json文件
             printData(){
-                console.log(this.newGraph)
+                console.log(this.newGraph["nodes"])
             },
             // setData(),
             getData(){
+                var _this = this
                 this.$axios.get("http://localhost:8081/initNodes").then(function(response){
-                    // this.newGraph = response.data.data
-                    for(var i=0;i<response.data.data.length;i++){
-                        var a = response.data.data[i]
-                        this.newGraph.nodes[i] = JSON.stringify(a)
-                        console.log(JSON.stringify(a))
-                    }
-                    // this.printData()
-
+                    // this.newGraph["nodes"] = response.data.data
+                    // for(var i=0;i<response.data.data.length;i++){
+                    //     var a = response.data.data[i]
+                    //     // this.newGraph.nodes[i] = JSON.stringify(a)
+                    //     console.log(JSON.stringify(a))
+                    // }
+                    _this.myGraph["nodes"] = response.data
+                    console.log(this.myGraph["nodes"])
                 },response=>{
                     // console.log("error")
                 })
