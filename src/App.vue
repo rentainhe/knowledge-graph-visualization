@@ -31,7 +31,7 @@
                         <!-- 节点信息区域-->
                         <el-col class="article"></el-col>
                         <!-- 基本功能按钮区域-->
-                        <el-button type="primary" round=true @click="printData" class="el-button–upload">文本导入
+                        <el-button type="primary" round=true @click="getData" class="el-button–upload">文本导入
                             <i class="el-icon-upload el-icon--right"></i>
                         </el-button>
                         <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
@@ -753,7 +753,10 @@
                         "value": 1
                     }, {"source": "Mme.Hucheloup", "target": "Enjolras", "value": 1}]
                 },
-                newGraph: []
+                newGraph: {
+                    "nodes" : [],
+                    "links" : []
+                }
             }
         },
         mounted() {
@@ -769,9 +772,15 @@
             getData(){
                 this.$axios.get("http://localhost:8081/initNodes").then(function(response){
                     // this.newGraph = response.data.data
-                    console.log(response.data.data)
+                    for(var i=0;i<response.data.data.length;i++){
+                        var a = response.data.data[i]
+                        this.newGraph.nodes[i] = JSON.stringify(a)
+                        console.log(JSON.stringify(a))
+                    }
+                    // this.printData()
+
                 },response=>{
-                    console.log("error")
+                    // console.log("error")
                 })
             },
             initGraph(data) {
