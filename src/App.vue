@@ -151,7 +151,7 @@
 <script>
     // 画图
     import * as d3 from 'd3'
-
+    var _this = this
     export default {
         data() {
             return {
@@ -191,6 +191,7 @@
                     //     {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
                     //     {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}
                         ]
+
                 },
                 myGraph:{
                     "nodes": [],
@@ -212,17 +213,18 @@
             // setData(),
             getData(){
                 var _this = this
-                this.$axios.get("http://localhost:8081/initNodes").then(function(response){
+                this.$axios.get("http://localhost:8081/initLinks").then( response =>{
                     // this.newGraph["nodes"] = response.data.data
                     // for(var i=0;i<response.data.data.length;i++){
                     //     var a = response.data.data[i]
                     //     // this.newGraph.nodes[i] = JSON.stringify(a)
                     //     console.log(JSON.stringify(a))
                     // }
-                    _this.myGraph["nodes"] = response.data
-                    console.log(this.myGraph["nodes"])
+                    _this.myGraph["links"] = response.data.data
+                    console.log(_this.myGraph.links)
+                    console.log(response.data.data)
                 },response=>{
-                    // console.log("error")
+                    console.log("error")
                 })
             },
             initGraph(data) {
