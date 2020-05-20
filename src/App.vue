@@ -35,10 +35,10 @@
                         <el-button type="primary" round=true @click="printData" class="el-button–upload">文本导入
                             <i class="el-icon-upload el-icon--right"></i>
                         </el-button>
-                        <el-button type="primary" round=1 @click="user_Check" class="el-button-check">人工审核
+                        <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
                             <i class="el-icon-user el-icon--right"></i>
                         </el-button>
-                        <el-button type="primary" round=1  @click="put_into_Database" class="el-button–mysql">数据库导入
+                        <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入
                             <i class="el-icon-coin el-icon--right"></i>
                         </el-button>
                         <!--              <el-row class="col1"></el-row>-->
@@ -52,6 +52,12 @@
 </template>
 
 <style>
+    .el-switch {
+        position:absolute;
+        top:30px;
+        left:20px;
+
+    }
     .text_search {
         position: absolute;
         top: 60px;
@@ -151,7 +157,7 @@
 <script>
     // 画图
     import * as d3 from 'd3'
-    var _this = this
+    // var _this = this
     export default {
         data() {
             return {
@@ -184,7 +190,7 @@
                     //     {"id":"卡尔莱斯·佩雷兹","group":2},{"id":"塞梅多","group":2},{"id":"布斯克茨","group":2},{"id":"安苏·法蒂","group":2},
                     //     {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}
                         ],
-                    "links" : [{"source":"皮克","target":"巴塞罗那","value":"效力"}
+                    "links" : [{"source":"皮克","target":"巴塞罗那","lineWord":"效力"}
                     // ,{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
                     //     {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"},{"source":"卡尔莱斯·佩雷兹","target":"巴塞罗那","value":"效力"},
                     //     {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
@@ -203,29 +209,39 @@
         mounted() {
             // var _this = this
             this.getData()
-            this.initGraph(this.newGraph)
+            this.printData()
+            // this.initGraph(this.myGraph)
         },
         methods: {
             // axios读取本地static文件夹下的json文件
             printData(){
-                console.log(this.newGraph["nodes"])
+                console.log(this.myGraph["links"])
             },
             // setData(),
             getData(){
                 var _this = this
-                this.$axios.get("http://localhost:8081/initLinks").then( response =>{
-                    // this.newGraph["nodes"] = response.data.data
-                    // for(var i=0;i<response.data.data.length;i++){
-                    //     var a = response.data.data[i]
-                    //     // this.newGraph.nodes[i] = JSON.stringify(a)
-                    //     console.log(JSON.stringify(a))
-                    // }
-                    _this.myGraph["links"] = response.data.data
+                this.$axios.get("http://10.24.82.10:8081/initNodes").then( response =>{
+                    // 处理json数据
+                    var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+                    _this.myGraph["nodes"] = jsonObj
+                    console.log("成功获取节点")
+                    // console.log(response.data.data)
+                    this.$axios.get("http://10.24.82.10:8081/initLinks").then( response =>{
+                    // 处理json数据
+                    var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+                    _this.myGraph["links"] = jsonObj
+                    // console.log(_this.newGraph.links)
                     console.log(_this.myGraph.links)
-                    console.log(response.data.data)
+                    console.log("成功获取关系")
+                    _this.initGraph(_this.myGraph)
                 },response=>{
                     console.log("error")
                 })
+                },response=>{
+                    console.log("error")
+                })
+
+
             },
             initGraph(data) {
                 var _this = this
