@@ -150,7 +150,7 @@
 <script>
     // 画图
     import * as d3 from 'd3'
-
+    var _this = this
     export default {
         data() {
             return {
@@ -181,11 +181,14 @@
                         {"id":"弗兰基·德容","group":2},{"id":"阿图尔","group":2},{"id":"乌姆蒂蒂","group":2},{"id":"罗贝托","group":2},{"id":"朗格莱","group":2},
                         {"id":"卡尔莱斯·佩雷兹","group":2},{"id":"塞梅多","group":2},{"id":"布斯克茨","group":2},{"id":"安苏·法蒂","group":2},
                         {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}],
-                    "links" : [{"source":"皮克","target":"巴塞罗那","value":"效力"},{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
-                        {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"},{"source":"卡尔莱斯·佩雷兹","target":"巴塞罗那","value":"效力"},
-                        {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
-                        {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
-                        {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}]
+                    // "links" : [{"source":"皮克","target":"巴塞罗那","value":"效力"},{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
+                    //     {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"},{"source":"卡尔莱斯·佩雷兹","target":"巴塞罗那","value":"效力"},
+                    //     {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
+                    //     {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
+                    //     {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}]
+                    // "nodes":[{"name":"巴塞罗那","group":1},{"name":"皮克","group":2},{"name":"菲尔波","group":2},{"name":"格里兹曼","group":2},{"name":"弗兰基·德容","group":2},{"name":"阿图尔","group":2},{"name":"乌姆蒂蒂","group":2},{"name":"罗贝托","group":2},{"name":"朗格莱","group":2},{"name":"卡尔莱斯·佩雷兹","group":2},{"name":"塞梅多","group":2},{"name":"布斯克茨","group":2},{"name":"安苏·法蒂","group":2},{"name":"苏亚雷斯","group":2},{"name":"拉基蒂奇","group":2},{"name":"阿尔巴","group":2},{"name":"梅西","group":2},{"name":"特尔施特根","group":2}]
+                    "links":[]
+                        // [{"source":"皮克","target":"巴塞罗那","lineWord":"效力"},{"source":"菲尔波","target":"巴塞罗那","lineWord":"效力"},{"source":"格里兹曼","target":"巴塞罗那","lineWord":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","lineWord":"效力"},{"source":"阿图尔","target":"巴塞罗那","lineWord":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","lineWord":"效力"},{"source":"罗贝托","target":"巴塞罗那","lineWord":"效力"},{"source":"朗格莱","target":"巴塞罗那","lineWord":"效力"},{"source":"卡尔莱斯·佩雷兹","target":"巴塞罗那","lineWord":"效力"},{"source":"塞梅多","target":"巴塞罗那","lineWord":"效力"},{"source":"布斯克茨","target":"巴塞罗那","lineWord":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","lineWord":"效力"},{"source":"苏亚雷斯","target":"巴塞罗那","lineWord":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","lineWord":"效力"},{"source":"阿尔巴","target":"巴塞罗那","lineWord":"效力"},{"source":"梅西","target":"巴塞罗那","lineWord":"效力"},{"source":"特尔施特根","target":"巴塞罗那","lineWord":"效力"}]
                 },
                 myGraph:{
                     "nodes": [],
@@ -207,17 +210,18 @@
             // setData(),
             getData(){
                 var _this = this
-                this.$axios.get("http://localhost:8081/initNodes").then(function(response){
+                this.$axios.get("http://localhost:8081/initLinks").then( response =>{
                     // this.newGraph["nodes"] = response.data.data
                     // for(var i=0;i<response.data.data.length;i++){
                     //     var a = response.data.data[i]
                     //     // this.newGraph.nodes[i] = JSON.stringify(a)
                     //     console.log(JSON.stringify(a))
                     // }
-                    _this.myGraph["nodes"] = response.data
-                    console.log(this.myGraph["nodes"])
+                    _this.myGraph["links"] = response.data.data
+                    console.log(_this.myGraph.links)
+                    console.log(response.data.data)
                 },response=>{
-                    // console.log("error")
+                    console.log("error")
                 })
             },
             initGraph(data) {
