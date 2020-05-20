@@ -31,7 +31,9 @@
                         <!-- 节点信息区域-->
                         <el-col class="article"></el-col>
                         <!-- 基本功能按钮区域-->
-                        <el-button type="primary" round=1 @click="Submit_text" class="el-button–upload">文本导入</el-button>
+                        <el-button type="primary" round=true @click="getData" class="el-button–upload">文本导入
+                            <i class="el-icon-upload el-icon--right"></i>
+                        </el-button>
                         <el-button type="primary" round=1 @click="user_Check" class="el-button-check">人工审核
                             <i class="el-icon-user el-icon--right"></i>
                         </el-button>
@@ -173,15 +175,38 @@
                         "target": "c",
                         "value": 8
                     }, {"source": "b", "target": "d", "value": 10} ]
+                },
+                newGraph: {
+                    "nodes" : [],
+                    "links" : []
                 }
-
 
             }
         },
         mounted() {
+            this.getData()
             this.initGraph(this.testGraph)
         },
         methods: {
+            // axios读取本地static文件夹下的json文件
+            printData(){
+                console.log(this.newGraph)
+            },
+            // setData(),
+            getData(){
+                this.$axios.get("http://localhost:8081/initNodes").then(function(response){
+                    // this.newGraph = response.data.data
+                    for(var i=0;i<response.data.data.length;i++){
+                        var a = response.data.data[i]
+                        this.newGraph.nodes[i] = JSON.stringify(a)
+                        console.log(JSON.stringify(a))
+                    }
+                    // this.printData()
+
+                },response=>{
+                    // console.log("error")
+                })
+            },
             initGraph(data) {
                 var _this = this
                 const links = data.links.map(d => Object.create(d));
@@ -232,6 +257,7 @@
                 .join("text")
                 // .attr("dx", 4)
                 // .attr("dy", 4)
+                .attr("fill","white")
                 .attr("class", "node-name")
                 .text(function (d) {
                    return d.id
