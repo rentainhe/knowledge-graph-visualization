@@ -230,6 +230,7 @@
             // var _this = this
             this.getData()
             this.printData()
+            // location.reload()
             // this.initGraph(this.myGraph)
         },
         methods: {
