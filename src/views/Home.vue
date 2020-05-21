@@ -1,11 +1,16 @@
 <template>
         <el-container style="height : 100%">
-            <el-header height="48px">
+            <el-header height="8%" class="header_text">
                 知识图谱展示
             </el-header>
             <el-container>
-                <el-aside width="20%">
+                <el-aside width="25%">
                     <!--                    <el-container>-->
+                    <div class="indicator">
+                        <div><span class="span" style="background-color: white"></span>节点列表</div>
+                        <div><span class="span" style="background-color: #ff7f0e"></span>球员</div>
+                        <div><span class="span" style="background-color: #1f77b4"></span>所属球队</div>
+                    </div>
                     <el-col :span="4" :offset="3">
                         <el-form :model="formInline" class="text_search">
                             <el-form-item>
@@ -53,6 +58,31 @@
 </template>
 
 <style>
+    .header_text{
+        font-family: "PingFang SC";
+        font-size: 30px;
+        letter-spacing: 5px;
+        color: #ffffff;
+    }
+    /*节点列表*/
+    .indicator{
+        text-align: left;
+        color: #f2f2f2;
+        font-size: 12px;
+        position: absolute;
+        left: 30%;
+        bottom: 40%;
+    }
+    /*节点样式*/
+    .span{
+        display: inline-block;
+        width: 30px;
+        height: 14px;
+        position: relative;
+        top:2px;
+        margin-right: 8px;
+    ;
+    }
     .right-side {
         position: relative;
     }
@@ -122,8 +152,8 @@
     }
 
     .el-header, .el-footer {
-        background-color: #B3C0D1;
-        color: #333;
+        background-color: #15161F;
+        color: #ffffff;
         text-align: center;
         line-height: 60px;
     }
