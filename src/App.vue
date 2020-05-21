@@ -7,6 +7,9 @@
             <el-container>
                 <el-aside width="20%">
 <!--                    <el-container>-->
+                    <div class="indicator">
+                        <span ></span>
+                    </div>
                     <el-col :span="4" :offset="3">
                         <el-form :model="formInline" class="text_search">
                             <el-form-item>
@@ -56,6 +59,14 @@
 </template>
 
 <style>
+    .indicator {
+        text-align: left;
+        color:#f2f2f2;
+        font-size: 12px;
+        position: absolute;
+        left:60px;
+        bottom: 120px;
+    }
     .right-side {
         position: relative;
     }
@@ -207,22 +218,6 @@
                         "target": "c",
                         "value": 8
                     }, {"source": "b", "target": "d", "value": 10} ]
-                },
-                newGraph: {
-                    "nodes" : [{"name":"巴塞罗那","group":1},{"name":"皮克","group":2}
-                    ,{"name":"菲尔波","group":2},{"name":"格里兹曼","group":2}
-                    //     {"id":"弗兰基·德容","group":2},{"id":"阿图尔","group":2},{"id":"乌姆蒂蒂","group":2},{"id":"罗贝托","group":2},{"id":"朗格莱","group":2},
-                    //     {"id":"卡尔莱斯·佩雷兹","group":2},{"id":"塞梅多","group":2},{"id":"布斯克茨","group":2},{"id":"安苏·法蒂","group":2},
-                    //     {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}
-                        ],
-                    "links" : [{"source":"皮克","target":"巴塞罗那","lineWord":"效力"}
-                    // ,{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
-                    //     {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"},{"source":"卡尔莱斯·佩雷兹","target":"巴塞罗那","value":"效力"},
-                    //     {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
-                    //     {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
-                    //     {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}
-                        ]
-
                 },
                 myGraph:{
                     "nodes": [],
@@ -386,7 +381,9 @@
                 console.log('文本导入')
             },
             user_Check(){
+                var _this = this
                 console.log('人工审核')
+                _this.$router.push('/aaa')
             },
             put_into_Database() {
                 console.log('导入数据库')
