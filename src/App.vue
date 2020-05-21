@@ -234,9 +234,9 @@
                     console.log(_this.myGraph.links)
                     console.log("成功获取关系")
                     _this.initGraph(_this.myGraph)
-                },response=>{
+                    },response=>{
                     console.log("error")
-                })
+                    })
                 },response=>{
                     console.log("error")
                 })
