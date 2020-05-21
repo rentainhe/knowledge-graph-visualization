@@ -82,7 +82,7 @@
     /* 上传文件框的相关设置 */
     .el-button–upload{
         position: absolute;
-        top:10%;
+        top:60%;
         left:90px;
         color: #fff;
         background-color: #303252;
@@ -92,7 +92,7 @@
 
     .el-button-check {
         position: absolute;
-        top: 20%;
+        top: 50%;
         left: 83px;
         color: #fff;
         background-color: #303252;
