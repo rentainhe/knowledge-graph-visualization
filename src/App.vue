@@ -185,7 +185,7 @@
                 },
                 newGraph: {
                     "nodes" : [{"name":"巴塞罗那","group":1},{"name":"皮克","group":2}
-                    // ,{"id":"菲尔波","group":2},{"id":"格里兹曼","group":2},
+                    ,{"name":"菲尔波","group":2},{"name":"格里兹曼","group":2}
                     //     {"id":"弗兰基·德容","group":2},{"id":"阿图尔","group":2},{"id":"乌姆蒂蒂","group":2},{"id":"罗贝托","group":2},{"id":"朗格莱","group":2},
                     //     {"id":"卡尔莱斯·佩雷兹","group":2},{"id":"塞梅多","group":2},{"id":"布斯克茨","group":2},{"id":"安苏·法蒂","group":2},
                     //     {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}
@@ -249,10 +249,12 @@
                 const nodes = data.nodes.map(d => Object.create(d));
 
                 const simulation = d3.forceSimulation(nodes)
-                    .force("link", d3.forceLink(links).id(d => d.name).distance(200))
-                    .force("charge", d3.forceManyBody().strength(-500))
+                    .force("link", d3.forceLink(links).id(d => d.name).distance(150))
+                    .force("charge", d3.forceManyBody().strength(-400))
                     .force("x", d3.forceX())
-                    .force("y", d3.forceY());
+                    .force("y", d3.forceY())
+                    .force("center", d3.forceCenter(_this.width / 2, _this.height / 3));
+
 
                 // const sv
                 // g = d3.create("svg")
@@ -260,7 +262,7 @@
 
                 const svg = d3.select(".cc")
                     .append("svg")
-                    .attr("viewBox", [-(_this.width) / 2, -(_this.height) / 2, _this.width, _this.height]);
+                    .attr("viewBox", [0,0,_this.width,_this.height]);
                 svg.call(d3.zoom().on("zoom", function () {
                     g.attr("transform", d3.event.transform)
                 }))
@@ -279,7 +281,7 @@
                     .selectAll("circle")
                     .data(nodes)
                     .join("circle")
-                    .attr("r", 30)
+                    .attr("r", 23)
                     .attr("fill", _this.color())
                     .call(_this.drag(simulation));
 
@@ -288,16 +290,20 @@
                 //     .text(d => d.name);
 
                 const nodeNameText = g.append("g")
-                .selectAll("text")
-                .data(nodes)
-                .join("text")
-                .attr("dx", -20)
-                // .attr("dy", 4)
-                .attr("fill","white")
-                .attr("class", "node-name")
-                .text(function (d) {
-                   return d.name
-                })
+                    .selectAll("text")
+                    .data(nodes)
+                    .join("text")
+                    .attr("dx", (function (d) {
+                        return -d.name.length * 3.7
+                    }))
+                    .attr("dy", 1)
+                    .style('font-size', 8)
+                    // .style('font-weight', 400)
+                    .attr("fill","white")
+                    .attr("class", "node-name")
+                    .text(function (d) {
+                        return d.name
+                    })
 
                 simulation.on("tick", () => {
                     link
