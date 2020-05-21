@@ -128,6 +128,9 @@
         color: #333;
         text-align: center;
         line-height: 60px;
+        font-family:"Adobe Arabic";
+        font-size: 18px;
+
     }
 
     .el-aside {
