@@ -6,26 +6,29 @@
             </el-header>
             <el-container>
                 <el-aside width="20%">
-                    <el-container>
-                        <el-form :inline="true" :model="formInline" class="text_search">
+<!--                    <el-container>-->
+                    <el-col :span="4" :offset="3">
+                        <el-form :model="formInline" class="text_search">
                             <el-form-item>
                                 <el-input v-model="formInline.user" placeholder="查询" clearable=1></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
                             </el-form-item>
+
                         </el-form>
+                    </el-col>
 <!--                        <el-switch-->
 <!--                                v-model="value1" active-text="Text" inactive-text="Nodes" active-color="#F0FFFF">-->
 <!--                        </el-switch>-->
-                    </el-container>
+<!--                    </el-container>-->
                 </el-aside>
                 <!--主要区域-->
-                <el-main>
+<!--                <el-main>-->
                     <!--图谱放置的主要区域-->
-                    <el-col :span="17" class="graph">
+                    <el-col :span="13" class="graph">
                         <!--这是我的图！！！！！！！！！-->
-                        <div class="cc"></div>
+<!--                        <div class="cc"></div>-->
                     </el-col>
                     <el-col :span="5" :offset="1" class="right-side">
                         <!-- 节点信息区域-->
@@ -43,7 +46,7 @@
                         </el-button>
                         <!--              <el-row class="col1"></el-row>-->
                     </el-col>
-                </el-main>
+<!--                </el-main>-->
 
             </el-container>
 
@@ -184,8 +187,8 @@
                     region: ''
                 },
                 value1: true,
-                width: 600,
-                height: 600,
+                width: 800,
+                height: 800,
                 //示例数据的地方
                 testGraph: {
                     "nodes": [{"id": "a", "group": 1}, {"id": "b", "group": 1}, {
@@ -267,25 +270,29 @@
                 const nodes = data.nodes.map(d => Object.create(d));
 
                 const simulation = d3.forceSimulation(nodes)
-                    .force("link", d3.forceLink(links).id(d => d.name).distance(150))
-                    .force("charge", d3.forceManyBody().strength(-400))
+                    .force("link", d3.forceLink(links).id(d => d.name).distance(200))
+                    .force("charge", d3.forceManyBody().strength(-600))
                     .force("x", d3.forceX())
                     .force("y", d3.forceY())
-                    .force("center", d3.forceCenter(_this.width / 2, _this.height / 3));
+                    .force("center", d3.forceCenter(_this.width / 2 - 10, _this.height / 2));
 
 
                 // const sv
                 // g = d3.create("svg")
                 //     .attr("viewBox", [0, 0, width, height]);
 
-                const svg = d3.select(".cc")
+                const svg = d3.select(".graph")
+                    // .attr("width",200)
+                    // .attr("height",564)
                     .append("svg")
-                    .attr("viewBox", [0,0,_this.width,_this.height]);
-                svg.call(d3.zoom().on("zoom", function () {
-                    g.attr("transform", d3.event.transform)
-                }))
+                    // .attr("preserveAspectRatio", "xMidYMid meet")
+                    .attr("viewBox", [0,0,_this.width ,_this.height]);
+                // svg.call(d3.zoom().on("zoom", function () {
+                //     g.attr("transform", d3.event.transform)
+                // }))
                 const g = svg.append("g")
                 const link = g.append("g")
+
                     .attr("stroke", "#999")
                     .attr("stroke-opacity", 0.6)
                     .selectAll("line")
@@ -299,7 +306,7 @@
                     .selectAll("circle")
                     .data(nodes)
                     .join("circle")
-                    .attr("r", 23)
+                    .attr("r", 30)
                     .attr("fill", _this.color())
                     .call(_this.drag(simulation));
 
@@ -312,10 +319,10 @@
                     .data(nodes)
                     .join("text")
                     .attr("dx", (function (d) {
-                        return -d.name.length * 3.7
+                        return -d.name.length * 5
                     }))
                     .attr("dy", 1)
-                    .style('font-size', 8)
+                    .style('font-size', 12)
                     // .style('font-weight', 400)
                     .attr("fill","white")
                     .attr("class", "node-name")
