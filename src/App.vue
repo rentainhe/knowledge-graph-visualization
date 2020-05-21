@@ -26,25 +26,26 @@
                 <!--主要区域-->
 <!--                <el-main>-->
                     <!--图谱放置的主要区域-->
-                    <el-col :span="13" class="graph">
+                    <el-col :span="15" class="graph">
                         <!--这是我的图！！！！！！！！！-->
 <!--                        <div class="cc"></div>-->
                     </el-col>
-                    <el-col :span="5" :offset="1" class="right-side">
+                    <el-col :span="7" class="right-side" >
                         <!-- 节点信息区域-->
-                        <el-col class="article"></el-col>
+                        <div class="personal_Information">
+                        </div>
                         <!-- 基本功能按钮区域-->
-
-                        <el-button type="primary" round=true @click="printData" class="el-button–upload">文本导入
-                            <i class="el-icon-upload el-icon--right"></i>
-                        </el-button>
-                        <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
+                        <div class="buttons">
+                            <el-button type="primary" round=true @click="printData" class="el-button–upload">文本导入
+                                <i class="el-icon-upload el-icon--right"></i>
+                            </el-button>
+                            <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
                             <i class="el-icon-user el-icon--right"></i>
-                        </el-button>
-                        <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入
-                            <i class="el-icon-coin el-icon--right"></i>
-                        </el-button>
-                        <!--              <el-row class="col1"></el-row>-->
+                            </el-button>
+                            <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入
+                                <i class="el-icon-coin el-icon--right"></i>
+                            </el-button><!--              <el-row class="col1"></el-row>-->
+                        </div>
                     </el-col>
 <!--                </el-main>-->
 
@@ -55,6 +56,9 @@
 </template>
 
 <style>
+    .right-side {
+        position: relative;
+    }
     /* el-switch 开关的相关设置 */
     .el-switch {
         position:relative;
@@ -80,33 +84,39 @@
     /* 搜索框的相关设置 */
     .text_search {
         position: absolute;
-        top: 60px;
+        top: 20%;
+    }
+    /* 按钮区域 */
+    .buttons {
+        background-color: #15161F;
+        height: 45%;
+        position: relative;
     }
     /* 上传文件框的相关设置 */
     .el-button–upload{
         position: absolute;
-        top:60%;
-        left:90px;
+        top:15%;
+        left:27%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
         border-width: 2px;
     }
-
+    /*人工检查按钮样式*/
     .el-button-check {
         position: absolute;
-        top: 50%;
-        left: 83px;
+        top: 40%;
+        left: 25%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
         border-width: 2px;
     }
-
+    /*导入数据库按钮设置*/
     .el-button–mysql {
         position: absolute;
-        top: 50%;
-        left: 75px;
+        top: 65%;
+        left: 24%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -128,12 +138,12 @@
         line-height: 50px;
     }
 
-    .el-main {
-        background-color: #15161F;
-        color: #333;
-        text-align: center;
-        line-height: 160px;
-    }
+    /*.el-main {*/
+    /*    background-color: #15161F;*/
+    /*    color: #333;*/
+    /*    text-align: center;*/
+    /*    line-height: 160px;*/
+    /*}*/
 
     body > .el-container {
         margin-bottom: 40px;
@@ -153,24 +163,15 @@
     }
 
     .graph {
-        background-color: teal;
+        background-color: #15161F;
     }
 
-    .right-side {
-        position: absolute;
-        right: 12px;
-    }
-
-    .article {
-        background-color: thistle;
+    .personal_Information {
+        background-color: #15161F;
         height: 55%;
     }
 
-    .buttons {
-        background-color: #15161F;
-        height: 45%;
-        position: relative;
-    }
+
 </style>
 
 <!-- 查询框-->
