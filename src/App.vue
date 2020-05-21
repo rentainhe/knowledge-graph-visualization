@@ -5,7 +5,7 @@
                 知识图谱展示
             </el-header>
             <el-container>
-                <el-aside width="200px">
+                <el-aside width="20%">
                     <el-container>
                         <el-form :inline="true" :model="formInline" class="text_search">
                             <el-form-item>
@@ -15,16 +15,16 @@
                                 <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
                             </el-form-item>
                         </el-form>
-                        <el-switch
-                                v-model="value1" active-text="Text" inactive-text="Nodes">
-                        </el-switch>
+<!--                        <el-switch-->
+<!--                                v-model="value1" active-text="Text" inactive-text="Nodes" active-color="#F0FFFF">-->
+<!--                        </el-switch>-->
                     </el-container>
                 </el-aside>
                 <!--主要区域-->
                 <el-main>
                     <!--图谱放置的主要区域-->
-                    <el-col :span="18" class="graph">
-                        <!--                这是我的图！！！！！！！！！-->
+                    <el-col :span="17" class="graph">
+                        <!--这是我的图！！！！！！！！！-->
                         <div class="cc"></div>
                     </el-col>
                     <el-col :span="5" :offset="1" class="right-side">
@@ -52,20 +52,37 @@
 </template>
 
 <style>
+    /* el-switch 开关的相关设置 */
     .el-switch {
-        position:absolute;
+        position:relative;
         top:30px;
         left:20px;
-
     }
+    .el-switch__label--left{
+        position: relative;
+        left: 60px;
+        color: #fff;
+        z-index: -1111;
+    }
+    .el-switch__label--right{
+        position: relative;
+        right: 60px;
+        color: #fff;
+        z-index: -1111;
+    }
+    .el-switch__label.is-active{
+        z-index: 1111;
+        color: #fff;
+    }
+    /* 搜索框的相关设置 */
     .text_search {
         position: absolute;
         top: 60px;
     }
-
+    /* 上传文件框的相关设置 */
     .el-button–upload{
         position: absolute;
-        top:400px;
+        top:10%;
         left:90px;
         color: #fff;
         background-color: #303252;
@@ -75,7 +92,7 @@
 
     .el-button-check {
         position: absolute;
-        top: 480px;
+        top: 20%;
         left: 83px;
         color: #fff;
         background-color: #303252;
@@ -85,7 +102,7 @@
 
     .el-button–mysql {
         position: absolute;
-        top: 560px;
+        top: 50%;
         left: 75px;
         color: #fff;
         background-color: #303252;
@@ -129,7 +146,7 @@
     }
 
     .el-col {
-        height: 640px;
+        /*height: 640px;*/
     }
 
     .graph {
@@ -161,6 +178,7 @@
     export default {
         data() {
             return {
+                value : '0',
                 formInline: {
                     user: '',
                     region: ''
