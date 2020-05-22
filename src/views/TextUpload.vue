@@ -41,19 +41,51 @@
     export default {
         data() {
             return {
-                textarea: ''
+                textarea: '',
+                tid:'',
+                extractNode:'',
+                extractTeam:'',
             }
         },
         methods: {
+            extract:function(){
+                this.$axios({
+                    method:'get',
+                    url:'http://10.24.82.10:8088/showExtractNode/' + this.tid,
+
+                }).then(res => {
+                    this.extractNode = res.data.data.extractNode
+                    this.extractTeam = res.data.data.extractTeam
+                    console.log(res)
+                    this.$alert('这是一段内容', '标题名称', {
+                        confirmButtonText: '确定',
+                        callback: action => {
+                            this.$message({
+                                type: 'info',
+                                message: `action: ${ action }`
+                            })
+                        }
+                    })
+                })
+            },
+
             begin_upload:function(){
                 this.$axios({
                     method:'post',
                     url:'http://10.24.82.10:8088/uploadText',
                     data:{
-                        content:thisn.textarea
+                        content:this.textarea
                     }
                 }).then(res => {
-                    console.log(res)
+                    this.tid = res.data.data.id
+                    console.log(res.data)
+                    if (!res.errno){
+                        this.$message('成功！');
+                    }
+                    else{
+                        this.$message('上传失败！');
+                    }
+
                 })
             },
             //点击回主界面
