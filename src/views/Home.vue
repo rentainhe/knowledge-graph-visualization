@@ -264,7 +264,8 @@
             // this.initGraph(this.myGraph)
         },
         methods: {
-            //点击跳转
+
+            //上传文件界面
             change_to_text:function(){
                 this.$router.push("/TextUpload")
             },
@@ -275,13 +276,13 @@
             // setData(),
             getData(){
                 var _this = this
-                this.$axios.get("http://10.24.82.10:8081/initNodes").then( response =>{
+                this.$axios.get("http://10.24.82.10:8088/initNodes").then( response =>{
                     // 处理json数据
                     var jsonObj = JSON.parse(JSON.stringify(response.data.data));
                     _this.myGraph["nodes"] = jsonObj
                     console.log("成功获取节点")
                     // console.log(response.data.data)
-                    this.$axios.get("http://10.24.82.10:8081/initLinks").then( response =>{
+                    this.$axios.get("http://10.24.82.10:8088/initLinks").then( response =>{
                         // 处理json数据
                         var jsonObj = JSON.parse(JSON.stringify(response.data.data));
                         _this.myGraph["links"] = jsonObj
@@ -415,8 +416,9 @@
             Submit_text(){
                 console.log('文本导入')
             },
-            user_Check(){
-                console.log('人工审核')
+            //跳转审核界面
+            user_Check:function(){
+                this.$router.push("/Check")
             },
             put_into_Database() {
                 console.log('导入数据库')

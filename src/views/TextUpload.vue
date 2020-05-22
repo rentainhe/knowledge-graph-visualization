@@ -5,18 +5,19 @@
             <el-main>
                 <el-col  class ="col">
                     <el-col  class="col">
-                    <el-input
-                            type="textarea"
-                            class="textarea"
-                            :rows="25"
-                            placeholder="请输入内容"
-                            v-model="textarea">
-                    </el-input>
+                        <el-input
+                                type="textarea"
+                                class="textarea"
+                                :rows="25"
+                                placeholder="请输入内容"
+                                v-model="textarea">
+                        </el-input>
                     </el-col>
                 </el-col>
             </el-main>
             <el-aside>
                 <div class="buttons">
+                    //发送数据
                     <el-button type="primary" round=true @click="begin_upload" >确认上传
                         <i class="el-icon-upload el-icon--right"></i>
                     </el-button>
@@ -44,6 +45,17 @@
             }
         },
         methods: {
+            begin_upload:function(){
+                this.$axios({
+                    method:'post',
+                    url:'http://10.24.82.10:8088/uploadText',
+                    data:{
+                        content:thisn.textarea
+                    }
+                }).then(res => {
+                    console.log(res)
+                })
+            },
             //点击回主界面
             return_home: function () {
                 this.$router.push("/Home")
