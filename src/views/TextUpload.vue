@@ -57,15 +57,11 @@
                     this.extractNode = res.data.data.extractNode
                     this.extractTeam = res.data.data.extractTeam
                     console.log(res)
-                    this.$alert('这是一段内容', '标题名称', {
-                        confirmButtonText: '确定',
-                        callback: action => {
-                            this.$message({
-                                type: 'info',
-                                message: `action: ${ action }`
-                            })
-                        }
-                    })
+                    if (this.extractTeam)
+                    this.$message('抽取信息：球员：'+ this.extractNode + ';   球队: ' + this.extractTeam)
+                    else {
+                        this.$message('抽取失败')
+                    }
                 })
             },
 
@@ -80,7 +76,7 @@
                     this.tid = res.data.data.id
                     console.log(res.data)
                     if (!res.errno){
-                        this.$message('成功！');
+                        this.$message('成功！请点击"开始抽取"按钮完成抽取');
                     }
                     else{
                         this.$message('上传失败！');
