@@ -1,6 +1,6 @@
 <template>
     <el-container>
-        <el-header>文本导入</el-header>
+        <el-header class="header_text">知识图谱系统</el-header>
         <el-container>
             <el-main>
                 <el-col  class ="col">
@@ -54,13 +54,18 @@
                     url:'http://10.24.82.10:8088/showExtractNode/' + this.tid,
 
                 }).then(res => {
-                    this.extractNode = res.data.data.extractNode
-                    this.extractTeam = res.data.data.extractTeam
-                    console.log(res)
-                    if (this.extractTeam)
-                    this.$message('抽取信息：球员：'+ this.extractNode + ';   球队: ' + this.extractTeam)
-                    else {
-                        this.$message('抽取失败')
+                    if(res.errno==-1){
+                        this.$message("文本有问题")
+                    }
+                    else{
+                        this.extractNode = res.data.data.extractNode
+                        this.extractTeam = res.data.data.extractTeam
+                        console.log(res)
+                        if (this.extractTeam)
+                            this.$message('抽取信息：球员：' + this.extractNode + ';   球队: ' + this.extractTeam)
+                        else {
+                            this.$message('抽取失败')
+                        }
                     }
                 })
             },
@@ -94,9 +99,14 @@
 </script>
 
 <style>
+    .header_text{
+        font-family: "PingFang SC";
+        font-size: 30px;
+        letter-spacing: 5px;
+        color: #ffffff;
+    }
     .el-header, .el-footer {
-        background-color: #B3C0D1;
-        color: #333;
+        background-color: #15161F;
         text-align: center;
         line-height: 60px;
     }

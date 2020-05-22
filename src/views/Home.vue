@@ -418,7 +418,7 @@
             },
             //跳转审核界面
             user_Check:function(){
-                this.$router.push("/Check")
+                this.$router.push("/Check_1")
             },
             put_into_Database() {
                 console.log('导入数据库')
