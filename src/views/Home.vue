@@ -14,7 +14,7 @@
                     <el-col :span="4" :offset="3">
                         <el-form :model="formInline" class="text_search">
                             <el-form-item>
-                                <el-input v-model="formInline.user" placeholder="查询" clearable=1></el-input>
+                                <el-input v-model="ask" placeholder="查询" clearable=1></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
@@ -211,10 +211,7 @@
         data() {
             return {
                 value : '0',
-                formInline: {
-                    user: '',
-                    region: ''
-                },
+                ask:'',
                 value1: true,
                 width: 800,
                 height: 800,
@@ -252,19 +249,26 @@
                 myGraph:{
                     "nodes": [],
                     "links": []
-                }
-
+                },
+                g:'',
+                svg:''
             }
         },
         mounted() {
             // var _this = this
             this.getData()
             this.printData()
+            this.init()
             // location.reload()
             // this.initGraph(this.myGraph)
         },
         methods: {
+            init:function(){
+                this.svg = d3.select(".graph")
+                    .append("svg")
+                    .attr("viewBox", [0,0,this.width ,this.height]);
 
+            },
             //上传文件界面
             change_to_text:function(){
                 this.$router.push("/TextUpload")
@@ -275,21 +279,21 @@
             },
             // setData(),
             getData(){
-                var _this = this
+                // var _this = this
                 this.$axios.get("http://10.24.82.10:8088/initNodes").then( response =>{
                     // 处理json数据
                     var jsonObj = JSON.parse(JSON.stringify(response.data.data));
-                    _this.myGraph["nodes"] = jsonObj
+                    this.myGraph["nodes"] = jsonObj
                     console.log("成功获取节点")
                     // console.log(response.data.data)
                     this.$axios.get("http://10.24.82.10:8088/initLinks").then( response =>{
                         // 处理json数据
                         var jsonObj = JSON.parse(JSON.stringify(response.data.data));
-                        _this.myGraph["links"] = jsonObj
+                        this.myGraph["links"] = jsonObj
                         // console.log(_this.newGraph.links)
-                        console.log(_this.myGraph.links)
+                        console.log(this.myGraph.links)
                         console.log("成功获取关系")
-                        _this.initGraph(_this.myGraph)
+                        this.initGraph(this.myGraph)
                     },response=>{
                         console.log("error")
                     })
@@ -300,34 +304,20 @@
 
             },
             initGraph(data) {
-                var _this = this
+                // var _this = this
+                // console.log('links:'+ data.links)
+                this.svg.selectAll("*").remove();
                 const links = data.links.map(d => Object.create(d));
                 const nodes = data.nodes.map(d => Object.create(d));
-
                 const simulation = d3.forceSimulation(nodes)
                     .force("link", d3.forceLink(links).id(d => d.name).distance(200))
                     .force("charge", d3.forceManyBody().strength(-600))
                     .force("x", d3.forceX())
                     .force("y", d3.forceY())
-                    .force("center", d3.forceCenter(_this.width / 2 - 10, _this.height / 2));
+                    .force("center", d3.forceCenter(this.width / 2 - 10, this.height / 2));
 
-
-                // const sv
-                // g = d3.create("svg")
-                //     .attr("viewBox", [0, 0, width, height]);
-
-                const svg = d3.select(".graph")
-                    // .attr("width",200)
-                    // .attr("height",564)
-                    .append("svg")
-                    // .attr("preserveAspectRatio", "xMidYMid meet")
-                    .attr("viewBox", [0,0,_this.width ,_this.height]);
-                // svg.call(d3.zoom().on("zoom", function () {
-                //     g.attr("transform", d3.event.transform)
-                // }))
-                const g = svg.append("g")
-                const link = g.append("g")
-
+                this.g = this.svg.append("g")
+                const link = this.g.append("g")
                     .attr("stroke", "#999")
                     .attr("stroke-opacity", 0.6)
                     .selectAll("line")
@@ -335,21 +325,17 @@
                     .join("line")
                     .attr("stroke-width", d => Math.sqrt(d.value));
 
-                const node = g.append("g")
+                const node = this.g.append("g")
                     .attr("stroke", "#fff")
                     .attr("stroke-width", 1.5)
                     .selectAll("circle")
                     .data(nodes)
                     .join("circle")
                     .attr("r", 30)
-                    .attr("fill", _this.color())
-                    .call(_this.drag(simulation));
+                    .attr("fill", this.color())
+                    .call(this.drag(simulation));
 
-
-                // node.append("title")
-                //     .text(d => d.name);
-
-                const nodeNameText = g.append("g")
+                const nodeNameText = this.g.append("g")
                     .selectAll("text")
                     .data(nodes)
                     .join("text")
@@ -410,8 +396,31 @@
                     .on("drag", dragged)
                     .on("end", dragended);
             },
-            onSubmit() {
-                console.log('节点搜索');
+            onSubmit:function(){
+                console.log(this.ask)
+                this.$axios({
+                    method:'get',
+                    url:'http://10.24.82.10:8088/getNodesByName/' + this.ask,
+
+                }).then(res => {
+                    console.log(res.data)
+                    if (!res.data.errno){
+                        this.$message("查询成功！")
+                        this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+                        // console.log(this.myGraph["nodes"])
+                        this.$axios({
+                            method:'get',
+                            url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
+
+                        }).then(res => {
+                                this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                                this.initGraph(this.myGraph)
+                        })
+                    }
+                    else{
+                        this.$message('无此节点！');
+                    }
+                })
             },
             Submit_text(){
                 console.log('文本导入')
