@@ -1,61 +1,60 @@
 <template>
-        <el-container style="height : 100%">
-            <el-header height="8%" class="header_text">
-                知识图谱展示
-            </el-header>
-            <el-container>
-                <el-aside width="25%">
-                    <!--                    <el-container>-->
-                    <div class="indicator">
-                        <div><span class="span" style="background-color: white"></span>节点列表</div>
-                        <div><span class="span" style="background-color: #ff7f0e"></span>球员</div>
-                        <div><span class="span" style="background-color: #1f77b4"></span>所属球队</div>
-                    </div>
-                    <el-col :span="4" :offset="3">
-                        <el-form :model="formInline" class="text_search">
-<!--                            <el-form-item>-->
-<!--                                <el-input v-model="formInline.user" placeholder="请输入球员名或球队名" clearable=1></el-input>-->
-<!--                                <el-input v-model="ask" placeholder="查询" clearable=1></el-input>-->
-<!--                            </el-form-item>-->
-                            <el-form-item>
-                                <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
-                            </el-form-item>
-                        </el-form>
-                    </el-col>
-                    <!--                        <el-switch-->
-                    <!--                                v-model="value1" active-text="Text" inactive-text="Nodes" active-color="#F0FFFF">-->
-                    <!--                        </el-switch>-->
-                    <!--                    </el-container>-->
-                </el-aside>
-                <!--主要区域-->
-                <!--                <el-main>-->
-                <!--图谱放置的主要区域-->
-                <el-col :span="15" class="graph">
-                    <!--这是我的图！！！！！！！！！-->
-                    <!--                        <div class="cc"></div>-->
+    <el-container style="height : 100%">
+        <el-header height="8%" class="header_text">
+            知识图谱展示
+        </el-header>
+        <el-container>
+            <el-aside width="25%">
+                <!--                    <el-container>-->
+                <div class="indicator">
+                    <div><span class="span" style="background-color: white"></span>节点列表</div>
+                    <div><span class="span" style="background-color: #ff7f0e"></span>球员</div>
+                    <div><span class="span" style="background-color: #1f77b4"></span>所属球队</div>
+                </div>
+                <el-col :span="4" :offset="3">
+                    <el-form :model="formInline" class="text_search">
+                        <el-form-item>
+                            <el-input v-model="ask" placeholder="查询" clearable=1></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
+                        </el-form-item>
+                    </el-form>
                 </el-col>
-                <el-col :span="7" class="right-side" >
-                    <!-- 节点信息区域-->
-                    <div class="personal_Information">
-                    </div>
-                    <!-- 基本功能按钮区域-->
-                    <div class="buttons">
-                        <el-button type="primary" round=true @click="change_to_text" class="el-button–upload">文本导入
-                            <i class="el-icon-upload el-icon--right"></i>
-                        </el-button>
-                        <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
-                            <i class="el-icon-user el-icon--right"></i>
-                        </el-button>
-                        <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入
-                            <i class="el-icon-coin el-icon--right"></i>
-                        </el-button><!--              <el-row class="col1"></el-row>-->
-                    </div>
-                </el-col>
-                <!--                </el-main>-->
-
-            </el-container>
+                <!--                        <el-switch-->
+                <!--                                v-model="value1" active-text="Text" inactive-text="Nodes" active-color="#F0FFFF">-->
+                <!--                        </el-switch>-->
+                <!--                    </el-container>-->
+            </el-aside>
+            <!--主要区域-->
+            <!--                <el-main>-->
+            <!--图谱放置的主要区域-->
+            <el-col :span="15" class="graph">
+                <!--这是我的图！！！！！！！！！-->
+                <!--                        <div class="cc"></div>-->
+            </el-col>
+            <el-col :span="7" class="right-side" >
+                <!-- 节点信息区域-->
+                <div class="personal_Information">
+                </div>
+                <!-- 基本功能按钮区域-->
+                <div class="buttons">
+                    <el-button type="primary" round=true @click="change_to_text" class="el-button–upload">文本导入
+                        <i class="el-icon-upload el-icon--right"></i>
+                    </el-button>
+                    <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
+                        <i class="el-icon-user el-icon--right"></i>
+                    </el-button>
+                    <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入
+                        <i class="el-icon-coin el-icon--right"></i>
+                    </el-button><!--              <el-row class="col1"></el-row>-->
+                </div>
+            </el-col>
+            <!--                </el-main>-->
 
         </el-container>
+
+    </el-container>
 </template>
 
 <style>
@@ -301,8 +300,6 @@
                 },response=>{
                     console.log("error")
                 })
-
-
             },
             initGraph(data) {
                 // var _this = this
@@ -414,8 +411,8 @@
                             url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
 
                         }).then(res => {
-                                this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
-                                this.initGraph(this.myGraph)
+                            this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                            this.initGraph(this.myGraph)
                         })
                     }
                     else{
