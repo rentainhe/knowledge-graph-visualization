@@ -13,13 +13,10 @@
                     </div>
                     <el-col :span="4" :offset="3">
                         <el-form :model="formInline" class="text_search">
-                            <el-form-item>
-<<<<<<< HEAD
-                                <el-input v-model="formInline.user" placeholder="请输入球员名或球队名" clearable=1></el-input>
-=======
-                                <el-input v-model="ask" placeholder="查询" clearable=1></el-input>
->>>>>>> 41b7e78e57663a1c31886029f7e8d2030f09b1ab
-                            </el-form-item>
+<!--                            <el-form-item>-->
+<!--                                <el-input v-model="formInline.user" placeholder="请输入球员名或球队名" clearable=1></el-input>-->
+<!--                                <el-input v-model="ask" placeholder="查询" clearable=1></el-input>-->
+<!--                            </el-form-item>-->
                             <el-form-item>
                                 <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
                             </el-form-item>
