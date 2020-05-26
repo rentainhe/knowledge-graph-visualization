@@ -14,7 +14,7 @@
                     <el-col :span="4" :offset="3">
                         <el-form :model="formInline" class="text_search">
                             <el-form-item>
-                                <el-input v-model="formInline.user" placeholder="查询" clearable=1></el-input>
+                                <el-input v-model="formInline.user" placeholder="请输入球员名或球队名" clearable=1></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
