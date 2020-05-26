@@ -21,30 +21,35 @@
                         <el-table-column
                                 prop="id"
                                 label="序号"
-                                width="120">
+                                width="120"
+                                align="center">
                         </el-table-column>
                         <el-table-column
                                 prop="extractNode"
                                 label="球员"
-                                width="120">
+                                width="120"
+                                align="center">
                         </el-table-column>
                         <el-table-column
                                 prop="extractTeam"
                                 label="球队"
-                                width="120">
+                                width="120"
+                                align="center">
                         </el-table-column>
                         <el-table-column
                                 prop="content"
-                                label="转会内容">
+                                label="转会内容"
+                                align="center">
                         </el-table-column>
                         <el-table-column
                                 fixed="right"
                                 label="操作"
-                                width="180">
+                                width="180"
+                                align="center">
                             <template slot-scope="scope">
                                 <el-button @click="handleClick(scope.row)" type="text" size="small">添加</el-button>
-                                <el-button type="text" size="small">编辑</el-button>
-                                <el-button type="text" size="small">删除</el-button>
+<!--                                <el-button type="text" size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>-->
+                                <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -59,14 +64,14 @@
 <!--                    <el-button type="primary" round=true @click="Skip" class="el-button-skip">跳过-->
 <!--                        <i class="el-icon-user el-icon&#45;&#45;right"></i>-->
 <!--                    </el-button>-->
-<!--                    <el-button type="primary" round=true  @click="Give_up" class="el-button–give-up">放弃-->
-<!--                        <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
-<!--                    </el-button>-->
-                    <el-button type="primary" round=true  @click="Back_to_lastpage" class="back_to_lastpage">返回上一页
+                    <el-button type="primary" round=true  @click="Give_up" class="el-button–save">保存
                         <i class="el-icon-coin el-icon--right"></i>
                     </el-button>
+                    <el-button type="primary" round=true  @click="Back_to_lastpage" class="back_to_lastpage">返回上一页
+                        <i class="el-icon-position el-icon--right"></i>
+                    </el-button>
                     <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
-                        <i class="el-icon-coin el-icon--right"></i>
+                        <i class="el-icon-s-promotion el-icon--right"></i>
                     </el-button>
                 </div>
             </el-col>
@@ -133,10 +138,10 @@
         border-width: 2px;
     }
     /*放弃按钮设置*/
-    .el-button–give-up {
+    .el-button–save {
         position: absolute;
-        top: 45%;
-        left: 20%;
+        top: 28%;
+        left: 22%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -145,7 +150,7 @@
     /*返回上一页按钮设置*/
     .back_to_lastpage {
         position: absolute;
-        top: 30%;
+        top: 43%;
         left: 20%;
         color: #fff;
         background-color: #303252;
@@ -155,7 +160,7 @@
     /*返回首页按钮设置*/
     .back_to_homepage {
         position: absolute;
-        top: 50%;
+        top: 58%;
         left: 20%;
         color: #fff;
         background-color: #303252;
@@ -230,6 +235,11 @@
             this.getAllTexts()
         },
         methods: {
+            // 删除行
+            deleteRow(index, rows) {
+                rows.splice(index, 1);
+                this.Node_lenth-=1;
+            },
             //获取所有未审核的节点
             getAllTexts:function(){
                 var _this = this
