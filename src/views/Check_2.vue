@@ -7,26 +7,71 @@
             <el-aside width="10%">
 
             </el-aside>
-            <el-col :span="15" class="table_cell">
-                <div class="main1"></div>
+<!--            数据审核表格区域-->
+            <el-col :span="17" class="table_cell">
+                <div class="table_header">
+                    <h1 class="tablehead">待审核的节点共{{Node_lenth}}条</h1>
+                </div>
+                <div class="main_table">
+                    <el-table stripe=true
+                            :data="tableData"
+                                height="500px"
+                                border
+                                style="width: 100%;">
+                        <el-table-column
+                                prop="id"
+                                label="序号"
+                                width="120"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="extractNode"
+                                label="球员"
+                                width="120"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="extractTeam"
+                                label="球队"
+                                width="120"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="content"
+                                label="转会内容"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="180"
+                                align="center">
+                            <template slot-scope="scope">
+                                <el-button @click="handleClick(scope.row)" type="text" size="small">添加</el-button>
+<!--                                <el-button type="text" size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>-->
+                                <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
             </el-col>
             <el-col :span="7" class="right-side" >
                 <!-- 基本功能按钮区域-->
                 <div class="buttons">
-                    <el-button type="primary" round=true @click="insert_nodes" class="el-button–insert">插入
-                        <i class="el-icon-upload el-icon--right"></i>
-                    </el-button>
-                    <el-button type="primary" round=true @click="Skip" class="el-button-skip">跳过
-                        <i class="el-icon-user el-icon--right"></i>
-                    </el-button>
-                    <el-button type="primary" round=true  @click="Give_up" class="el-button–give-up">放弃
+<!--                    <el-button type="primary" round=true @click="insert_nodes" class="el-button–insert">插入-->
+<!--                        <i class="el-icon-upload el-icon&#45;&#45;right"></i>-->
+<!--                    </el-button>-->
+<!--                    <el-button type="primary" round=true @click="Skip" class="el-button-skip">跳过-->
+<!--                        <i class="el-icon-user el-icon&#45;&#45;right"></i>-->
+<!--                    </el-button>-->
+                    <el-button type="primary" round=true  @click="Give_up" class="el-button–save">保存
                         <i class="el-icon-coin el-icon--right"></i>
                     </el-button>
                     <el-button type="primary" round=true  @click="Back_to_lastpage" class="back_to_lastpage">返回上一页
-                        <i class="el-icon-coin el-icon--right"></i>
+                        <i class="el-icon-position el-icon--right"></i>
                     </el-button>
                     <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
-                        <i class="el-icon-coin el-icon--right"></i>
+                        <i class="el-icon-s-promotion el-icon--right"></i>
                     </el-button>
                 </div>
             </el-col>
@@ -39,11 +84,22 @@
     .table_cell{
         background-color: #15161F;
     }
-    .main1{
-        background-color: #ff7f0e;
+    .tablehead{
+        float: left;
+        color: #ffffff;
+    }
+    .table_header{
+        background-color: #15161F;
         float: right;
         width: 80%;
-        height: 100%;
+        height: 10%;
+    }
+    /*表格的主体区域*/
+    .main_table{
+        background-color: #15161F;
+        float: right;
+        width: 80%;
+        height: 60%;
     }
     .header_text{
         font-family: "PingFang SC";
@@ -82,10 +138,10 @@
         border-width: 2px;
     }
     /*放弃按钮设置*/
-    .el-button–give-up {
+    .el-button–save {
         position: absolute;
-        top: 45%;
-        left: 20%;
+        top: 28%;
+        left: 22%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -94,7 +150,7 @@
     /*返回上一页按钮设置*/
     .back_to_lastpage {
         position: absolute;
-        top: 60%;
+        top: 43%;
         left: 20%;
         color: #fff;
         background-color: #303252;
@@ -104,7 +160,7 @@
     /*返回首页按钮设置*/
     .back_to_homepage {
         position: absolute;
-        top: 75%;
+        top: 58%;
         left: 20%;
         color: #fff;
         background-color: #303252;
@@ -165,12 +221,37 @@
                 value1: true,
                 width: 800,
                 height: 800,
-            }
+                Node_lenth: 0, // default = 0
+                tableData: []
+            // {
+            //     id:'1',
+            //         extractNode: '卡卡',
+            //     extractTeam: '米兰',
+            //     content: '卡卡转会米兰',
+            // },
+        }
         },
         mounted() {
+            this.getAllTexts()
         },
         methods: {
-
+            // 删除行
+            deleteRow(index, rows) {
+                rows.splice(index, 1);
+                this.Node_lenth-=1;
+            },
+            //获取所有未审核的节点
+            getAllTexts:function(){
+                var _this = this
+                _this.$axios.get("http://10.24.82.10:8088/allText").then(response =>{
+                    var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+                    console.log(jsonObj)
+                    this.tableData = jsonObj
+                    _this.Node_lenth = _this.tableData.length
+                },response=>{
+                    console.log("error")
+                })
+            },
             //上传文件界面
             insert_nodes:function(){
                 console.log("这是插入节点")

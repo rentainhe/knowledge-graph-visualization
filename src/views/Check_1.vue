@@ -8,15 +8,15 @@
                     <div class="right"></div>
                     <div class="center">
                         <div class="up">
-                            <p class="P-position">目前待审核节点共90条！</p>
+                            <p class="P-position">目前待审核节点共{{Node_lenth}}条！</p>
                         </div>
                         <div class="down">
                             <el-button type="primary" round=true @click="begin_to_check" class="el-button–begin_check">开始审核
                                 <i class="el-icon-caret-right el-icon--right"></i>
                             </el-button>
-                            <el-button type="primary" round=true @click="user_Check" class="el-button-save">保存
-                                <i class="el-icon-success el-icon--right"></i>
-                            </el-button>
+<!--                            <el-button type="primary" round=true @click="user_Check" class="el-button-save">保存-->
+<!--                                <i class="el-icon-success el-icon&#45;&#45;right"></i>-->
+<!--                            </el-button>-->
                             <el-button type="primary" round=true  @click="return_home" class="el-button–go_back">返回
                                 <i class="el-icon-position el-icon--right"></i>
                             </el-button><!--              <el-row class="col1"></el-row>-->
@@ -32,10 +32,26 @@
     export default {
         data() {
             return {
-                textarea: ''
+                textarea: '',
+                Node_lenth: 0,
+                tableData: []
             }
         },
+        mounted() {
+            this.getAllTexts()
+        },
         methods: {
+            getAllTexts:function() {
+                var _this = this
+                _this.$axios.get("http://10.24.82.10:8088/allText").then(response => {
+                    var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+                    // console.log(jsonObj)
+                    this.tableData = jsonObj
+                    _this.Node_lenth = _this.tableData.length
+                }, response => {
+                    console.log("error")
+                })
+            },
             //上传成功提示
             successMessage() {
                 this.$message('上传成功')
@@ -141,7 +157,7 @@
     .el-button–begin_check{
         color: #fff;
         position: absolute;
-        left: 30%;
+        left: 35%;
         bottom: 30%;
         background-color: #303252;
         border-color: #9593A7;
@@ -164,7 +180,7 @@
         border-color: #9593A7;
         border-width: 2px;
         position: absolute;
-        right: 31%;
+        right: 35%;
         bottom: 30%;
     }
 
