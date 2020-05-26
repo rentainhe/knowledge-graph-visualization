@@ -300,8 +300,6 @@
                 },response=>{
                     console.log("error")
                 })
-
-
             },
             initGraph(data) {
                 // var _this = this
