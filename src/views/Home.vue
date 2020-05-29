@@ -10,6 +10,12 @@
                     <div><span class="span" style="background-color: white"></span>节点列表</div>
                     <div><span class="span" style="background-color: #ff7f0e"></span>球员</div>
                     <div><span class="span" style="background-color: #1f77b4"></span>所属球队</div>
+<!--                    <div><el-button>一级关系</el-button></div>-->
+<!--                    <div><el-button>二级关系</el-button></div>-->
+                </div>
+                <div class="relation_change">
+                    <div><el-button type="primary" round=true class="one_relation" @click="oneRelation">一级关系</el-button></div>
+                    <div><el-button type="primary" round=true class="second_relation" @click="secondRelation">二级关系</el-button></div>
                 </div>
                 <el-col :span="4" :offset="3">
                     <el-form :model="formInline" class="text_search">
@@ -36,6 +42,20 @@
             <el-col :span="7" class="right-side" >
                 <!-- 节点信息区域-->
                 <div class="personal_Information">
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span class="text item">节点信息</span>
+                        </div>
+                        <div  class="text item">
+                            名字：{{currentNode.name}}
+                        </div>
+                        <div  class="text item">
+                            国籍：{{currentNode.country}}
+                        </div>
+                        <div  class="text item">
+                            年份：{{currentNode.year}}
+                        </div>
+                    </el-card>
                 </div>
                 <!-- 基本功能按钮区域-->
                 <div class="buttons">
@@ -58,11 +78,59 @@
 </template>
 
 <style>
+    .text {
+        font-size: 14px;
+        color: #ffffff;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+    .clearfix:after {
+        color : #ffffff;
+        clear: both
+    }
+
+    .box-card {
+        background-color: #15161F;
+
+        width: 80%;
+    }
+    .one_relation{
+        left: 25%;
+
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .second_relation{
+        left: 25%;
+
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
     .header_text{
         font-family: "PingFang SC";
         font-size: 30px;
         letter-spacing: 5px;
         color: #ffffff;
+    }
+    .relation_change{
+        text-align: left;
+        color: #f2f2f2;
+        font-size: 12px;
+        position: absolute;
+        top: 70%;
+        left: 30%;
     }
     /*节点列表*/
     .indicator{
@@ -215,6 +283,11 @@
                 value1: true,
                 width: 800,
                 height: 800,
+                currentNode:{
+                    'country':'',
+                    'year':'',
+                    'name':''
+                },
                 //示例数据的地方
                 testGraph: {
                     "nodes": [{"id": "a", "group": 1}, {"id": "b", "group": 1}, {
@@ -231,44 +304,79 @@
                     }, {"source": "b", "target": "d", "value": 10} ]
                 },
                 newGraph: {
-                    "nodes" : [{"name":"巴塞罗那","group":1},{"name":"皮克","group":2}
-                        ,{"name":"菲尔波","group":2},{"name":"格里兹曼","group":2}
-                        //     {"id":"弗兰基·德容","group":2},{"id":"阿图尔","group":2},{"id":"乌姆蒂蒂","group":2},{"id":"罗贝托","group":2},{"id":"朗格莱","group":2},
-                        //     {"id":"卡尔莱斯·佩雷兹","group":2},{"id":"塞梅多","group":2},{"id":"布斯克茨","group":2},{"id":"安苏·法蒂","group":2},
-                        //     {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}
+                    "nodes" : [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}
+                        ,{"name":"菲尔波","group":2,'country':'西班牙','year':1996},{"name":"格里兹曼","group":2,'country':'法国','year':1991},
+                        {"name":"弗兰基·德容","group":2,'country':'荷兰','year':1997},{"name":"阿图尔","group":2,'country':'巴西','year':1996},{"name":"乌姆蒂蒂","group":2,'country':'法国','year':1993},{"name":"罗贝托","group":2,'country':'西班牙','year':1992},{"name":"朗格莱","group":2,'country':'法国','year':1995},
+                        // {"name":"卡尔莱斯·佩雷兹","group":2,'country':'西班牙','year':1899},
+                        // {"name":"塞梅多","group":2},{"name":"布斯克茨","group":2},{"name":"安苏·法蒂","group":2}
+                        // {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}
                     ],
-                    "links" : [{"source":"皮克","target":"巴塞罗那","lineWord":"效力"}
-                        // ,{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
-                        //     {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"},{"source":"卡尔莱斯·佩雷兹","target":"巴塞罗那","value":"效力"},
-                        //     {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
+                    "links" : [{"source":"皮克","target":"巴塞罗那","value":"效力"}
+                        ,{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
+                        {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"}
+                        // {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
                         //     {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
                         //     {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}
                     ]
 
+                },
+                firstGraph: {
+                    "nodes" : [],
+                    "links" : []
                 },
                 myGraph:{
                     "nodes": [],
                     "links": []
                 },
                 g:'',
-                svg:''
+                svg:'',
             }
         },
         mounted() {
             // var _this = this
-            this.getData()
-            this.printData()
+            // this.getData()
+            // this.printData()
             this.init()
             // location.reload()
-            // this.initGraph(this.myGraph)
+            this.initGraph(this.newGraph)
         },
         methods: {
             init:function(){
+                // this.svg.selectAll("*").remove();
                 this.svg = d3.select(".graph")
                     .append("svg")
                     .attr("viewBox", [0,0,this.width ,this.height]);
 
             },
+            //一级关系
+            oneRelation:function(){
+                this.firstGraph["nodes"] = [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}];
+                this.firstGraph["links"] = [{"source":"皮克","target":"巴塞罗那","value":"效力"}];
+                this.initGraph(this.firstGraph);
+            },
+            //二级关系
+            secondRelation:function(){
+                this.newGraph= {
+                    "nodes" : [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}
+                        ,{"name":"菲尔波","group":2,'country':'西班牙','year':1996},{"name":"格里兹曼","group":2,'country':'法国','year':1991},
+                        {"name":"弗兰基·德容","group":2,'country':'荷兰','year':1997},{"name":"阿图尔","group":2,'country':'巴西','year':1996},{"name":"乌姆蒂蒂","group":2,'country':'法国','year':1993},{"name":"罗贝托","group":2,'country':'西班牙','year':1992},{"name":"朗格莱","group":2,'country':'法国','year':1995},
+                        // {"name":"卡尔莱斯·佩雷兹","group":2,'country':'西班牙','year':1899},
+                        // {"name":"塞梅多","group":2},{"name":"布斯克茨","group":2},{"name":"安苏·法蒂","group":2}
+                        // {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}
+                    ],
+                        "links" : [{"source":"皮克","target":"巴塞罗那","value":"效力"}
+                        ,{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
+                        {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"}
+                        // {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
+                        //     {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
+                        //     {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}
+                    ]
+
+                };
+                this.initGraph(this.newGraph);
+
+            },
+
             //上传文件界面
             change_to_text:function(){
                 this.$router.push("/TextUpload")
@@ -302,14 +410,14 @@
                 })
             },
             initGraph(data) {
-                // var _this = this
-                // console.log('links:'+ data.links)
+                var _this = this
+                console.log(data)
                 this.svg.selectAll("*").remove();
                 const links = data.links.map(d => Object.create(d));
                 const nodes = data.nodes.map(d => Object.create(d));
                 const simulation = d3.forceSimulation(nodes)
                     .force("link", d3.forceLink(links).id(d => d.name).distance(200))
-                    .force("charge", d3.forceManyBody().strength(-600))
+                    .force("charge", d3.forceManyBody().strength(-1500))
                     .force("x", d3.forceX())
                     .force("y", d3.forceY())
                     .force("center", d3.forceCenter(this.width / 2 - 10, this.height / 2));
@@ -331,7 +439,8 @@
                     .join("circle")
                     .attr("r", 30)
                     .attr("fill", this.color())
-                    .call(this.drag(simulation));
+                    .on("click",_this.queryTest)
+                    .call(this.drag(simulation))
 
                 const nodeNameText = this.g.append("g")
                     .selectAll("text")
@@ -371,6 +480,12 @@
                 const scale = d3.scaleOrdinal(d3.schemeCategory10);
                 return d => scale(d.group);
             },
+            queryTest(d){
+                console.log(d.name);
+                this.currentNode.country = d.country;
+                this.currentNode.year = d.year;
+                this.currentNode.name = d.name;
+            },
             drag(simulation) {
                 function dragstarted(d) {
                     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -381,8 +496,8 @@
                 function dragged(d) {
                     d.fx = d3.event.x;
                     d.fy = d3.event.y;
-                }
 
+                }
                 function dragended(d) {
                     if (!d3.event.active) simulation.alphaTarget(0);
                     d.fx = null;
@@ -396,29 +511,34 @@
             },
             onSubmit:function(){
                 console.log(this.ask)
-                this.$axios({
-                    method:'get',
-                    url:'http://10.24.82.10:8088/getNodesByName/' + this.ask,
-
-                }).then(res => {
-                    console.log(res.data)
-                    if (!res.data.errno){
-                        this.$message("查询成功！")
-                        this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
-                        // console.log(this.myGraph["nodes"])
-                        this.$axios({
-                            method:'get',
-                            url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
-
-                        }).then(res => {
-                            this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
-                            this.initGraph(this.myGraph)
-                        })
-                    }
-                    else{
-                        this.$message('无此节点！');
-                    }
-                })
+                // this.$axios({
+                //     method:'get',
+                //     url:'http://10.24.82.10:8088/getNodesByName/' + this.ask,
+                //
+                // }).then(res => {
+                    // console.log(res.data)
+                    // if (!res.data.errno){
+                    //     this.$message("查询成功！")
+                    //     this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+                    //     // console.log(this.myGraph["nodes"])
+                    //     this.$axios({
+                    //         method:'get',
+                    //         url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
+                    //
+                    //     }).then(res => {
+                    //         this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                    //         this.initGraph(this.myGraph)
+                    //     })
+                    // }
+                    // else{
+                    //     this.$message('无此节点！');
+                    // }
+                // })
+                if(this.ask === "皮克"){
+                    this.firstGraph["nodes"] = [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}];
+                    this.firstGraph["links"] = [{"source":"皮克","target":"巴塞罗那","value":"效力"}];
+                    this.initGraph(this.firstGraph);
+                }
             },
             Submit_text(){
                 console.log('文本导入')
