@@ -1,14 +1,17 @@
 <template>
-    <el-container>
-        <el-header class="header_text">知识图谱系统</el-header>
-        <el-container>
-            <el-aside width="50%">
-                <div class="textarea">
+    <div>
+        <div class="header_text">知识图谱系统</div>
+<!--        <el-container>-->
+        <div class="container">
+            <div class = 'left'>
+<!--                上传文本的文本框和按钮-->
+                <div class="inputText">
                     <div class="textUpLoader">
+<!--                        文本框的参数直接在这里面调-->
                         <el-input clearable
                                   type="textarea"
                                   class="textarea"
-                                  style="width: 100%"
+                                  style="left:1%; top:10%; width: 80%"
                                   :rows="10"
                                   placeholder="请输入内容"
                                   v-model="textarea">
@@ -31,28 +34,31 @@
                 <div class="graph_temp">
 
                 </div>
-            </el-aside>
-            <el-main>
+            </div>
+
+            <div class="right">
 <!--                最初的节点信息，我这边先注释掉，如果有需要再取消注释即可-->
-                <div class="buttons">
-<!--                    //发送数据-->
-                    <el-button type="primary" round=true @click="begin_upload" >确认上传
-                        <i class="el-icon-upload el-icon--right"></i>
-                    </el-button>
-                </div>
-                <div class="buttons">
-                    <el-button type="primary" round=true @click="extract">开始抽取
-                        <i class="el-icon-caret-right el-icon--right"></i>
-                    </el-button>
-                </div>
-                <div class="buttons" style="left: auto">
-                    <el-button type="primary" round=true @click="return_home">返回
-                        <i class="el-icon-caret-right el-icon--right"></i>
-                    </el-button>
-                </div>
-            </el-main>
-        </el-container>
-    </el-container>
+<!--                <div class="buttons">-->
+<!--&lt;!&ndash;                    //发送数据&ndash;&gt;-->
+<!--                    <el-button type="primary" round=true @click="begin_upload" >确认上传-->
+<!--                        <i class="el-icon-upload el-icon&#45;&#45;right"></i>-->
+<!--                    </el-button>-->
+<!--                </div>-->
+<!--                <div class="buttons">-->
+<!--                    <el-button type="primary" round=true @click="extract">开始抽取-->
+<!--                        <i class="el-icon-caret-right el-icon&#45;&#45;right"></i>-->
+<!--                    </el-button>-->
+<!--                </div>-->
+<!--                <div class="buttons" style="left: auto">-->
+<!--                    <el-button type="primary" round=true @click="return_home">返回-->
+<!--                        <i class="el-icon-caret-right el-icon&#45;&#45;right"></i>-->
+<!--                    </el-button>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+<!--        </el-container>-->
+<!--    </el-container>-->
 </template>
 
 <script>
@@ -117,6 +123,29 @@
 </script>
 
 <style>
+    .inputText{
+        height: 50%;
+    }
+    .container {
+        display: table;
+        width: 100%;
+    }
+
+    .container .left {
+        width: 50%;
+        height: 100%;
+        position:absolute;
+        background-color: #15161F;
+    }
+
+    .container .right {
+        height:100%;
+        position:absolute;
+        left: 50%;
+        width: 50%;
+        background-color: #15161F;
+    }
+
     .el-main {
         /*position: absolute;*/
         height: 100%;
@@ -148,40 +177,45 @@
         height: 50%;
         width: 100%;
     }
-    .textarea .textExtract .extractButton{
+    .inputText .textExtract .extractButton{
         position: absolute;
+        left: 40%;
         top:0%;
+        width: 50%;
         right:24%;
         height: 200px;
     }
-    .textarea .textExtract .backButton{
+    .inputText .textExtract .backButton{
         position: absolute;
+        left: 40%;
         top:30%;
         right:22%;
+        width: 50%;
         height: 200px;
     }
-    .textarea{
-        float: top;
-        /*float: left;*/
-        position: relative;
-        background-color: #15161F;
-        height: 50%;
-        width: 100%;
-        /*background-color: #ff7f0e;*/
-    }
-    .textarea .textUpLoader{
+    /*.textarea{*/
+    /*    position: absolute;*/
+    /*    top: 10%;*/
+    /*    left: 10%;*/
+    /*    background-color: pink;*/
+    /*    height: 50%;*/
+    /*    width: 50%;*/
+    /*    !*background-color: #ff7f0e;*!*/
+    /*}*/
+    .inputText .textUpLoader{
         float: left;
-        position: relative;
+        position: absolute;
         left: 5%;
-        width: 65%;
-        height: 100%;
+        width: 60%;
+        height: 50%;
         background-color: #15161F;
     }
-    .textarea .textExtract{
-        float: right;
-        /*position: relative;*/
-        width: 30%;
-        height: 100%;
+    .inputText .textExtract{
+        float: left;
+        position: absolute;
+        left: 60%;
+        width: 40%;
+        height: 50%;
         background-color: #15161F;
     }
     /*.graph_temp{*/
@@ -195,6 +229,8 @@
         font-size: 30px;
         letter-spacing: 5px;
         color: #ffffff;
+        height: 10%;
+        background-color: #15161F;
     }
     .el-header, .el-footer {
         background-color: #15161F;
