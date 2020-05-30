@@ -11,7 +11,7 @@
                         <el-input clearable
                                   type="textarea"
                                   class="textarea"
-                                  style="left:1%; top:10%; width: 80%"
+                                  style="left:5%; top:20%; width: 73%"
                                   :rows="10"
                                   placeholder="请输入内容"
                                   v-model="textarea">
@@ -19,24 +19,73 @@
                     </div>
                     <div class="textExtract">
                         <div class="extractButton">
-                            <el-button type="primary" round=true @click="begin_upload">开始抽取
+                            <el-button class="buttons" type="primary" round=true @click="begin_upload">开始抽取
                                 <i class="el-icon-caret-right el-icon--right"></i>
                             </el-button>
                         </div>
                         <div class="backButton" >
-                            <el-button type="primary" round=true @click="return_home">返回
+                            <el-button class="buttons" type="primary" round=true @click="return_home">返回
                                 <i class="el-icon-caret-right el-icon--right"></i>
                             </el-button>
                         </div>
                     </div>
                 </div>
-<!--                现有知识图谱-->
-                <div class="graph_temp">
+<!--                现有知识图谱放置在这个区域-->
+                <div class="temp_Graph">
 
                 </div>
             </div>
 
             <div class="right">
+<!--                将抽取出的实体信息放置在这个位置-->
+                <div class="table_area">
+                    <el-table stripe=true
+                              :data="tableData"
+                              height="100%"
+                              border
+                              style="width: 95%;">
+                        <el-table-column
+                                prop="id"
+                                label="序号"
+                                width="120"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="extractNode"
+                                label="球员"
+                                width="120"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="extractTeam"
+                                label="球队"
+                                width="120"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                prop="content"
+                                label="转会内容"
+                                align="center">
+                        </el-table-column>
+                        <el-table-column
+                                fixed="right"
+                                label="操作"
+                                width="180"
+                                align="center">
+                            <template slot-scope="scope">
+                                <el-button @click="handleClick(scope.row)" type="text" size="small">预览</el-button>
+                                <!--                                <el-button type="text" size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>-->
+                                <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">保存</el-button>
+                                <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+<!--                这里放预览的图-->
+                <div class="newGraph">
+
+                </div>
+            </div>
 <!--                最初的节点信息，我这边先注释掉，如果有需要再取消注释即可-->
 <!--                <div class="buttons">-->
 <!--&lt;!&ndash;                    //发送数据&ndash;&gt;-->
@@ -54,7 +103,7 @@
 <!--                        <i class="el-icon-caret-right el-icon&#45;&#45;right"></i>-->
 <!--                    </el-button>-->
 <!--                </div>-->
-            </div>
+
         </div>
     </div>
 <!--        </el-container>-->
@@ -69,9 +118,25 @@
                 tid:'',
                 extractNode:'',
                 extractTeam:'',
+                tableData: []
             }
         },
+        mounted() {
+            this.getAllTexts()
+        },
         methods: {
+            //获取所有未审核的节点
+            getAllTexts:function(){
+                var _this = this
+                _this.$axios.get("http://10.24.82.10:8088/allText").then(response =>{
+                    var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+                    console.log(jsonObj)
+                    this.tableData = jsonObj
+                    _this.Node_lenth = _this.tableData.length
+                },response=>{
+                    console.log("error")
+                })
+            },
             extract:function(){
                 this.$axios({
                     method:'get',
@@ -123,16 +188,27 @@
 </script>
 
 <style>
+    .header_text{
+        font-family: "PingFang SC";
+        font-size: 30px;
+        letter-spacing: 6px;
+        color: #ffffff;
+        height: 15%;
+        background-color: #15161F;
+    }
     .inputText{
-        height: 50%;
+        height:45%;
+        /*background-color: #ff7f0e;*/
     }
     .container {
         display: table;
         width: 100%;
+        /*height: 100%;*/
+        /*background-color: #15161F;*/
     }
 
     .container .left {
-        width: 50%;
+        width: 45%;
         height: 100%;
         position:absolute;
         background-color: #15161F;
@@ -141,11 +217,26 @@
     .container .right {
         height:100%;
         position:absolute;
-        left: 50%;
-        width: 50%;
+        left: 45%;
+        width: 55%;
+        /*right: 3%;*/
         background-color: #15161F;
     }
-
+    .container .right .table_area{
+        width: 100%;
+        height: 40%;
+        position: absolute;
+        top:5%;
+        right: 3%;
+        background-color: #15161F;
+    }
+    .container .right .newGraph{
+        width: 100%;
+        height: 55%;
+        position: absolute;
+        top: 45%;
+        background-color: aqua;
+    }
     .el-main {
         /*position: absolute;*/
         height: 100%;
@@ -157,10 +248,8 @@
     .buttons {
         /*background-color: #15161F;*/
         /*top : 5%;*/
-        height: 200px;
-        position: relative;
-    }
-    .el-button {
+        /*height: 200px;*/
+        /*position: relative;*/
         position: absolute;
         top: 40%;
         left: 0%;
@@ -169,44 +258,55 @@
         background-color: #303252;
         border-color: #9593A7;
         border-width: 2px;
+
     }
-    .table_temp{
-        float: right;
+    .el-button {
+        /*position: absolute;*/
+        /*top: 40%;*/
+        /*left: 0%;*/
+        /*bottom: 40%;*/
+        /*color: #fff;*/
+        /*background-color: #303252;*/
+        /*border-color: #9593A7;*/
+        /*border-width: 2px;*/
+    }
+    .temp_Graph{
+        /*float: right;*/
         position: relative;
         background-color: #ff7f0e;
-        height: 50%;
+        height: 55%;
         width: 100%;
     }
     .inputText .textExtract .extractButton{
         position: absolute;
-        left: 40%;
-        top:0%;
+        left: 30%;
+        top:5%;
         width: 50%;
         right:24%;
         height: 200px;
     }
     .inputText .textExtract .backButton{
         position: absolute;
-        left: 40%;
-        top:30%;
+        left: 30%;
+        top:35%;
         right:22%;
         width: 50%;
         height: 200px;
     }
-    /*.textarea{*/
-    /*    position: absolute;*/
-    /*    top: 10%;*/
-    /*    left: 10%;*/
-    /*    background-color: pink;*/
-    /*    height: 50%;*/
-    /*    width: 50%;*/
-    /*    !*background-color: #ff7f0e;*!*/
-    /*}*/
+    .textarea{
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        /*background-color: pink;*/
+        height: 50%;
+        width: 100%;
+        background-color: #ff7f0e;
+    }
     .inputText .textUpLoader{
         float: left;
         position: absolute;
         left: 5%;
-        width: 60%;
+        width: 70%;
         height: 50%;
         background-color: #15161F;
     }
@@ -214,7 +314,7 @@
         float: left;
         position: absolute;
         left: 60%;
-        width: 40%;
+        width: 30%;
         height: 50%;
         background-color: #15161F;
     }
@@ -224,14 +324,7 @@
     /*    height: 50%;*/
     /*    background-color: aqua;*/
     /*}*/
-    .header_text{
-        font-family: "PingFang SC";
-        font-size: 30px;
-        letter-spacing: 5px;
-        color: #ffffff;
-        height: 10%;
-        background-color: #15161F;
-    }
+
     .el-header, .el-footer {
         background-color: #15161F;
         text-align: center;
