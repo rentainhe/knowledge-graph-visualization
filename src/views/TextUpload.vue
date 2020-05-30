@@ -2,22 +2,40 @@
     <el-container>
         <el-header class="header_text">知识图谱系统</el-header>
         <el-container>
-            <el-main>
-                <el-col  class ="col">
-                    <el-col  class="col">
-                        <el-input
-                                type="textarea"
-                                class="textarea"
-                                :rows="25"
-                                placeholder="请输入内容"
-                                v-model="textarea">
+            <el-aside width="50%">
+                <div class="textarea">
+                    <div class="textUpLoader">
+                        <el-input clearable
+                                  type="textarea"
+                                  class="textarea"
+                                  style="width: 100%"
+                                  :rows="10"
+                                  placeholder="请输入内容"
+                                  v-model="textarea">
                         </el-input>
-                    </el-col>
-                </el-col>
-            </el-main>
-            <el-aside>
+                    </div>
+                    <div class="textExtract">
+                        <div class="extractButton">
+                            <el-button type="primary" round=true @click="begin_upload">开始抽取
+                                <i class="el-icon-caret-right el-icon--right"></i>
+                            </el-button>
+                        </div>
+                        <div class="backButton" >
+                            <el-button type="primary" round=true @click="return_home">返回
+                                <i class="el-icon-caret-right el-icon--right"></i>
+                            </el-button>
+                        </div>
+                    </div>
+                </div>
+<!--                现有知识图谱-->
+                <div class="graph_temp">
+
+                </div>
+            </el-aside>
+            <el-main>
+<!--                最初的节点信息，我这边先注释掉，如果有需要再取消注释即可-->
                 <div class="buttons">
-                    //发送数据
+<!--                    //发送数据-->
                     <el-button type="primary" round=true @click="begin_upload" >确认上传
                         <i class="el-icon-upload el-icon--right"></i>
                     </el-button>
@@ -27,12 +45,12 @@
                         <i class="el-icon-caret-right el-icon--right"></i>
                     </el-button>
                 </div>
-                <div class="buttons">
+                <div class="buttons" style="left: auto">
                     <el-button type="primary" round=true @click="return_home">返回
                         <i class="el-icon-caret-right el-icon--right"></i>
                     </el-button>
                 </div>
-            </el-aside>
+            </el-main>
         </el-container>
     </el-container>
 </template>
@@ -81,12 +99,12 @@
                     this.tid = res.data.data.id
                     console.log(res.data)
                     if (!res.errno){
-                        this.$message('成功！请点击"开始抽取"按钮完成抽取');
+                        this.$message('信息上传成功！正在抽取实体信息');
+                        this.extract()
                     }
                     else{
                         this.$message('上传失败！');
                     }
-
                 })
             },
             //点击回主界面
@@ -99,6 +117,79 @@
 </script>
 
 <style>
+    .el-main {
+        /*position: absolute;*/
+        height: 100%;
+        background-color: #15161F;
+        color: #333;
+        text-align: center;
+        line-height: 160px;
+    }
+    .buttons {
+        /*background-color: #15161F;*/
+        /*top : 5%;*/
+        height: 200px;
+        position: relative;
+    }
+    .el-button {
+        position: absolute;
+        top: 40%;
+        left: 0%;
+        bottom: 40%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .table_temp{
+        float: right;
+        position: relative;
+        background-color: #ff7f0e;
+        height: 50%;
+        width: 100%;
+    }
+    .textarea .textExtract .extractButton{
+        position: absolute;
+        top:0%;
+        right:24%;
+        height: 200px;
+    }
+    .textarea .textExtract .backButton{
+        position: absolute;
+        top:30%;
+        right:22%;
+        height: 200px;
+    }
+    .textarea{
+        float: top;
+        /*float: left;*/
+        position: relative;
+        background-color: #15161F;
+        height: 50%;
+        width: 100%;
+        /*background-color: #ff7f0e;*/
+    }
+    .textarea .textUpLoader{
+        float: left;
+        position: relative;
+        left: 5%;
+        width: 65%;
+        height: 100%;
+        background-color: #15161F;
+    }
+    .textarea .textExtract{
+        float: right;
+        /*position: relative;*/
+        width: 30%;
+        height: 100%;
+        background-color: #15161F;
+    }
+    /*.graph_temp{*/
+    /*    position: relative;*/
+    /*    float: bottom;*/
+    /*    height: 50%;*/
+    /*    background-color: aqua;*/
+    /*}*/
     .header_text{
         font-family: "PingFang SC";
         font-size: 30px;
@@ -112,40 +203,16 @@
     }
 
     .el-aside {
+        position: relative;
         background-color: #15161F;
         color: #333;
         text-align: center;
         line-height: 200px;
     }
 
-    .el-main {
-        background-color: #15161F;
-        color: #333;
-        text-align: center;
-        line-height: 160px;
-    }
-    /*.textarea{*/
-    /*    !*position: absolute;*!*/
-    /*    top: 20%;*/
-    /*    left: 20%;*/
-    /*    bottom: 20%;*/
-    /*}*/
-    .buttons {
-        background-color: #15161F;
-        /*top : 5%;*/
-        height: 200px;
-        position: relative;
-    }
-    .el-button {
-        position: absolute;
-        top: 40%;
-        left: 25%;
-        bottom: 40%;
-        color: #fff;
-        background-color: #303252;
-        border-color: #9593A7;
-        border-width: 2px;
-    }
+
+
+
     body > .el-container {
         margin-bottom: 40px;
     }
