@@ -125,6 +125,7 @@
                 this.table_Graph.links[0].target=rows[index].extractTeam
                 console.log(this.table_Graph.nodes)
                 console.log(this.table_Graph.links)
+                this.initGraph(this.table_Graph)
             },
             // 删除行
             deleteRow(index, rows) {
