@@ -260,6 +260,7 @@
                     url:'http://10.24.82.10:8088/showExtractNode/' + this.tid,
 
                 }).then(res => {
+                    // 等后端
                     console.log("1111111")
                     _this.player=res.data.data.extractNode
                     _this.team=res.data.data.extractTeam
