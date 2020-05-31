@@ -32,7 +32,7 @@
                 </div>
 <!--                现有知识图谱放置在这个区域-->
                 <div class="temp_Graph">
-
+                    <p class="temp_Graph_Text"> 现有知识图谱如下所示</p>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@
                                 width="180"
                                 align="center">
                             <template slot-scope="scope">
-                                <el-button @click="handleClick(scope.row)" type="text" size="small">预览</el-button>
+                                <el-button @click="showLinks(scope.$index,tableData)" type="text" size="small">预览</el-button>
                                 <!--                                <el-button type="text" size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>-->
                                 <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">保存</el-button>
                                 <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
@@ -140,7 +140,11 @@
                         //     {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
                         //     {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}
                     ]
-
+                },
+                table_Graph:{
+                    "nodes" : [{"name":null,"group":1,"country":null,"year":null},
+                                {"name":null,"group":2,"country":null,"year":null}],
+                    "links" : [{"source":null,"target":null,"value":"效力"}]
                 }
             }
         },
@@ -150,6 +154,23 @@
             this.initGraph(this.newGraph)
         },
         methods: {
+            //预览，显示一级关系
+            showLinks(index, rows) {
+                console.log(rows[index].extractNode);
+                console.log(rows[index].extractTeam);
+                this.table_Graph.nodes[0].name=rows[index].extractTeam
+                this.table_Graph.nodes[1].name=rows[index].extractNode
+                this.table_Graph.links[0].source=rows[index].extractNode
+                this.table_Graph.links[0].target=rows[index].extractTeam
+                console.log(this.table_Graph.nodes)
+                console.log(this.table_Graph.links)
+            },
+            // 删除行
+            deleteRow(index, rows) {
+                console.log(rows[index]);
+                rows.splice(index, 1);
+                this.Node_lenth-=1;
+            },
             //初始图画布
             init:function(){
                 this.svg = d3.select(".temp_Graph")
@@ -321,10 +342,10 @@
 </script>
 
 <style>
-    .temp_Graph{
-        background-color: #15161F;
-        /*height: 40%;*/
-    }
+    /*.temp_Graph{*/
+    /*    background-color: #15161F;*/
+    /*    !*height: 40%;*!*/
+    /*}*/
     .header_text{
         font-family: "PingFang SC";
         font-size: 30px;
@@ -407,10 +428,20 @@
         /*border-color: #9593A7;*/
         /*border-width: 2px;*/
     }
+    .temp_Graph_Text{
+        font-family: "PingFang SC";
+        position: absolute;
+        top:5%;
+        left: 5%;
+        float: left;
+        font-size: 20px;
+        letter-spacing: 3px;
+        color: #ffffff;
+    }
     .temp_Graph{
         /*float: right;*/
         position: relative;
-        background-color: #ff7f0e;
+        background-color: #15161F;
         height: 55%;
         width: 100%;
     }

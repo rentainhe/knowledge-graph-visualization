@@ -237,6 +237,8 @@
         methods: {
             // 删除行
             deleteRow(index, rows) {
+                console.log(rows[index].extractNode);
+                console.log(rows[index].extractTeam);
                 rows.splice(index, 1);
                 this.Node_lenth-=1;
             },
