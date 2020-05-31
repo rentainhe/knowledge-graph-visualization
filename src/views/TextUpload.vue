@@ -37,54 +37,15 @@
             </div>
 
             <div class="right">
-<!--                将抽取出的实体信息放置在这个位置-->
-                <div class="table_area">
-                    <el-table stripe=true
-                              :data="tableData"
-                              height="100%"
-                              border
-                              style="width: 95%;">
-                        <el-table-column
-                                prop="id"
-                                label="序号"
-                                width="120"
-                                align="center">
-                        </el-table-column>
-                        <el-table-column
-                                prop="extractNode"
-                                label="球员"
-                                width="120"
-                                align="center">
-                        </el-table-column>
-                        <el-table-column
-                                prop="extractTeam"
-                                label="球队"
-                                width="120"
-                                align="center">
-                        </el-table-column>
-                        <el-table-column
-                                prop="content"
-                                label="转会内容"
-                                align="center">
-                        </el-table-column>
-                        <el-table-column
-                                fixed="right"
-                                label="操作"
-                                width="180"
-                                align="center">
-                            <template slot-scope="scope">
-                                <el-button @click="showLinks(scope.$index,tableData)" type="text" size="small">预览</el-button>
-                                <!--                                <el-button type="text" size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>-->
-                                <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">保存</el-button>
-                                <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+                <div class="Nodes">
+                    <h3 class="extractNodesInfo">所抽取到的节点如下</h3>
+                    <el-button class="extractPlayer" type="primary" plain>{{player}}</el-button>
+                    <el-button class="extractTeam" type="warning" plain>{{team}}</el-button>
                 </div>
-<!--                这里放预览的图-->
-                <div class="newGraph">
-
+                <div class="Links">
+                    <h3 class="extractNodesInfo">所抽取到的关系如下</h3>
                 </div>
+            </div>
             </div>
 <!--                最初的节点信息，我这边先注释掉，如果有需要再取消注释即可-->
 <!--                <div class="buttons">-->
@@ -103,8 +64,6 @@
 <!--                        <i class="el-icon-caret-right el-icon&#45;&#45;right"></i>-->
 <!--                    </el-button>-->
 <!--                </div>-->
-
-        </div>
     </div>
 <!--        </el-container>-->
 <!--    </el-container>-->
@@ -116,6 +75,8 @@
     export default {
         data() {
             return {
+                player: "球员",
+                team:"球队",
                 width: 800,
                 height: 800,
                 g:'',
@@ -292,20 +253,28 @@
                 })
             },
             extract:function(){
+                var _this = this
                 this.$axios({
                     method:'get',
                     url:'http://10.24.82.10:8088/showExtractNode/' + this.tid,
 
                 }).then(res => {
+                    console.log("1111111")
+                    _this.player=res.data.data.extractNode
+                    _this.team=res.data.data.extractTeam
                     if(res.errno==-1){
                         this.$message("文本有问题")
                     }
                     else{
                         this.extractNode = res.data.data.extractNode
                         this.extractTeam = res.data.data.extractTeam
+                        _this.player=this.extractNode
+                        _this.team=this.extractTeam
                         console.log(res)
                         if (this.extractTeam)
-                            this.$message('抽取信息：球员：' + this.extractNode + ';   球队: ' + this.extractTeam)
+                            {
+                                this.$message('抽取信息：球员：' + this.extractNode + ';   球队: ' + this.extractTeam)
+                            }
                         else {
                             this.$message('抽取失败')
                         }
@@ -346,6 +315,26 @@
     /*    background-color: #15161F;*/
     /*    !*height: 40%;*!*/
     /*}*/
+    .extractPlayer{
+        position: absolute;
+        top:15%;
+        left:20%;
+    }
+    .extractTeam{
+        position: absolute;
+        top:15%;
+        left:40%;
+    }
+    .extractNodesInfo{
+        font-family: "PingFang SC";
+        position: absolute;
+        top:2%;
+        left: 5%;
+        float: left;
+        font-size: 20px;
+        letter-spacing: 3px;
+        color: #ffffff;
+    }
     .header_text{
         font-family: "PingFang SC";
         font-size: 30px;
@@ -366,33 +355,33 @@
     }
 
     .container .left {
-        width: 45%;
-        height: 95%;
+        width: 60%;
+        height: 100%;
         position:absolute;
         background-color: #15161F;
     }
 
     .container .right {
-        height:95%;
+        height:100%;
         position:absolute;
-        left: 45%;
-        width: 55%;
+        left: 60%;
+        width: 40%;
         /*right: 3%;*/
         background-color: #15161F;
     }
-    .container .right .table_area{
+    .container .right .Nodes{
         width: 100%;
-        height: 40%;
-        position: absolute;
-        top:5%;
-        right: 3%;
-        background-color: #15161F;
+        height: 30%;
+        /*position: absolute;*/
+        /*top:5%;*/
+        /*right: 3%;*/
+        background-color: #1f77b4;
     }
-    .container .right .newGraph{
+    .container .right .Links{
         width: 100%;
-        height: 55%;
-        position: absolute;
-        top: 45%;
+        height: 30%;
+        position: relative;
+        /*top: 45%;*/
         background-color: aqua;
     }
     .el-main {
