@@ -293,18 +293,20 @@
                 })
             },
             extract:function(){
+                console.log(this.tid)
                 this.$axios({
                     method:'get',
-                    url:'http://10.24.82.10:8088/showExtractNode/' + this.tid,
-
+                    url:'http://10.24.82.10:8088/showExtractNode/' + this.tid
                 }).then(res => {
-                    if(res.errno==-1){
+                    console.log(res)
+                    if(res.errno === -1){
                         this.$message("文本有问题")
                     }
                     else{
+                        console.log("111" + res)
                         this.extractNode = res.data.data.extractNode
                         this.extractTeam = res.data.data.extractTeam
-                        console.log(res)
+
                         if (this.extractTeam)
                             this.$message('抽取信息：球员：' + this.extractNode + ';   球队: ' + this.extractTeam)
                         else {
@@ -323,10 +325,12 @@
                     }
                 }).then(res => {
                     this.tid = res.data.data.id
-                    console.log(res.data)
+                    console.log(res.data.data.id)
                     if (!res.errno){
                         this.$message('信息上传成功！正在抽取实体信息');
+                        console.log(this.tid)
                         this.extract()
+                        console.log(111)
                     }
                     else{
                         this.$message('上传失败！');
