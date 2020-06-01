@@ -455,14 +455,14 @@
         /*position: absolute;*/
         /*top:5%;*/
         /*right: 3%;*/
-        background-color: #1f77b4;
+        background-color: #15161F;
     }
     .container .right .Links{
         width: 100%;
         height: 30%;
         position: relative;
         /*top: 45%;*/
-        background-color: aqua;
+        background-color: #15161F;
     }
     .el-main {
         /*position: absolute;*/
