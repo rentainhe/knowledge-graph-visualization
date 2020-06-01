@@ -44,6 +44,14 @@
                 </div>
                 <div class="Links">
                     <h3 class="extractNodesInfo">所抽取到的关系如下</h3>
+                    <el-card class="box-card">
+                        <ol>
+<!--                            <div  v-for="links in this.table_Graph.links":key="links"  class="text item">-->
+                            <div  class="text item">
+                                <li>{{this.player+"转会至"+this.team}}</li>
+                            </div>
+                        </ol>
+                    </el-card>
                 </div>
             </div>
             </div>
@@ -395,6 +403,27 @@
     /*    background-color: #15161F;*/
     /*    !*height: 40%;*!*/
     /*}*/
+    .text {
+        font-size: 20px;
+        font-family: "PingFang SC";
+        float: left;
+        /*这里的文字位置需要调整*/
+        word-break: break-all;
+        position: absolute;
+        top:10%;
+    }
+
+    .item {
+        padding: 10px 0;
+    }
+
+    .box-card {
+        width: 80%;
+        position: absolute;
+        left: 5%;
+        top:30%
+    }
+
     .extractPlayer{
         position: absolute;
         top:15%;
@@ -455,14 +484,14 @@
         /*position: absolute;*/
         /*top:5%;*/
         /*right: 3%;*/
-        background-color: #1f77b4;
+        background-color: #15161F;
     }
     .container .right .Links{
         width: 100%;
         height: 30%;
         position: relative;
         /*top: 45%;*/
-        background-color: aqua;
+        background-color: #15161F;
     }
     .el-main {
         /*position: absolute;*/
