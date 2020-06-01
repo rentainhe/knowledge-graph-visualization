@@ -534,10 +534,10 @@
         position: absolute;
         top: 10%;
         left: 10%;
-        /*background-color: pink;*/
+        background-color: pink;
         height: 50%;
         width: 100%;
-        background-color: #ff7f0e;
+        /*background-color: #ff7f0e;*/
     }
     .inputText .textUpLoader{
         float: left;
