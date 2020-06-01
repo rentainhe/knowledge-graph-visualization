@@ -11,7 +11,7 @@
                         <el-input clearable
                                   type="textarea"
                                   class="textarea"
-                                  style="left:5%; top:20%; width: 73%"
+                                  style="left:5%; top:20%; width: 73%;  "
                                   :rows="10"
                                   placeholder="请输入内容"
                                   v-model="textarea">
@@ -39,8 +39,8 @@
             <div class="right">
                 <div class="Nodes">
                     <h3 class="extractNodesInfo">所抽取到的节点如下</h3>
-                    <el-button class="extractPlayer" type="primary" plain @click="find_first_relation">{{player}}</el-button>
-                    <el-button class="extractTeam" type="warning" plain @click="find_second_relation">{{team}}</el-button>
+                    <el-button class="extractPlayer" type="primary"  @click="find_first_relation">{{player}}</el-button>
+                    <el-button class="extractTeam" type="primary"  @click="find_second_relation">{{team}}</el-button>
                 </div>
                 <div class="Links">
                     <h3 class="extractNodesInfo">所抽取到的关系如下</h3>
@@ -421,18 +421,28 @@
         width: 80%;
         position: absolute;
         left: 5%;
-        top:30%
+        top:30%;
+        color: #ffffff;
+        background-color: #15161F;
     }
 
     .extractPlayer{
         position: absolute;
         top:15%;
         left:20%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
     }
     .extractTeam{
         position: absolute;
         top:15%;
         left:40%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
     }
     .extractNodesInfo{
         font-family: "PingFang SC";
@@ -567,6 +577,10 @@
         height: 50%;
         width: 100%;
         /*background-color: #ff7f0e;*/
+    }
+    .inputText .textUpLoader .textarea .el-textarea__inner{
+        background-color: #15161F;
+        color: white;
     }
     .inputText .textUpLoader{
         float: left;
