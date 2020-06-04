@@ -25,7 +25,7 @@
                         </div>
                         <div class="backButton" >
                             <el-button class="buttons" type="primary" round=true @click="return_home">返回
-                                <i class="el-icon-caret-right el-icon--right"></i>
+                                <i class="el-icon-s-promotion el-icon--right"></i>
                             </el-button>
                         </div>
                     </div>
@@ -39,8 +39,12 @@
             <div class="right">
                 <div class="Nodes">
                     <h3 class="extractNodesInfo">所抽取到的节点如下</h3>
-                    <el-button class="extractPlayer" type="primary"  @click="find_first_relation">{{player}}</el-button>
-                    <el-button class="extractTeam" type="primary"  @click="find_second_relation">{{team}}</el-button>
+                    <el-button class="extractPlayer" type="primary"  @click="find_first_relation">{{player}}
+                        <i class="el-icon-user el-icon--right"></i>
+                    </el-button>
+                    <el-button class="extractTeam" type="primary"  @click="find_second_relation">{{team}}
+                        <i class="el-icon-football el-icon--right"></i>
+                    </el-button>
                 </div>
                 <div class="Links">
                     <h3 class="extractNodesInfo">所抽取到的关系如下</h3>
@@ -52,6 +56,12 @@
                             </div>
                         </ol>
                     </el-card>
+                </div>
+                <div class="change_url_buttons">
+                    <h3 class="extractNodesInfo">可选择的操作如下</h3>
+                    <el-button class="move_to_check2_button"  round=true type="primary"  @click="move_to_check2">文本审核
+                        <i class="el-icon-edit el-icon--right"></i>
+                    </el-button>
                 </div>
             </div>
             </div>
@@ -393,6 +403,10 @@
             return_home: function () {
                 this.$router.push("/Home")
                 location.reload()
+            },
+            move_to_check2:function () {
+                this.$router.push("/Check_2")
+                location.reload()
             }
         }
     }
@@ -503,6 +517,12 @@
         /*top: 45%;*/
         background-color: #15161F;
     }
+    .container .right .change_url_buttons{
+        width: 100%;
+        height: 30%;
+        position: relative;
+        background-color: #15161F;
+    }
     .el-main {
         /*position: absolute;*/
         height: 100%;
@@ -525,6 +545,15 @@
         border-color: #9593A7;
         border-width: 2px;
 
+    }
+    .move_to_check2_button{
+        position: absolute;
+        top:55%;
+        right:50%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
     }
     .el-button {
         /*position: absolute;*/

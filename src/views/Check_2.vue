@@ -70,6 +70,9 @@
                     <el-button type="primary" round=true  @click="Back_to_lastpage" class="back_to_lastpage">返回上一页
                         <i class="el-icon-position el-icon--right"></i>
                     </el-button>
+                    <el-button type="primary" round=true  @click="Back_to_TextUpload" class="back_to_textupload">返回文本上传界面
+                        <i class="el-icon-s-order el-icon--right"></i>
+                    </el-button>
                     <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
                         <i class="el-icon-s-promotion el-icon--right"></i>
                     </el-button>
@@ -160,6 +163,15 @@
     /*返回首页按钮设置*/
     .back_to_homepage {
         position: absolute;
+        top: 73%;
+        left: 20%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .back_to_textupload{
+        position: absolute;
         top: 58%;
         left: 20%;
         color: #fff;
@@ -167,7 +179,6 @@
         border-color: #9593A7;
         border-width: 2px;
     }
-
     .el-header, .el-footer {
         background-color: #15161F;
         color: #ffffff;
@@ -270,6 +281,11 @@
             },
             Back_to_homepage:function () {
                 this.$router.push("/Home")
+            },
+            //跳回文本审核界面
+            Back_to_TextUpload:function () {
+                this.$router.push("/TextUpload")
+                location.reload()
             }
         }
     }

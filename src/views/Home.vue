@@ -380,6 +380,7 @@
             //上传文件界面
             change_to_text:function(){
                 this.$router.push("/TextUpload")
+                location.reload()
             },
             // axios读取本地static文件夹下的json文件
             printData(){
