@@ -248,11 +248,36 @@
         methods: {
             // 删除行
             deleteRow(index, rows) {
-                console.log(rows[index].extractNode);
+                console.log(rows[index].id);
                 console.log(rows[index].extractTeam);
                 rows.splice(index, 1);
                 this.Node_lenth-=1;
-            },
+                this.$axios({
+                    method:'post',
+                    url:'http://10.24.82.10:8088/updateGraph',
+                    data:{
+                        id:rows[index].id,
+                        status:1,
+                    }
+                }).then(res => {
+                console.log(res.data)
+                // if (!res.data.errno){
+                //     this.$message("查询成功！")
+                //     this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+                //     // console.log(this.myGraph["nodes"])
+                //     this.$axios({
+                //         method:'get',
+                //         url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
+                //
+                //     }).then(res => {
+                //         this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                //         this.initGraph(this.myGraph)
+                //     })
+                // }
+                // else{
+                //     this.$message('无此节点！');
+                })
+                },
             //获取所有未审核的节点
             getAllTexts:function(){
                 var _this = this
