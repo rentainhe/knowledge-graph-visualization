@@ -59,7 +59,21 @@
                 </div>
                 <div class="change_url_buttons">
                     <h3 class="extractNodesInfo">可选择的操作如下</h3>
-                    <el-button class="move_to_check2_button"  round=true type="primary"  @click="move_to_check2">文本审核
+                    <el-button class="Preview"  round=true type="primary"  @click="dialogVisible = true">实体预览
+                        <i class="el-icon-edit el-icon--right"></i>
+                    </el-button>
+                    <el-dialog
+                            title="提示"
+                            :visible.sync="dialogVisible"
+                            width="30%"
+                            :before-close="handleClose">
+                        <span>这是一段信息</span>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="dialogVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="confirm_to_add_Node">确 定</el-button>
+                        </span>
+                    </el-dialog>
+                    <el-button class="move_to_check2_button"  round=true type="primary"  @click="move_to_check2">进入文本审核界面
                         <i class="el-icon-edit el-icon--right"></i>
                     </el-button>
                 </div>
@@ -93,6 +107,7 @@
     export default {
         data() {
             return {
+                dialogVisible : false,
                 player: "球员",
                 team:"球队",
                 width: 800,
@@ -137,6 +152,22 @@
             this.initGraph(this.newGraph)
         },
         methods: {
+            // Dialog的相关方法设置
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+            confirm_to_add_Node:function(){
+                this.$confirm('确认在数据库中添加该节点关系？')
+                    .then(_ => {
+                        // 在这里添加入库操作
+                        this.dialogVisible = false
+                    })
+                    .catch(_ => {})
+            },
             find_first_relation:function(){
                 console.log(this.player)
                 // this.$axios({
@@ -546,10 +577,19 @@
         border-width: 2px;
 
     }
+    .Preview{
+        position: absolute;
+        top:47%;
+        right:55%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
     .move_to_check2_button{
         position: absolute;
-        top:55%;
-        right:50%;
+        top:85%;
+        right:46%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
