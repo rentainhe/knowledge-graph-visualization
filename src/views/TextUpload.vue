@@ -63,14 +63,15 @@
                         <i class="el-icon-edit el-icon--right"></i>
                     </el-button>
                     <el-dialog
-                            title="提示"
+                            title="预 览"
                             :visible.sync="dialogVisible"
                             width="30%"
                             :before-close="handleClose">
-                        <span>这是一段信息</span>
+                        <span>这里放预览的图片</span>
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="dialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="confirm_to_add_Node">确 定</el-button>
+                            <el-button type="primary" round=true @click="dialogVisible = false">返 回</el-button>
+                            <el-button type="primary" round=true @click="refuse_to_add_Node">删除该节点</el-button>
+                            <el-button type="primary" @click="confirm_to_add_Node">存入数据库</el-button>
                         </span>
                     </el-dialog>
                     <el-button class="move_to_check2_button"  round=true type="primary"  @click="move_to_check2">进入文本审核界面
@@ -160,11 +161,21 @@
                     })
                     .catch(_ => {});
             },
+            refuse_to_add_Node:function(){
+              this.$confirm('确认删除本条关系？')
+                .then(_ => {
+                    //这里传回去拒绝审核的操作
+                    this.dialogVisible = false
+                    this.$message("删除成功！")
+                })
+                .catch(_ => {})
+            },
             confirm_to_add_Node:function(){
                 this.$confirm('确认在数据库中添加该节点关系？')
                     .then(_ => {
                         // 在这里添加入库操作
                         this.dialogVisible = false
+                        this.$message("添加成功！")
                     })
                     .catch(_ => {})
             },
