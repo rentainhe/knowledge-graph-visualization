@@ -33,6 +33,9 @@
 <!--                现有知识图谱放置在这个区域-->
                 <div class="temp_Graph">
                     <p class="temp_Graph_Text"> 现有知识图谱如下所示</p>
+                    <el-button id="delete_new_Nodes" class="delete_Nodes" style="display: none" type="primary" round=true @click="refuse_to_add_Node">删除该节点</el-button>
+                    <el-button id="add_new_Nodes" class="add_Nodes" style="display: none" type="primary" round=true @click="confirm_to_add_Node">存入数据库</el-button>
+                    <el-button id="save_it_later" class="save_nodes_later" style="display: none" type="primary" round=true @click="save_it_later">稍后审核</el-button>
                 </div>
             </div>
 
@@ -59,22 +62,23 @@
                 </div>
                 <div class="change_url_buttons">
                     <h3 class="extractNodesInfo">可选择的操作如下</h3>
-                    <el-button class="Preview"  round=true type="primary"  @click="dialogVisible = true">实体预览
+                    <el-button class="Preview"  round=true type="primary"  @click="show_new_graph">实体预览
                         <i class="el-icon-edit el-icon--right"></i>
                     </el-button>
-                    <el-dialog
-                            title="预 览"
-                            :visible.sync="dialogVisible"
-                            width="30%"
-                            :before-close="handleClose">
-                        <span>这里放预览的图片</span>
-                        <div class="new_Graph"></div>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button type="primary" round=true @click="dialogVisible = false">返 回</el-button>
-                            <el-button type="primary" round=true @click="refuse_to_add_Node">删除该节点</el-button>
-                            <el-button type="primary" @click="confirm_to_add_Node">存入数据库</el-button>
-                        </span>
-                    </el-dialog>
+
+<!--                    dialogVisible = true-->
+<!--                    <el-dialog-->
+<!--                            title="预 览"-->
+<!--                            :visible.sync="dialogVisible"-->
+<!--                            width="30%"-->
+<!--                            :before-close="handleClose">-->
+<!--                        <span>这里放预览的图片</span>-->
+<!--                        <span slot="footer" class="dialog-footer">-->
+<!--                            <el-button type="primary" round=true @click="dialogVisible = false">返 回</el-button>-->
+<!--                            <el-button type="primary" round=true @click="refuse_to_add_Node">删除该节点</el-button>-->
+<!--                            <el-button type="primary" @click="confirm_to_add_Node">存入数据库</el-button>-->
+<!--                        </span>-->
+<!--                    </el-dialog>-->
                     <el-button class="move_to_check2_button"  round=true type="primary"  @click="move_to_check2">进入文本审核界面
                         <i class="el-icon-edit el-icon--right"></i>
                     </el-button>
@@ -157,19 +161,29 @@
         methods: {
 
             // Dialog的相关方法设置
-            handleClose(done) {
-                this.$confirm('确认关闭？')
-                    .then(_ => {
-                        done();
-                    })
-                    .catch(_ => {});
+            // handleClose(done) {
+            //     this.$confirm('确认关闭？')
+            //         .then(_ => {
+            //             done();
+            //         })
+            //         .catch(_ => {});
+            // },
+            show_new_graph:function(){
+                document.getElementById('delete_new_Nodes').style.display='block'
+                document.getElementById('add_new_Nodes').style.display='block'
+                document.getElementById('save_it_later').style.display='block'
+            },
+            save_it_later:function(){
+                this.$message("请进入文本审核界面重新审核")
+                location.reload()
             },
             refuse_to_add_Node:function(){
               this.$confirm('确认删除本条关系？')
                 .then(_ => {
                     //这里传回去拒绝审核的操作
-                    this.dialogVisible = false
+                    // this.dialogVisible = false
                     this.$message("删除成功！")
+                    location.reload()
                 })
                 .catch(_ => {})
             },
@@ -177,8 +191,9 @@
                 this.$confirm('确认在数据库中添加该节点关系？')
                     .then(_ => {
                         // 在这里添加入库操作
-                        this.dialogVisible = false
+                        // this.dialogVisible = false
                         this.$message("添加成功！")
+                        location.reload()
                     })
                     .catch(_ => {})
             },
@@ -565,6 +580,33 @@
     /*    background-color: #15161F;*/
     /*    !*height: 40%;*!*/
     /*}*/
+    .save_nodes_later{
+        position: absolute;
+        top:75%;
+        left:9%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .add_Nodes{
+        position: absolute;
+        top:55%;
+        left:9%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .delete_Nodes{
+        position: absolute;
+        top:35%;
+        left:10%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
     .text {
         font-size: 20px;
         font-family: "PingFang SC";
