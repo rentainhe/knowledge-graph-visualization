@@ -68,6 +68,7 @@
                             width="30%"
                             :before-close="handleClose">
                         <span>这里放预览的图片</span>
+                        <div class="new_Graph"></div>
                         <span slot="footer" class="dialog-footer">
                             <el-button type="primary" round=true @click="dialogVisible = false">返 回</el-button>
                             <el-button type="primary" round=true @click="refuse_to_add_Node">删除该节点</el-button>
@@ -115,6 +116,7 @@
                 height: 800,
                 g:'',
                 svg:'',
+                svg1:'',
                 textarea: '',
                 tid:'',
                 extractNode:'',
@@ -153,6 +155,7 @@
             this.initGraph(this.newGraph)
         },
         methods: {
+
             // Dialog的相关方法设置
             handleClose(done) {
                 this.$confirm('确认关闭？')
@@ -278,6 +281,109 @@
                     .attr("viewBox", [0,0,this.width  ,this.height ])
                     .attr("height", 428)
 
+            },
+            showGraph(data){
+                this.svg1 = d3.select(".new_Graph")
+                    .append("svg")
+                    .attr("viewBox", [0,0,this.width  ,this.height ])
+                    .attr("height", 428)
+                var _this = this
+                console.log(data)
+                this.svg1.selectAll("*").remove();
+                const links = data.links.map(d => Object.create(d));
+                const nodes = data.nodes.map(d => Object.create(d));
+                const simulation = d3.forceSimulation(nodes)
+                    .force("link", d3.forceLink(links).id(d => d.name).distance(200))
+                    .force("charge", d3.forceManyBody().strength(-1500))
+                    .force("x", d3.forceX())
+                    .force("y", d3.forceY())
+                    .force("center", d3.forceCenter(this.width / 2 - 10, this.height / 2));
+
+                this.g = this.svg1.append("g")
+                const link = this.g.append("g")
+                    .attr("stroke", "#999")
+                    .attr("stroke-opacity", 0.6)
+                    .selectAll("line")
+                    .data(links)
+                    .join("line")
+                    .attr("stroke-width", d => Math.sqrt(d.value));
+
+                const node = this.g.append("g")
+                    .attr("stroke", "#fff")
+                    .attr("stroke-width", 1.5)
+                    .selectAll("circle")
+                    .data(nodes)
+                    .join("circle")
+                    .attr("r", 30)
+                    .attr("fill", this.color())
+                    .on("click",_this.queryTest)
+                    .call(this.drag(simulation))
+
+                const nodeNameText = this.g.append("g")
+                    .selectAll("text")
+                    .data(nodes)
+                    .join("text")
+                    .attr("dx", (function (d) {
+                        return -d.name.length * 5
+                    }))
+                    .attr("dy", 1)
+                    .style('font-size', 12)
+                    // .style('font-weight', 400)
+                    .attr("fill","white")
+                    .attr("class", "node-name")
+                    .text(function (d) {
+                        return d.name
+                    })
+
+                simulation.on("tick", () => {
+                    link
+                        .attr("x1", d => d.source.x)
+                        .attr("y1", d => d.source.y)
+                        .attr("x2", d => d.target.x)
+                        .attr("y2", d => d.target.y);
+
+                    node
+                        .attr("cx", d => d.x)
+                        .attr("cy", d => d.y);
+
+                    nodeNameText
+                        .attr("x", d => d.x)
+                        .attr("y", d => d.y);
+                });
+
+            },
+            color() {
+                const scale = d3.scaleOrdinal(d3.schemeCategory10);
+                return d => scale(d.group);
+            },
+            queryTest(d){
+                console.log(d.name);
+                this.currentNode.country = d.country;
+                this.currentNode.year = d.year;
+                this.currentNode.name = d.name;
+            },
+            drag(simulation) {
+                function dragstarted(d) {
+                    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
+
+                function dragged(d) {
+                    d.fx = d3.event.x;
+                    d.fy = d3.event.y;
+
+                }
+                function dragended(d) {
+                    if (!d3.event.active) simulation.alphaTarget(0);
+                    d.fx = null;
+                    d.fy = null;
+                }
+
+                return d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended);
             },
             //画图
             initGraph(data) {
