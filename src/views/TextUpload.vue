@@ -116,8 +116,6 @@
                 dialogVisible : false,
                 player: "",
                 team:"",
-                PreviewPlayer:"", //预览的节点
-                PreviewTeam:"", //预览的节点
                 width: 800,
                 height: 800,
                 g:'',
@@ -278,30 +276,45 @@
                 .then(_ => {
                     //这里传回去拒绝审核的操作
                     // this.dialogVisible = false
-                        this.$axios({
-                            method:'post',
-                            url:'http://10.24.82.10:8088/updateGraph',
-                            data:{
-                                id:rows[index].id,
-                                status:1,
-                            }
-                        }).then(res => {
-                            console.log(res.data)
-                            this.$message("删除成功")
-                    this.$message("删除成功！")
-                    location.reload()
+                    this.$axios({
+                        method: 'post',
+                        url: 'http://10.24.82.10:8088/updateGraph',
+                        data: {
+                            id: this.tid,
+                            status: 1,
+                        }
+                    }).then(res => {
+                        console.log(res.data)
+                        this.$message("删除成功！")
+                        location.reload()
+                    })
+                        .catch(_ => {
+                        })
                 })
                 .catch(_ => {})
-            })
-            },
+            }
+            ,
             confirm_to_add_Node:function(){
                 this.$confirm('确认在数据库中添加该节点关系？')
                     .then(_ => {
                         // 在这里添加入库操作
                         // this.dialogVisible = false
+                        this.$axios({
+                            method: 'post',
+                            url: 'http://10.24.82.10:8088/updateGraph',
+                            data: {
+                                id: this.tid,
+                                status: 2,
+                            }
+                        }).then(res => {
+                            console.log(res.data)
+                            this.$message("删除成功！")
+                            // location.reload()
+                        })
                         this.$message("添加成功！")
                         location.reload()
                     })
+
                     .catch(_ => {})
             },
             find_first_relation:function(){
@@ -383,7 +396,7 @@
 
             },
             //画图
-            initGraph(data) {
+            initGraph(data){
                 var _this = this
                 console.log(data)
                 this.svg.selectAll("*").remove();
@@ -557,7 +570,7 @@
                 this.$router.push("/Check_2")
                 location.reload()
             }
-        }
+    }
     }
 </script>
 

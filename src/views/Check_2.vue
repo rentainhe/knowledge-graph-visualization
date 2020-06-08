@@ -25,13 +25,13 @@
                                 align="center">
                         </el-table-column>
                         <el-table-column
-                                prop="extractNode"
+                                prop="extractNode1"
                                 label="球员"
                                 width="120"
                                 align="center">
                         </el-table-column>
                         <el-table-column
-                                prop="extractTeam"
+                                prop="extractNode2"
                                 label="球队"
                                 width="120"
                                 align="center">
@@ -244,6 +244,7 @@
         },
         mounted() {
             this.getAllTexts()
+            console.log()
         },
         methods: {
             // 删除行
