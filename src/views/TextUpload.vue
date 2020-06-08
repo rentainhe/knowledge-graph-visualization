@@ -31,7 +31,7 @@
                     </div>
                 </div>
 <!--                现有知识图谱放置在这个区域-->
-                <div class="temp_Graph">
+                <div class="temp_Graph" id="TempGraph" style="display: none">
                     <p class="temp_Graph_Text"> 现有知识图谱如下所示</p>
                     <el-button id="delete_new_Nodes" class="delete_Nodes" style="display: none" type="primary" round=true @click="refuse_to_add_Node">删除该节点</el-button>
                     <el-button id="add_new_Nodes" class="add_Nodes" style="display: none" type="primary" round=true @click="confirm_to_add_Node">存入数据库</el-button>
@@ -42,10 +42,10 @@
             <div class="right">
                 <div class="Nodes">
                     <h3 class="extractNodesInfo">所抽取到的节点如下</h3>
-                    <el-button class="extractPlayer" type="primary"  @click="find_first_relation">{{player}}
+                    <el-button class="extractPlayer" id="Player_extracted" style="display:none;" type="primary"  @click="find_first_relation">{{player}}
                         <i class="el-icon-user el-icon--right"></i>
                     </el-button>
-                    <el-button class="extractTeam" type="primary"  @click="find_second_relation">{{team}}
+                    <el-button class="extractTeam" type="primary" id="Team_extracted" style="display: none" @click="find_second_relation">{{team}}
                         <i class="el-icon-football el-icon--right"></i>
                     </el-button>
                 </div>
@@ -62,7 +62,7 @@
                 </div>
                 <div class="change_url_buttons">
                     <h3 class="extractNodesInfo">可选择的操作如下</h3>
-                    <el-button class="Preview"  round=true type="primary"  @click="show_new_graph">实体预览
+                    <el-button class="Preview"  round=true type="primary"  @click="PreviewNewGraph">实体预览
                         <i class="el-icon-edit el-icon--right"></i>
                     </el-button>
 
@@ -114,8 +114,10 @@
         data() {
             return {
                 dialogVisible : false,
-                player: "球员",
-                team:"球队",
+                player: "",
+                team:"",
+                PreviewPlayer:"", //预览的节点
+                PreviewTeam:"", //预览的节点
                 width: 800,
                 height: 800,
                 g:'',
@@ -150,13 +152,47 @@
                     "nodes" : [{"name":null,"group":1,"country":null,"year":null},
                                 {"name":null,"group":2,"country":null,"year":null}],
                     "links" : [{"source":null,"target":null,"value":"效力"}]
+                },
+                newPlayerNodes:{
+                    "name": null,
+                    "group": null,
+                    "country":null,
+                    "year":null
+                },
+                newTeamNodes:{
+                    "name": null,
+                    "group": null,
+                    "country":null,
+                    "year":null
+                },
+                newLinks:{
+                    "source":null,
+                    "target":null,
+                    "value":"效力"
+                },
+                myGraph:{
+                    "nodes": [],
+                    "links": []
+                },
+                PreviewGraph:{
+                    "nodes": [],
+                    "links": []
+                },
+                Preview_OneRelation:{
+                    "nodes": [],
+                    "links": []
+                },
+                Preview_TwoRelation:{
+                    "nodes": [],
+                    "links": []
                 }
             }
         },
         mounted() {
             this.getAllTexts()
             this.init()
-            this.initGraph(this.newGraph)
+            // this.initGraph(this.newGraph)
+            // this.getData() // 查看默认节点关系
         },
         methods: {
 
@@ -168,11 +204,71 @@
             //         })
             //         .catch(_ => {});
             // },
-            show_new_graph:function(){
+            PreviewNewGraph(){
                 document.getElementById('delete_new_Nodes').style.display='block'
                 document.getElementById('add_new_Nodes').style.display='block'
                 document.getElementById('save_it_later').style.display='block'
+                // 每次调用这个函数的时候把数组array清空
+                this.PreviewGraph.nodes = []
+                this.PreviewGraph.links = []
+
+                this.newTeamNodes.name = this.team
+                this.newTeamNodes.group = 2
+                this.PreviewGraph.nodes.push(this.newTeamNodes)
+                console.log(this.PreviewGraph)
+                // console.log("=================================")
+                this.newPlayerNodes.name = this.player
+                this.newPlayerNodes.group = 1
+                this.PreviewGraph.nodes.push(this.newPlayerNodes)
+                // console.log(this.PreviewGraph)
+                this.newLinks.source = this.player
+                this.newLinks.target = this.team
+                this.PreviewGraph.links.push(this.newLinks)
+                console.log("================")
+                console.log(this.PreviewGraph.nodes)
+                this.initGraph(this.PreviewGraph)
+                // this.$axios.get("http://10.24.82.10:8088/getOneLevelRelation/比利时").then(response=>{
+                //     console.log("==========")
+                //     console.log(response.data.data)
+                // },response=>{
+                //     console.log('error')
+                // })
             },
+            getData(){
+                // var _this = this
+                this.$axios.get("http://10.24.82.10:8088/initNodes").then( response =>{
+                    // 处理json数据
+                    var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+                    this.myGraph["nodes"] = jsonObj
+                    // this.PreviewGraph["nodes"] = jsonObj
+                    // console.log(this.myGraph.nodes)
+                    console.log("成功获取节点")
+                    // console.log(response.data.data)
+                    this.$axios.get("http://10.24.82.10:8088/initRelations").then( response =>{
+                        // 处理json数据
+                        var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+                        // JSON.stringify
+                        console.log("==================")
+                        console.log(jsonObj)
+                        this.myGraph["links"] = jsonObj
+                        // this.PreviewGraph["links"] = jsonObj
+                        console.log(this.myGraph["links"])
+                        // console.log(_this.newGraph.links)
+                        // console.log(this.myGraph.links)
+                        // console.log("成功获取关系")
+                        this.initGraph(this.myGraph)
+                    },response=>{
+                        console.log("error")
+                    })
+                },response=>{
+                    console.log("error")
+                })
+            },
+            // show_new_graph:function(){
+            //     document.getElementById('delete_new_Nodes').style.display='block'
+            //     document.getElementById('add_new_Nodes').style.display='block'
+            //     document.getElementById('save_it_later').style.display='block'
+            // },
             save_it_later:function(){
                 this.$message("请进入文本审核界面重新审核")
                 location.reload()
@@ -196,6 +292,7 @@
                     location.reload()
                 })
                 .catch(_ => {})
+            })
             },
             confirm_to_add_Node:function(){
                 this.$confirm('确认在数据库中添加该节点关系？')
@@ -221,10 +318,11 @@
                         // console.log(this.myGraph["nodes"])
                         this.$axios({
                             method:'get',
-                            url:'http://10.24.82.10:8088/getOneLevelRelation/' + this.player,
+                            url:'http://10.24.82.10:8088/getOneLevelRelation/' + String(this.player),
 
                         }).then(res => {
                             this.firstGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                            document.getElementById('TempGraph').style.display='block'
                             this.initGraph(this.firstGraph)
                         })
                     }
@@ -237,7 +335,7 @@
                 console.log(this.team)
                 this.$axios({
                     method:'get',
-                    url:'http://10.24.82.10:8088/getOneLevelNode/' + this.team,
+                    url:'http://10.24.82.10:8088/getOneLevelNode/' + String(this.team),
                 }).then(res => {
                     console.log(res.data)
                     if (!res.data.errno){
@@ -407,6 +505,9 @@
                     console.log(res)
                     _this.player=res.data.data.extractNode
                     _this.team=res.data.data.extractTeam
+                    document.getElementById('Player_extracted').style.display='block'
+                    document.getElementById('Team_extracted').style.display='block'
+                    document.getElementById('TempGraph').style.display='block'
                     if(res.errno==-1){
                         this.$message("文本有问题")
                     }
