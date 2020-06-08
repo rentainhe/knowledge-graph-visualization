@@ -378,30 +378,50 @@
             },
             //一级关系
             oneRelation:function(){
-                this.firstGraph["nodes"] = [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}];
-                this.firstGraph["links"] = [{"source":"皮克","target":"巴塞罗那","value":"效力"}];
-                this.initGraph(this.firstGraph);
+                console.log(this.ask)
+                this.$axios({
+                    method:'get',
+                    url:'http://10.24.82.10:8088/getOneLevelNode/' + this.ask,
+
+                }).then(res => {
+                    console.log(res.data)
+                    if (!res.data.errno){
+                        // this.$message("查询成功！")
+                        this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+                        // console.log(this.myGraph["nodes"])
+                        this.$axios({
+                            method:'get',
+                            url:'http://10.24.82.10:8088/getOneLevelRelation/' + this.ask,
+
+                        }).then(res => {
+                            this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                            this.initGraph(this.myGraph)
+                        })
+                    }
+                })
             },
             //二级关系
             secondRelation:function(){
-                this.newGraph= {
-                    "nodes" : [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}
-                        ,{"name":"菲尔波","group":2,'country':'西班牙','year':1996},{"name":"格里兹曼","group":2,'country':'法国','year':1991},
-                        {"name":"弗兰基·德容","group":2,'country':'荷兰','year':1997},{"name":"阿图尔","group":2,'country':'巴西','year':1996},{"name":"乌姆蒂蒂","group":2,'country':'法国','year':1993},{"name":"罗贝托","group":2,'country':'西班牙','year':1992},{"name":"朗格莱","group":2,'country':'法国','year':1995},
-                        // {"name":"卡尔莱斯·佩雷兹","group":2,'country':'西班牙','year':1899},
-                        // {"name":"塞梅多","group":2},{"name":"布斯克茨","group":2},{"name":"安苏·法蒂","group":2}
-                        // {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}
-                    ],
-                        "links" : [{"source":"皮克","target":"巴塞罗那","value":"效力"}
-                        ,{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
-                        {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"}
-                        // {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
-                        //     {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
-                        //     {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}
-                    ]
+                console.log(this.ask)
+                this.$axios({
+                    method:'get',
+                    url:'http://10.24.82.10:8088/getTwoLevelNode/' + this.ask,
 
-                };
-                this.initGraph(this.newGraph);
+                }).then(res => {
+                    console.log(res.data)
+                    if (!res.data.errno){
+                        this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+                        // console.log(this.myGraph["nodes"])
+                        this.$axios({
+                            method:'get',
+                            url:'http://10.24.82.10:8088/getTwoLevelRelation/' + this.ask,
+
+                        }).then(res => {
+                            this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                            this.initGraph(this.myGraph)
+                        })
+                    }
+                })
 
             },
 
@@ -546,34 +566,35 @@
             },
             onSubmit:function(){
                 console.log(this.ask)
-                // this.$axios({
-                //     method:'get',
-                //     url:'http://10.24.82.10:8088/getNodesByName/' + this.ask,
-                //
-                // }).then(res => {
-                    // console.log(res.data)
-                    // if (!res.data.errno){
-                    //     this.$message("查询成功！")
-                    //     this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
-                    //     // console.log(this.myGraph["nodes"])
-                    //     this.$axios({
-                    //         method:'get',
-                    //         url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
-                    //
-                    //     }).then(res => {
-                    //         this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
-                    //         this.initGraph(this.myGraph)
-                    //     })
-                    // }
-                    // else{
-                    //     this.$message('无此节点！');
-                    // }
-                // })
-                if(this.ask === "皮克"){
-                    this.firstGraph["nodes"] = [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}];
-                    this.firstGraph["links"] = [{"source":"皮克","target":"巴塞罗那","value":"效力"}];
-                    this.initGraph(this.firstGraph);
-                }
+                this.$axios({
+                    method:'get',
+                    url:'http://10.24.82.10:8088/getOneLevelNode/' + this.ask,
+
+                }).then(res => {
+                    console.log(res.data)
+                    if (!res.data.errno){
+                        this.$message("查询成功！")
+                        this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+                        // console.log(this.myGraph["nodes"])
+                        this.$axios({
+                            method:'get',
+                            url:'http://10.24.82.10:8088/getOneLevelRelation/' + this.ask,
+
+                        }).then(res => {
+                            this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                            this.initGraph(this.myGraph)
+                        })
+                        this.initGraph(this.myGraph)
+                    }
+                    else{
+                        this.$message('无此节点！');
+                    }
+                })
+                // if(this.ask === "皮克"){
+                //     this.firstGraph["nodes"] = [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}];
+                //     this.firstGraph["links"] = [{"source":"皮克","target":"巴塞罗那","value":"效力"}];
+                //     this.initGraph(this.firstGraph);
+                // }
             },
             Submit_text(){
                 console.log('文本导入')
