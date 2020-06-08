@@ -54,7 +54,7 @@
                     <el-card class="box-card">
                         <ol>
 <!--                            <div  v-for="links in this.table_Graph.links":key="links"  class="text item">-->
-                            <div  class="text item">
+                            <div  class="text item" id="extract_links" style="display: none">
                                 <li>{{this.player+"转会至"+this.team}}</li>
                             </div>
                         </ol>
@@ -425,6 +425,7 @@
                         this.extractTeam = res.data.data.extractTeam
                         _this.player=this.extractNode
                         _this.team=this.extractTeam
+                        document.getElementById('extract_links').style.display='block'
                         console.log(res)
                         if (this.extractTeam)
                             {
