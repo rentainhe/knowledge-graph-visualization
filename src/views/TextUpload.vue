@@ -413,7 +413,7 @@
                 var _this = this
                 this.$axios({
                     method:'get',
-                    url:'http://10.24.82.10:8088/showExtractNode/' + this.tid,
+                    url:'http://10.24.82.10:8088/showExtractInfo/' + this.tid,
 
                 }).then(res => {
                     // 等后端
