@@ -42,7 +42,7 @@
             <el-col :span="7" class="right-side" >
                 <!-- 节点信息区域-->
                 <div class="personal_Information">
-                    <el-card class="box-card" id="Player_info" style="display: block">
+                    <el-card class="box-card" id="Player_info" style="display: none">
                         <div slot="header" class="clearfix">
                             <span class="text item">节点信息</span>
                         </div>
@@ -67,13 +67,13 @@
                             <span class="text item">节点信息</span>
                         </div>
                         <div  class="text item">
-                            名字：{{currentPlayerNode.name}}
+                            创建时间：{{currentTeamNode.createTime}}
                         </div>
                         <div  class="text item">
-                            国籍：{{currentPlayerNode.country}}
+                            所在城市：{{currentTeamNode.City}}
                         </div>
                         <div  class="text item">
-                            年份：{{currentPlayerNode.year}}
+                            教练：{{currentTeamNode.Coach}}
                         </div>
                     </el-card>
                 </div>
@@ -517,9 +517,38 @@
                 // this.currentPlayerNode.country = d.country;
                 // this.currentPlayerNode.year = d.year;
                 // this.currentPlayerNode.name = d.name;
-                this.$axios.get("http://10.24.82.10:8088/getAttribute/"+String(d.id)).then(response=>{
-                    console.log(response.data)
-                })
+                // document.getElementById
+                if(d.group==1){
+                    this.$axios.get("http://10.24.82.10:8088/getAttribute/"+String(d.id)).then(response=>{
+                        console.log(response.data.data)
+                        document.getElementById('Team_info').style.display = 'none'
+                        document.getElementById('Player_info').style.display = 'block'
+                        // this.currentPlayerNode.number = response.data.data['球员编号']
+                        var jsonObj = JSON.parse(response.data.data);
+                        this.currentPlayerNode.number = jsonObj['球员编号']
+                        this.currentPlayerNode.age = jsonObj['年龄']
+                        this.currentPlayerNode.country = jsonObj['国籍']
+                        this.currentPlayerNode.TeamName = jsonObj['球队名']
+                        this.currentPlayerNode.responsibility = jsonObj['职责']
+                    },response=>{
+                        console.log('error')
+                    })
+                }
+                else {
+                    this.$axios.get("http://10.24.82.10:8088/getAttribute/"+String(d.id)).then(response=>{
+                        console.log(response.data.data)
+                        document.getElementById('Player_info').style.display = 'none'
+                        document.getElementById('Team_info').style.display = 'block'
+                        // this.currentPlayerNode.number = response.data.data['球员编号']
+                        // console.log(response.data.data)
+                        var jsonObj = JSON.parse(response.data.data)
+                        this.currentTeamNode.City = jsonObj['所在城市']
+                        this.currentTeamNode.createTime = jsonObj['创建时间']
+                        this.currentTeamNode.Coach = jsonObj['教练']
+                    },response=>{
+                        console.log('error')
+                    })
+                }
             },
             drag(simulation) {
                 function dragstarted(d) {
