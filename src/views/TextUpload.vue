@@ -182,6 +182,16 @@
                 .then(_ => {
                     //这里传回去拒绝审核的操作
                     // this.dialogVisible = false
+                        this.$axios({
+                            method:'post',
+                            url:'http://10.24.82.10:8088/updateGraph',
+                            data:{
+                                id:rows[index].id,
+                                status:1,
+                            }
+                        }).then(res => {
+                            console.log(res.data)
+                            this.$message("删除成功")
                     this.$message("删除成功！")
                     location.reload()
                 })
@@ -199,77 +209,54 @@
             },
             find_first_relation:function(){
                 console.log(this.player)
-                // this.$axios({
-                //     method:'get',
-                //     url:'http://10.24.82.10:8088/getNodesByName/' + this.player,
-                //
-                // }).then(res => {
-                // console.log(res.data)
-                // if (!res.data.errno){
-                //     this.$message("查询成功！")
-                //     this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
-                //     // console.log(this.myGraph["nodes"])
-                //     this.$axios({
-                //         method:'get',
-                //         url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
-                //
-                //     }).then(res => {
-                //         this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
-                //         this.initGraph(this.myGraph)
-                //     })
-                // }
-                // else{
-                //     this.$message('无此节点！');
-                // }
-                // })
-                this.firstGraph["nodes"] = [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}];
-                this.firstGraph["links"] = [{"source":"皮克","target":"巴塞罗那","value":"效力"}];
-                this.initGraph(this.firstGraph);
+                this.$axios({
+                    method:'get',
+                    url:'http://10.24.82.10:8088/getOneLevelNode/' + this.player,
 
+                }).then(res => {
+                    console.log(res.data)
+                    if (!res.data.errno){
+                        // this.$message("查询成功！")
+                        this.firstGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+                        // console.log(this.myGraph["nodes"])
+                        this.$axios({
+                            method:'get',
+                            url:'http://10.24.82.10:8088/getOneLevelRelation/' + this.player,
+
+                        }).then(res => {
+                            this.firstGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                            this.initGraph(this.firstGraph)
+                        })
+                    }
+                    else{
+                        this.$message("数据库中无此节点！")
+                    }
+                })
             },
             find_second_relation:function(){
                 console.log(this.team)
-                // this.$axios({
-                //     method:'get',
-                //     url:'http://10.24.82.10:8088/getNodesByName/' + this.team,
-                //
-                // }).then(res => {
-                // console.log(res.data)
-                // if (!res.data.errno){
-                //     this.$message("查询成功！")
-                //     this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
-                //     // console.log(this.myGraph["nodes"])
-                //     this.$axios({
-                //         method:'get',
-                //         url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
-                //
-                //     }).then(res => {
-                //         this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
-                //         this.initGraph(this.myGraph)
-                //     })
-                // }
-                // else{
-                //     this.$message('无此节点！');
-                // }
-                // })
-                this.newGraph= {
-                    "nodes" : [{"name":"巴塞罗那","group":1,'country':'西班牙','year':1899},{"name":"皮克","group":2,'country':'西班牙','year':1987}
-                        ,{"name":"菲尔波","group":2,'country':'西班牙','year':1996},{"name":"格里兹曼","group":2,'country':'法国','year':1991},
-                        {"name":"弗兰基·德容","group":2,'country':'荷兰','year':1997},{"name":"阿图尔","group":2,'country':'巴西','year':1996},{"name":"乌姆蒂蒂","group":2,'country':'法国','year':1993},{"name":"罗贝托","group":2,'country':'西班牙','year':1992},{"name":"朗格莱","group":2,'country':'法国','year':1995},
-                        // {"name":"卡尔莱斯·佩雷兹","group":2,'country':'西班牙','year':1899},
-                        // {"name":"塞梅多","group":2},{"name":"布斯克茨","group":2},{"name":"安苏·法蒂","group":2}
-                        // {"id":"苏亚雷斯","group":2},{"id":"拉基蒂奇","group":2},{"id":"阿尔巴","group":2},{"id":"梅西","group":2},{"id":"特尔施特根","group":2}
-                    ],
-                    "links" : [{"source":"皮克","target":"巴塞罗那","value":"效力"}
-                        ,{"source":"菲尔波","target":"巴塞罗那","value":"效力"},{"source":"格里兹曼","target":"巴塞罗那","value":"效力"},{"source":"弗兰基·德容","target":"巴塞罗那","value":"效力"},{"source":"阿图尔","target":"巴塞罗那","value":"效力"},{"source":"乌姆蒂蒂","target":"巴塞罗那","value":"效力"},
-                        {"source":"罗贝托","target":"巴塞罗那","value":"效力"},{"source":"朗格莱","target":"巴塞罗那","value":"效力"}
-                        // {"source":"塞梅多","target":"巴塞罗那","value":"效力"},{"source":"布斯克茨","target":"巴塞罗那","value":"效力"},{"source":"安苏·法蒂","target":"巴塞罗那","value":"效力"},
-                        //     {"source":"苏亚雷斯","target":"巴塞罗那","value":"效力"},{"source":"拉基蒂奇","target":"巴塞罗那","value":"效力"},{"source":"阿尔巴","target":"巴塞罗那","value":"效力"},
-                        //     {"source":"梅西","target":"巴塞罗那","value":"效力"},{"source":"特尔施特根","target":"巴塞罗那","value":"效力"}
-                    ]
+                this.$axios({
+                    method:'get',
+                    url:'http://10.24.82.10:8088/getOneLevelNode/' + this.team,
+                }).then(res => {
+                    console.log(res.data)
+                    if (!res.data.errno){
+                        // this.$message("查询成功！")
+                        this.newGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+                        // console.log(this.myGraph["nodes"])
+                        this.$axios({
+                            method:'get',
+                            url:'http://10.24.82.10:8088/getOneLevelRelation/' + this.team,
 
-                };
-                this.initGraph(this.newGraph);
+                        }).then(res => {
+                            this.newGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+                            this.initGraph(this.newGraph)
+                        })
+                    }
+                    else{
+                        this.$message("数据库中无此节点！")
+                    }
+                })
             },
             //预览，显示一级关系
             showLinks(index, rows) {
@@ -417,15 +404,15 @@
 
                 }).then(res => {
                     // 等后端
-                    console.log("1111111")
+                    console.log(res)
                     _this.player=res.data.data.extractNode
                     _this.team=res.data.data.extractTeam
                     if(res.errno==-1){
                         this.$message("文本有问题")
                     }
                     else{
-                        this.extractNode = res.data.data.extractNode
-                        this.extractTeam = res.data.data.extractTeam
+                        this.extractNode = res.data.data.extractNode1
+                        this.extractTeam = res.data.data.extractNode2
                         _this.player=this.extractNode
                         _this.team=this.extractTeam
                         document.getElementById('extract_links').style.display='block'
