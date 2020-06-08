@@ -42,18 +42,38 @@
             <el-col :span="7" class="right-side" >
                 <!-- 节点信息区域-->
                 <div class="personal_Information">
-                    <el-card class="box-card">
+                    <el-card class="box-card" id="Player_info" style="display: block">
                         <div slot="header" class="clearfix">
                             <span class="text item">节点信息</span>
                         </div>
                         <div  class="text item">
-                            名字：{{currentNode.name}}
+                            球员编号：{{currentPlayerNode.number}}
                         </div>
                         <div  class="text item">
-                            国籍：{{currentNode.country}}
+                            年龄：{{currentPlayerNode.age}}
                         </div>
                         <div  class="text item">
-                            年份：{{currentNode.year}}
+                            国籍：{{currentPlayerNode.country}}
+                        </div>
+                        <div  class="text item">
+                            职责：{{currentPlayerNode.responsibility}}
+                        </div>
+                        <div  class="text item">
+                            所属球队：{{currentPlayerNode.TeamName}}
+                        </div>
+                    </el-card>
+                    <el-card class="box-card" id="Team_info" style="display: none">
+                        <div slot="header" class="clearfix">
+                            <span class="text item">节点信息</span>
+                        </div>
+                        <div  class="text item">
+                            名字：{{currentPlayerNode.name}}
+                        </div>
+                        <div  class="text item">
+                            国籍：{{currentPlayerNode.country}}
+                        </div>
+                        <div  class="text item">
+                            年份：{{currentPlayerNode.year}}
                         </div>
                     </el-card>
                 </div>
@@ -283,10 +303,17 @@
                 value1: true,
                 width: 800,
                 height: 800,
-                currentNode:{
+                currentPlayerNode:{
+                    'number':'',
+                    'age':'',
                     'country':'',
-                    'year':'',
-                    'name':''
+                    'responsibility':'',
+                    'TeamName':''
+                },
+                currentTeamNode:{
+                    'createTime':'',
+                    'City':'',
+                    'Coach':''
                 },
                 //示例数据的地方
                 testGraph: {
@@ -337,8 +364,9 @@
             // this.getData()
             // this.printData()
             this.init()
+            this.getData()
             // location.reload()
-            this.initGraph(this.newGraph)
+            // this.initGraph(this.newGraph)
         },
         methods: {
             init:function(){
@@ -393,9 +421,10 @@
                     // 处理json数据
                     var jsonObj = JSON.parse(JSON.stringify(response.data.data));
                     this.myGraph["nodes"] = jsonObj
+                    console.log(this.myGraph.nodes)
                     console.log("成功获取节点")
                     // console.log(response.data.data)
-                    this.$axios.get("http://10.24.82.10:8088/initLinks").then( response =>{
+                    this.$axios.get("http://10.24.82.10:8088/initRelations").then( response =>{
                         // 处理json数据
                         var jsonObj = JSON.parse(JSON.stringify(response.data.data));
                         this.myGraph["links"] = jsonObj
@@ -482,10 +511,15 @@
                 return d => scale(d.group);
             },
             queryTest(d){
-                console.log(d.name);
-                this.currentNode.country = d.country;
-                this.currentNode.year = d.year;
-                this.currentNode.name = d.name;
+                console.log(d.name)
+                console.log(d.id)
+                console.log(d.group)
+                // this.currentPlayerNode.country = d.country;
+                // this.currentPlayerNode.year = d.year;
+                // this.currentPlayerNode.name = d.name;
+                this.$axios.get("http://10.24.82.10:8088/getAttribute/"+String(d.id)).then(response=>{
+                    console.log(response.data)
+                })
             },
             drag(simulation) {
                 function dragstarted(d) {
