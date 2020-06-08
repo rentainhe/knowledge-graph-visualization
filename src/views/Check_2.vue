@@ -260,7 +260,8 @@
                         status:1,
                     }
                 }).then(res => {
-                console.log(res.data)
+                    console.log(res.data)
+                    this.$message("删除成功")
                 // if (!res.data.errno){
                 //     this.$message("查询成功！")
                 //     this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
