@@ -286,7 +286,8 @@
                     }).then(res => {
                         console.log(res.data)
                         this.$message("删除成功！")
-                        location.reload()
+                        // location.reload()
+
                     })
                         .catch(_ => {
                         })
@@ -308,11 +309,11 @@
                             }
                         }).then(res => {
                             console.log(res.data)
-                            this.$message("删除成功！")
+                            this.$message("添加成功！")
                             // location.reload()
                         })
-                        this.$message("添加成功！")
-                        location.reload()
+
+                        // location.reload()
                     })
 
                     .catch(_ => {})
