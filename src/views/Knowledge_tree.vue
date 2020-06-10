@@ -2,12 +2,9 @@
     <div>
         <div class="header_text">知识图谱系统</div>
         <div class="container">
-            <div class="left">
-                <div id="myChart" :style="{width: '537px', height: '500px'}"></div>
-            </div>
 
             <div class="left">
-
+                <div id="myChart" style="position: absolute;top:5%;left: 20%" :style="{width: '537px', height: '500px'}"></div>
 <!--                <el-radio-group id="El-radio-group" class="header_button" v-model="isCollapse" style="margin-bottom: 20px;display: block" @change="Edit">-->
 <!--                    <el-radio-button :label="false" >展开</el-radio-button>-->
 <!--                    <el-radio-button :label="true" >收起</el-radio-button>-->
@@ -50,7 +47,10 @@
                             <span slot="title">球员</span>
                         </template>
                         <el-menu-item-group>
-                            <el-menu-item index="3-1">后卫</el-menu-item>
+                            <span slot="title" style="text-align: center">球员位置</span>
+                            <el-menu-item index="3-1" @click.native="Edit_Q">前锋</el-menu-item>
+                            <el-menu-item index="3-2">后卫</el-menu-item>
+                            <el-menu-item index="3-3">守门员</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
                 </el-menu>
@@ -76,6 +76,9 @@
             this.drawLine();
         },
         methods: {
+            Edit_Q:function(){
+                console.log("1111")
+            },
             handleOpen(key, keyPath) {
                 console.log(key, keyPath);
             },
@@ -94,7 +97,7 @@
             Close:function () {
                 this.isCollapse = false
                 document.getElementById("El-menu").style.display='block'
-            }
+            },
             drawLine(){
                 // 基于准备好的dom，初始化echarts实例
                 let myChart = this.$echarts.init(document.getElementById('myChart'))
