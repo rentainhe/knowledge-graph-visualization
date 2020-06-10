@@ -94,6 +94,9 @@
                     <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入
                         <i class="el-icon-coin el-icon--right"></i>
                     </el-button><!--              <el-row class="col1"></el-row>-->
+                    <el-button type="primary" round=true  @click="Edit_knowledge_tree" class="el-button–Knowledge_tree">知识树编辑
+                        <i class="el-icon-coin el-icon--right"></i>
+                    </el-button>
                 </div>
             </el-col>
             <!--                </el-main>-->
@@ -216,7 +219,7 @@
     /* 上传文件框的相关设置 */
     .el-button–upload{
         position: absolute;
-        top:15%;
+        top:5%;
         left:27%;
         color: #fff;
         background-color: #303252;
@@ -226,9 +229,8 @@
     /*人工检查按钮样式*/
     .el-button-check {
         position: absolute;
-        top: 40%;
+        top: 27%;
         left: 25%;
-
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -237,14 +239,22 @@
     /*导入数据库按钮设置*/
     .el-button–mysql {
         position: absolute;
-        top: 65%;
+        top: 49%;
         left: 24%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
         border-width: 2px;
     }
-
+    .el-button–Knowledge_tree{
+        position: absolute;
+        top: 71%;
+        left: 24%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
     .el-header, .el-footer {
         background-color: #15161F;
         color: #ffffff;
@@ -644,6 +654,9 @@
             },
             put_into_Database() {
                 console.log('导入数据库')
+            },
+            Edit_knowledge_tree(){
+                this.$router.push("/Knowledge_tree")
             }
         }
     }

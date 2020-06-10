@@ -2,6 +2,7 @@ import Home from "~/views/Home";
 import TextUpload from "~/views/TextUpload";
 import Check_1 from "~/views/Check_1";
 import Check_2 from "~/views/Check_2";
+import Knowledge_tree from "~/views/Knowledge_tree";
 export const routes = [
     {
         path:'/Home',
@@ -18,5 +19,9 @@ export const routes = [
     {
         path: '/Check_2',
         component: Check_2
+    },
+    {
+        path: '/Knowledge_tree',
+        component: Knowledge_tree
     }
 ]
