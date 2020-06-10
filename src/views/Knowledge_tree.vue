@@ -2,7 +2,60 @@
     <div>
         <div class="header_text">知识图谱系统</div>
         <div class="container">
-            <div class="left"></div>
+            <div class="left">
+
+<!--                <el-radio-group id="El-radio-group" class="header_button" v-model="isCollapse" style="margin-bottom: 20px;display: block" @change="Edit">-->
+<!--                    <el-radio-button :label="false" >展开</el-radio-button>-->
+<!--                    <el-radio-button :label="true" >收起</el-radio-button>-->
+<!--                </el-radio-group>-->
+                <el-switch
+                        class="header_button"
+                        v-model="isCollapse"
+                        active-text="展开"
+                        :width="54"
+                        inactive-text="收起">
+                </el-switch>
+                <el-menu id="El-menu"  style="display:block;" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+                    <el-menu-item index="1">
+<!--                        <template slot="title">-->
+<!--                            <i class="el-icon-location"></i>-->
+<!--                            <span slot="title">导航一</span>-->
+<!--                        </template>-->
+<!--                        <el-menu-item-group>-->
+<!--                            <span slot="title">分组一</span>-->
+<!--                            <el-menu-item index="1-1">选项1</el-menu-item>-->
+<!--                            <el-menu-item index="1-2">选项2</el-menu-item>-->
+<!--                        </el-menu-item-group>-->
+<!--                        <el-menu-item-group title="分组2">-->
+<!--                            <el-menu-item index="1-3">选项3</el-menu-item>-->
+<!--                        </el-menu-item-group>-->
+<!--                        <el-submenu index="1-4">-->
+<!--                            <span slot="title">选项4</span>-->
+<!--                            <el-menu-item index="1-4-1">选项1</el-menu-item>-->
+<!--                        </el-submenu>-->
+                        <i class="el-icon-s-flag"></i>
+                        <span slot="title">联赛</span>
+                    </el-menu-item>
+                    <el-menu-item index="2">
+                        <i class="el-icon-football"></i>
+                        <span slot="title">球队</span>
+                    </el-menu-item>
+                    <el-submenu index="3">
+                        <template slot="title">
+                            <i class="el-icon-user-solid"></i>
+                            <span slot="title">球员</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="3-1">后卫</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
+
+<!--                <el-button type="primary" round=true  @click="Edit" class="el-button–Edit">知识树编辑-->
+<!--                    <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
+<!--                </el-button>-->
+
+            </div>
             <div class="right"></div>
         </div>
     </div>
@@ -12,18 +65,81 @@
     export default {
         data() {
             return {
-
+                isCollapse: true
             }
         },
         mounted() {
         },
         methods: {
-
+            handleOpen(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleClose(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            Edit:function () {
+                document.getElementById("El-menu").style.display='block'
+                document.getElementById("El-radio-group").style.display='block'
+                // this.isCollapse=false
+            },
+            Open:function () {
+                this.isCollapse = true
+                document.getElementById("El-menu").style.display='block'
+            },
+            Close:function () {
+                this.isCollapse = false
+                document.getElementById("El-menu").style.display='block'
+            }
         }
     }
 </script>
 
 <style>
+    /*.el-button–Edit{*/
+    /*    position: absolute;*/
+    /*    top: 85%;*/
+    /*    right: 10%;*/
+    /*    color: #fff;*/
+    /*    background-color: #303252;*/
+    /*    border-color: #9593A7;*/
+    /*    border-width: 2px;*/
+    /*}*/
+    .el-switch__label--left{
+        position: relative;
+        left: 57px;
+        color: #fff;
+        z-index: -1111;
+    }
+    .el-switch__label--right{
+        position: relative;
+        right: 57px;
+        color: #fff;
+        z-index: -1111;
+    }
+    .el-switch__label--right.is-active{
+        z-index: 1111;
+        color: #fff !important;
+    }
+    .el-switch__label--left.is-active{
+        z-index: 1111;
+        color: #9c9c9c !important;
+    }
+
+    .header_button{
+        position: absolute;
+        left: -4%;
+        top:  22%;
+    }
+    .el-menu--collapse{
+        position: absolute;
+        top:30%;
+    }
+    .el-menu-vertical-demo:not(.el-menu--collapse) {
+        position: absolute;
+        top:30%;
+        width: 30%;
+        min-height: 24%;
+    }
     .header_text{
         font-family: "PingFang SC";
         font-size: 30px;
@@ -47,7 +163,7 @@
         float: left;
         width: 50%;
         height: 100%;
-        background-color: #ff7f0e;
+        background-color: #15161F;
     }
     .container .right{
         position: relative;
