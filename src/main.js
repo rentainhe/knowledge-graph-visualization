@@ -11,6 +11,8 @@ import {routes} from '~/routes'
 Vue.prototype.$axios = axios    //全局注册，使用方法为:this.$axios
 Vue.prototype.qs = qs           //全局注册，使用方法为:this.qs
 
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
