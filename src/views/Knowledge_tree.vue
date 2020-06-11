@@ -9,6 +9,10 @@
 <!--                    <el-radio-button :label="false" >展开</el-radio-button>-->
 <!--                    <el-radio-button :label="true" >收起</el-radio-button>-->
 <!--                </el-radio-group>-->
+                <div class="buttons" id="buttons" style="display: none">
+                    <el-button round  class="info" @click="add_node">添加节点</el-button>
+                    <el-button round class="info" @click="delete_node">删除节点</el-button>
+                </div>
                 <el-switch
                         class="header_button"
                         v-model="isCollapse"
@@ -66,16 +70,77 @@
 </template>
 
 <script>
+    import Vue from "vue";
+
     export default {
         data() {
             return {
-                isCollapse: true
+                isCollapse: true,
+                isClick:false,
+                myChart:null,
+                treeData:
+                    {
+                        name: '所有节点',
+                        value: 100,
+                        children: [
+                            {
+                                name: '俱乐部',
+                                value: 4,
+                                children: [
+
+                                ]
+                            },
+                            {
+                                name: '球员',
+                                value: 4,
+                                children: [{
+                                    name: '前锋',
+                                    value: 4
+                                },
+                                    {
+                                        name: '后卫',
+                                        value: 4
+                                    },
+                                    {
+                                        name: '守门员',
+                                        value: 4
+                                    }]
+                            },
+                            {
+                                name: '联赛',
+                                value: 1,
+                                children: [
+
+                                ]
+                            }
+                        ]
+                    }
             }
         },
         mounted() {
-            this.drawLine();
+            this.drawLine(this.treeData);
         },
         methods: {
+            add_node:function(){
+                this.$prompt('请输入节点名字','添加节点', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+
+                }).then(({ value }) => {
+                    this.$message({
+                        type: 'success',
+                        message: '添加节点: ' + value
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            },
+            delete_node:function(){
+                this.$alert("确认删除该节点？");
+            },
             Edit_Q:function(){
                 console.log("1111")
             },
@@ -98,11 +163,13 @@
                 this.isCollapse = false
                 document.getElementById("El-menu").style.display='block'
             },
-            drawLine(){
+            drawLine(treedata){
+                console.log(treedata)
                 // 基于准备好的dom，初始化echarts实例
-                let myChart = this.$echarts.init(document.getElementById('myChart'))
+                this.myChart = this.$echarts.init(document.getElementById('myChart'))
                 // 绘制图表
-                myChart.setOption({
+                this.myChart.setOption({
+                        // this.$confirm('确认删除本条关系？'),
                     calculable : false,
                     series : [
                         {
@@ -110,6 +177,7 @@
                             type:'tree',
                             symbolSize: [60,30],
                             edgeShape:'polyline',
+                            expandAndCollapse : false,
                             symbol : 'roundRect',
                             orient: 'vertical',  // vertical horizontal
                             rootLocation: {x: 'center',y: 50}, // 根节点位置  {x: 100, y: 'center'}
@@ -128,7 +196,7 @@
                                         shadowBlur: 3,
                                         shadowOffsetX: 3,
                                         shadowOffsetY: 5,
-                                        curveness: 0.5,
+                                        // curveness: 0.5,
                                         // type: 'broken' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
 
                                     }
@@ -139,48 +207,20 @@
                                     }
                                 }
                             },
-
-                            data: [
-                                {
-                                    name: '所有节点',
-                                    value: 100,
-                                    children: [
-                                        {
-                                            name: '俱乐部',
-                                            value: 4,
-                                            children: [
-
-                                            ]
-                                        },
-                                        {
-                                            name: '球员',
-                                            value: 4,
-                                            children: [{
-                                                name: '前锋',
-                                                value: 4
-                                            },
-                                                {
-                                                    name: '后卫',
-                                                    value: 4
-                                                },
-                                                {
-                                                    name: '守门员',
-                                                    value: 4
-                                                }]
-                                        },
-                                        {
-                                            name: '联赛',
-                                            value: 1,
-                                            children: [
-
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
+                            data: [treedata]
                         }
                     ]
+
+                }
+                );
+                //点击事件
+                this.myChart.on("click", function (param){
+                    console.log(param);
+                    document.getElementById('buttons').style.display='block'
                 });
+            },
+            ask:function(){
+                console.log(1);
             },
             back_home:function () {
                 this.$router.push("/Home")
@@ -267,5 +307,17 @@
         width: 50%;
         height: 100%;
         background-color: #1f77b4;
+    }
+    .buttons{
+        position: absolute;
+        top:80%;
+        left: 20%;
+    }
+    .buttons .info{
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+
     }
 </style>
