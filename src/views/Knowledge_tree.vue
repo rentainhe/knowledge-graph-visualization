@@ -129,7 +129,7 @@
                 }).then(({ value }) => {
                     this.$message({
                         type: 'success',
-                        message: '添加节点: ' + value
+                        message: '添加节点: ' + value,
                     });
                 }).catch(() => {
                     this.$message({
@@ -137,6 +137,7 @@
                         message: '取消输入'
                     });
                 });
+
             },
             delete_node:function(){
                 this.$alert("确认删除该节点？");
