@@ -10,8 +10,8 @@
 <!--                    <el-radio-button :label="true" >收起</el-radio-button>-->
 <!--                </el-radio-group>-->
                 <div class="buttons" id="buttons" style="display: none">
-                    <el-button round  class="info" @click="add_node">添加节点</el-button>
-                    <el-button round class="info" @click="delete_node">删除节点</el-button>
+                    <el-button round  class="addNodes" @click="add_node">添加节点</el-button>
+                    <el-button round class="deleteNodes" @click="delete_node">删除节点</el-button>
                 </div>
                 <el-switch
                         class="header_button"
@@ -64,7 +64,23 @@
                 </el-button>
 
             </div>
-            <div class="right"></div>
+            <div class="right">
+                <el-card id="Attribute" class="box-card" style="display: none">
+                    <div slot="header" class="clearfix">
+                        <span>{{currentNode}}节点属性</span>
+<!--                        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+                    </div>
+                    <div v-for="(item, index) in currentNodeAttribute"  class="text item">
+                        {{item}}
+                        <el-button style="float: right; padding: 3px 0 ;position: absolute;right: 20%" type="text">修改</el-button>
+                        <el-button style="float: right; padding: 3px 0;position: absolute;right: 8%" type="text" @click="deleteAttribute(index)">删除</el-button>
+
+                    </div>
+                </el-card>
+                <el-button id="addAttribute" style="display: none" type="primary" round=true  @click="addAttrubute" class="el-button–Edit">新增属性
+                    <i class="el-icon-coin el-icon--right"></i>
+                </el-button>
+            </div>
         </div>
     </div>
 </template>
@@ -75,6 +91,8 @@
     export default {
         data() {
             return {
+                currentNode:"",
+                currentNodeAttribute:[],
                 isCollapse: true,
                 isClick:false,
                 myChart:null,
@@ -84,7 +102,7 @@
                         value: 100,
                         children: [
                             {
-                                name: '俱乐部',
+                                name: '球队',
                                 value: 4,
                                 children: [
 
@@ -121,6 +139,41 @@
             this.drawLine(this.treeData);
         },
         methods: {
+            open() { //添加属性提示
+                this.$prompt('请输入属性值', '新增属性', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                }).then(({value}) => {
+                    this.$message({
+                        type: 'success',
+                        message: '成功添加属性: ' + value
+                    });
+                    this.currentNodeAttribute.push(value)
+                    // 新增属性
+                    this.$axios({
+                        method:'post',
+                        url:"http://10.24.82.10:8088/addAttribute/"+this.currentNode+"/"+value
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            },
+            addAttrubute:function(){ //添加属性
+                this.open()
+            },
+            deleteAttribute:function(index){
+                this.$confirm("确认删除该属性？").then(()=>{ //需要加()=>
+                    this.$axios({
+                        method:'post',
+                        url:"http://10.24.82.10:8088/deleteAttribute/"+this.currentNode+"/"+this.currentNodeAttribute[index]
+                    })
+                    this.currentNodeAttribute.splice(index,1)
+                    this.$message("删除成功！")
+                })
+            },
             add_node:function(){
                 this.$prompt('请输入节点名字','添加节点', {
                     confirmButtonText: '确定',
@@ -215,9 +268,24 @@
                 }
                 );
                 //点击事件
+                let that=this //echart中无法调用this的解决方法 let that = this, 然后再用this.
                 this.myChart.on("click", function (param){
-                    console.log(param);
+                    console.log(param.name);
+                    that.currentNode = param.name
                     document.getElementById('buttons').style.display='block'
+                    document.getElementById('Attribute').style.display='block'
+                    document.getElementById('addAttribute').style.display='block'
+                    Vue.prototype.$axios.get("http://10.24.82.10:8088/getAttributeByName/"+param.name).then(response=>{ //Echart的特性，不能用this调用axios，应该用Vue.prototype.$axios
+                        console.log(response.data.data)
+                        var jsonObj = JSON.parse(JSON.stringify(response.data.data))
+                        that.currentNodeAttribute = jsonObj
+                        that.currentNodeAttribute.shift()
+                        console.log(that.currentNodeAttribute[1])
+                    },response=>{
+                        console.log('error')
+                    }
+                    )
+
                 });
             },
             ask:function(){
@@ -232,6 +300,30 @@
 </script>
 
 <style>
+    .text {
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: "";
+    }
+    .clearfix:after {
+        clear: both
+    }
+
+    .box-card {
+        position: absolute;
+        top:15%;
+        left: 25%;
+        width: 50%;
+    }
     .el-button–Edit{
         position: absolute;
         top: 85%;
@@ -307,18 +399,23 @@
         float: right;
         width: 50%;
         height: 100%;
-        background-color: #1f77b4;
+        background-color: #15161F;
     }
     .buttons{
         position: absolute;
         top:80%;
         left: 20%;
     }
-    .buttons .info{
+    .buttons .addNodes{
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
         border-width: 2px;
-
+    }
+    .buttons .deleteNodes{
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
     }
 </style>
