@@ -55,9 +55,9 @@
                     </el-submenu>
                 </el-menu>
 
-<!--                <el-button type="primary" round=true  @click="Edit" class="el-button–Edit">知识树编辑-->
-<!--                    <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
-<!--                </el-button>-->
+                <el-button type="primary" round=true  @click="back_home" class="el-button–Edit">返回
+                    <i class="el-icon-coin el-icon--right"></i>
+                </el-button>
 
             </div>
             <div class="right"></div>
@@ -181,21 +181,25 @@
                         }
                     ]
                 });
+            },
+            back_home:function () {
+                this.$router.push("/Home")
+                location.reload()
             }
         }
     }
 </script>
 
 <style>
-    /*.el-button–Edit{*/
-    /*    position: absolute;*/
-    /*    top: 85%;*/
-    /*    right: 10%;*/
-    /*    color: #fff;*/
-    /*    background-color: #303252;*/
-    /*    border-color: #9593A7;*/
-    /*    border-width: 2px;*/
-    /*}*/
+    .el-button–Edit{
+        position: absolute;
+        top: 85%;
+        right: 10%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
     .el-switch__label--left{
         position: relative;
         left: 57px;

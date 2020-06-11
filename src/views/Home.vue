@@ -46,40 +46,16 @@
                         <div slot="header" class="clearfix">
                             <span class="text item">节点信息</span>
                         </div>
-                        <div  class="text item">
-                            球员姓名：{{currentPlayerNode.PlayerName}}
-                        </div>
-                        <div  class="text item">
-                            球员编号：{{currentPlayerNode.number}}
-                        </div>
-                        <div  class="text item">
-                            年龄：{{currentPlayerNode.age}}
-                        </div>
-                        <div  class="text item">
-                            国籍：{{currentPlayerNode.country}}
-                        </div>
-                        <div  class="text item">
-                            职责：{{currentPlayerNode.responsibility}}
-                        </div>
-                        <div  class="text item">
-                            所属球队：{{currentPlayerNode.TeamName}}
+                        <div class="text item" v-for="(val,key,i) in currentPlayerNode" >
+                            {{key}}:{{val}}
                         </div>
                     </el-card>
                     <el-card class="box-card" id="Team_info" style="display: none">
                         <div slot="header" class="clearfix">
                             <span class="text item">节点信息</span>
                         </div>
-                        <div  class="text item">
-                            球队姓名：{{currentTeamNode.TeamName}}
-                        </div>
-                        <div  class="text item">
-                            创建时间：{{currentTeamNode.createTime}}
-                        </div>
-                        <div  class="text item">
-                            所在城市：{{currentTeamNode.City}}
-                        </div>
-                        <div  class="text item">
-                            教练：{{currentTeamNode.Coach}}
+                        <div class="text item" v-for="(val,key,i) in currentTeamNode" >
+                            {{key}}:{{val}}
                         </div>
                     </el-card>
                 </div>
@@ -320,18 +296,8 @@
                 width: 800,
                 height: 800,
                 currentPlayerNode:{
-                    'PlayerName':'',
-                    'number':'',
-                    'age':'',
-                    'country':'',
-                    'responsibility':'',
-                    'TeamName':''
                 },
                 currentTeamNode:{
-                    'TeamName':'',
-                    'createTime':'',
-                    'City':'',
-                    'Coach':''
                 },
                 //示例数据的地方
                 testGraph: {
@@ -558,17 +524,19 @@
                 // document.getElementById
                 if(d.group==1){
                     this.$axios.get("http://10.24.82.10:8088/getAttribute/"+String(d.id)).then(response=>{
-                        console.log(response.data.data)
+                        // console.log(response.data.data)
                         document.getElementById('Team_info').style.display = 'none'
                         document.getElementById('Player_info').style.display = 'block'
                         // this.currentPlayerNode.number = response.data.data['球员编号']
-                        var jsonObj = JSON.parse(response.data.data);
-                        this.currentPlayerNode.PlayerName = d.name
-                        this.currentPlayerNode.number = jsonObj['球员编号']
-                        this.currentPlayerNode.age = jsonObj['年龄']
-                        this.currentPlayerNode.country = jsonObj['国籍']
-                        this.currentPlayerNode.TeamName = jsonObj['球队名']
-                        this.currentPlayerNode.responsibility = jsonObj['职责']
+                        var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+                        console.log(jsonObj)
+                        this.currentPlayerNode = jsonObj
+                        // this.currentPlayerNode.PlayerName = d.name
+                        // this.currentPlayerNode.number = jsonObj['球员编号']
+                        // this.currentPlayerNode.age = jsonObj['年龄']
+                        // this.currentPlayerNode.country = jsonObj['国籍']
+                        // this.currentPlayerNode.TeamName = jsonObj['球队名']
+                        // this.currentPlayerNode.responsibility = jsonObj['职责']
                     },response=>{
                         console.log('error')
                     })
@@ -580,11 +548,10 @@
                         document.getElementById('Team_info').style.display = 'block'
                         // this.currentPlayerNode.number = response.data.data['球员编号']
                         // console.log(response.data.data)
-                        var jsonObj = JSON.parse(response.data.data)
-                        this.currentTeamNode.TeamName = d.name
-                        this.currentTeamNode.City = jsonObj['所在城市']
-                        this.currentTeamNode.createTime = jsonObj['创建时间']
-                        this.currentTeamNode.Coach = jsonObj['教练']
+                        var jsonObj = JSON.parse(JSON.stringify(response.data.data))
+                        this.currentTeamNode = jsonObj
+
+
                     },response=>{
                         console.log('error')
                     })
