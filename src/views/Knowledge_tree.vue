@@ -72,7 +72,7 @@
                     </div>
                     <div v-for="(item, index) in currentNodeAttribute"  class="text item">
                         {{item}}
-                        <el-button style="float: right; padding: 3px 0 ;position: absolute;right: 20%" type="text">修改</el-button>
+                        <el-button style="float: right; padding: 3px 0 ;position: absolute;right: 20%" type="text" @click="editAttribute(index)">修改</el-button>
                         <el-button style="float: right; padding: 3px 0;position: absolute;right: 8%" type="text" @click="deleteAttribute(index)">删除</el-button>
 
                     </div>
@@ -139,6 +139,31 @@
             this.drawLine(this.treeData);
         },
         methods: {
+            editAttribute(index){
+                this.$prompt('请输入属性值', '修改属性', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /^[\u4e00-\u9fa5]+$/,
+                    inputErrorMessage:'请输入中文'
+                }).then(({value}) => {
+                    this.$message({
+                        type: 'success',
+                        message: '成功修改属性: ' + value
+                    });
+                    // 新增属性
+                    this.$axios({
+                        method:'post',
+                        url:"http://10.24.82.10:8088/updateAttribute/"+this.currentNode+"/"+this.currentNodeAttribute[index]+"/"+value
+                    }).then(()=>{
+                        this.currentNodeAttribute[index]=value
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                    });
+                });
+            },
             open() { //添加属性提示
                 this.$prompt('请输入属性值', '新增属性', {
                     confirmButtonText: '确定',

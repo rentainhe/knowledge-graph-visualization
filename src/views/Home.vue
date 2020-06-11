@@ -624,6 +624,7 @@
             },
             Edit_knowledge_tree(){
                 this.$router.push("/Knowledge_tree")
+                location.reload()
             }
         }
     }
