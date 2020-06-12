@@ -524,12 +524,12 @@
                 // document.getElementById
                 if(d.group==1){
                     this.$axios.get("http://10.24.82.10:8088/getAttribute/"+String(d.id)).then(response=>{
-                        // console.log(response.data.data)
+                        console.log(response.data.data)
                         document.getElementById('Team_info').style.display = 'none'
                         document.getElementById('Player_info').style.display = 'block'
                         // this.currentPlayerNode.number = response.data.data['球员编号']
                         var jsonObj = JSON.parse(JSON.stringify(response.data.data));
-                        console.log(jsonObj)
+                        // console.log(jsonObj)
                         this.currentPlayerNode = jsonObj
                         // this.currentPlayerNode.PlayerName = d.name
                         // this.currentPlayerNode.number = jsonObj['球员编号']

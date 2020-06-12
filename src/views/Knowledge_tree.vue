@@ -110,18 +110,9 @@
                             {
                                 name: '球员',
                                 value: 4,
-                                children: [{
-                                    name: '前锋',
-                                    value: 4
-                                },
-                                    {
-                                        name: '后卫',
-                                        value: 4
-                                    },
-                                    {
-                                        name: '守门员',
-                                        value: 4
-                                    }]
+                                children: [
+
+                                ]
                             },
                             {
                                 name: '联赛',
