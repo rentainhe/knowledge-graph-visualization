@@ -95,7 +95,6 @@
                 currentNodeAttribute:[],
                 isCollapse: true,
                 isClick:false,
-                myChart:null,
                 treeData:
                     {
                         name: '所有节点',
@@ -244,11 +243,11 @@
             },
             drawLine(treedata){
                 console.log(treedata)
+                var checkName='';
                 // 基于准备好的dom，初始化echarts实例
-                this.myChart = this.$echarts.init(document.getElementById('myChart'))
+                var myChart = this.$echarts.init(document.getElementById('myChart'))
                 // 绘制图表
-                this.myChart.setOption({
-                        // this.$confirm('确认删除本条关系？'),
+                var Option = ({
                     calculable : false,
                     series : [
                         {
@@ -263,14 +262,20 @@
                             nodePadding: 20,
                             itemStyle: {
                                 normal: {
-                                    color : 'rgba(128,0,0)', //节点的颜色在这里改
+                                    color: function (param){
+                                        //通过判断选中的名字改变柱子的颜色样式
+                                        if(checkName === param.name){
+                                            return '#ff8040';
+                                        }else {
+                                            return '#c23531';
+                                        }
+                                    },
                                     label: {
                                         show: true,
                                         formatter: "{b}",
                                         color : "#fff"
                                     },
                                     lineStyle: {
-                                        color: '#48b',
                                         shadowColor: '#000',
                                         shadowBlur: 3,
                                         shadowOffsetX: 3,
@@ -292,11 +297,15 @@
 
                 }
                 );
+                myChart.setOption(Option);
                 //点击事件
                 let that=this //echart中无法调用this的解决方法 let that = this, 然后再用this.
-                this.myChart.on("click", function (param){
+                myChart.on("click", function (param){
                     console.log(param.name);
+                    checkName = param.name;
+                    myChart.setOption(Option);
                     that.currentNode = param.name
+                    console.log(checkName);
                     document.getElementById('buttons').style.display='block'
                     document.getElementById('Attribute').style.display='block'
                     document.getElementById('addAttribute').style.display='block'
@@ -312,9 +321,6 @@
                     )
 
                 });
-            },
-            ask:function(){
-                console.log(1);
             },
             back_home:function () {
                 this.$router.push("/Home")
