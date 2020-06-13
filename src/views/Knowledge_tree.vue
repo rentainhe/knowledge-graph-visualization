@@ -3,6 +3,29 @@
         <div class="header_text">知识图谱系统</div>
         <div class="container">
 
+            <el-dialog
+                    title="添加节点"
+                    :visible.sync="dialogVisible"
+                    width="20%"
+                    :before-close="DialogClose">
+                <div class="NodeNameInput">
+                    <el-input placeholder="需要插入的节点名称" v-model="Nodename" clearable>
+                        <template slot="prepend">节点名</template>
+                    </el-input>
+                </div>
+                <div class="MySQLNameInput">
+                    <p></p>
+<!--                    加入一个空行，看起来更舒服-->
+                    <el-input placeholder="节点对应的属性表名" v-model="MySQLName" clearable>
+                        <template slot="prepend">属性表</template>
+                    </el-input>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="add_node">确 定</el-button>
+                </span>
+            </el-dialog>
+
             <div class="left">
                 <div id="myChart" style="position: absolute;top:5%;left: 20%" :style="{width: '537px', height: '500px'}"></div>
 <!--                <el-radio-group id="El-radio-group" class="header_button" v-model="isCollapse" style="margin-bottom: 20px;display: block" @change="Edit">-->
@@ -10,7 +33,7 @@
 <!--                    <el-radio-button :label="true" >收起</el-radio-button>-->
 <!--                </el-radio-group>-->
                 <div class="buttons" id="buttons" style="display: none">
-                    <el-button round  class="addNodes" @click="add_node">添加节点</el-button>
+                    <el-button round  class="addNodes" @click="OpenDialog">添加节点</el-button>
                     <el-button round class="deleteNodes" @click="delete_node">删除节点</el-button>
                 </div>
                 <el-switch
@@ -91,6 +114,9 @@
     export default {
         data() {
             return {
+                Nodename:"", // 输入的节点名字
+                MySQLName:"", // 在后端创建的表的名字
+                dialogVisible:false,
                 currentNode:"",
                 currentNodeid:"",
                 currentNodeAttribute:[],
@@ -213,36 +239,65 @@
                     this.$message("删除成功！")
                 })
             },
+            DialogClose:function(done){
+                this.$confirm('确认关闭？').then(_=>{
+                    done();
+                }).catch(_=>{})
+            },
+            OpenDialog:function(){
+                this.Nodename = ""
+                this.MySQLName = ""
+                this.dialogVisible = true
+            },
             add_node:function(){
-                this.$prompt('请输入节点名字','添加节点', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-
-                }).then(({ value }) => {
-                    console.log('id');
-                    console.log(this.currentNodeid);
+                this.$confirm('确认添加节点？').then(_=>{
+                    this.dialogVisible = false
+                    console.log(this.Nodename)
+                    console.log(this.MySQLName)
                     this.$axios({
                         method:'post',
                         url:"http://10.24.82.10:8088/addNodeType/",
                         data:{
-                            "name": 1, //放插入节点的名字
-                            "attribute_table_name":value, //属性表 也是用户输入
+                            "name": this.Nodename, //放插入节点的名字
+                            "attribute_table_name":this.MySQLName, //属性表 也是用户输入
                             "pid": this.currentNodeid
 
                         }
                     }).then(res =>{
                         console.log(res);
+                        this.$message("添加成功！")
                     })
-                    this.$message({
-                        type: 'success',
-                        message: '添加节点: ' + value,
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });
-                });
+                }).catch(_=>{})
+                // this.$prompt('请输入节点名字','添加节点', {
+                //     confirmButtonText: '确定',
+                //     cancelButtonText: '取消',
+                //
+                // }).then(({ value,value2 }) => {
+                //     console.log('id');
+                //     console.log(this.currentNodeid);
+                //     console.log(value2)
+                //     this.$axios({
+                //         method:'post',
+                //         url:"http://10.24.82.10:8088/addNodeType/",
+                //         data:{
+                //             "name": 1, //放插入节点的名字
+                //             "attribute_table_name":value, //属性表 也是用户输入
+                //             "pid": this.currentNodeid
+                //
+                //         }
+                //     }).then(res =>{
+                //         console.log(res);
+                //     })
+                //     this.$message({
+                //         type: 'success',
+                //         message: '添加节点: ' + value,
+                //     });
+                // }).catch(() => {
+                //     this.$message({
+                //         type: 'info',
+                //         message: '取消输入'
+                //     });
+                // });
 
             },
             delete_node:function(){
@@ -389,6 +444,14 @@
 </script>
 
 <style>
+    .NodeNameInput{
+        /*float: right;*/
+        width: 100%;
+    }
+    .MySQLNameInput{
+        /*float: right;*/
+        width: 100%;
+    }
     .text {
         font-size: 14px;
         text-align: left;
