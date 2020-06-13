@@ -123,8 +123,8 @@
                 isCollapse: true,
                 isClick:false,
                 Node:'',
-                treeData:''
-
+                treeData:'',
+                myChart:''
 
             }
         },
@@ -174,7 +174,6 @@
                                 val.push(item);
                             }
                         });
-                        // console.log(val);
                         return val;
                     }
                 })
@@ -266,7 +265,8 @@
                     }).then(res =>{
                         console.log(res);
                         this.$message("添加成功！")
-                        location.reload() //我这里是添加了一个页面刷新，不然好像没办法在tree上体现已经添加的节点
+                        this.getTree();
+                        // location.reload() //我这里是添加了一个页面刷新，不然好像没办法在tree上体现已经添加的节点
 
                     })
                 }).catch(_=>{})
@@ -303,7 +303,20 @@
 
             },
             delete_node:function(){
-                this.$alert("确认删除该节点？");
+                this.$alert("确认删除该节点？")
+                .then( _ => {
+                    this.$axios({
+                        method: 'post',
+                        url: "http://10.24.82.10:8088/deleteNodeType/" + this.currentNode,
+                    }).then(res => {
+                        console.log(res);
+                        this.$message("删除成功！")
+                        this.getTree();
+                        // location.reload() //我这里是添加了一个页面刷新，不然好像没办法在tree上体现已经添加的节点
+
+                    })
+                });
+
             },
             Edit_Q:function(){
                 console.log("1111")
@@ -332,7 +345,7 @@
                 console.log(treedata)
                 var checkName = '';
                 // 基于准备好的dom，初始化echarts实例
-                var myChart = this.$echarts.init(document.getElementById('myChart'))
+                this.myChart = this.$echarts.init(document.getElementById('myChart'))
                 // 绘制图表
                 var Option = ({
                         calculable: false,
@@ -385,18 +398,18 @@
 
                     }
                 );
-                myChart.setOption(Option);
+                this.myChart.setOption(Option);
 
                 //点击事件
                 let that = this //echart中无法调用this的解决方法 let that = this, 然后再用this.
-                myChart.on("click", function (param) {
+                this.myChart.on("click", function (param) {
                     checkName = param.name;
                     that.currentNode = param.name;
                     that.currentNodeid = param.data.id;
-                    // console.log('id');
-                    // console.log(that.currentNodeid);
-                    console.log(checkName);
-                    myChart.setOption(Option);
+                    console.log('options')
+                    Option.series[0].data = that.treeData;
+                    console.log(Option.series[0].data)
+                    that.myChart.setOption(Option);
                     // that.$confirm('请选择操作类型', {
                     //     confirmButtonText: '添加节点',
                     //     cancelButtonText: '查看属性',
