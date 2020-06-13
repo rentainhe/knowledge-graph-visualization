@@ -92,52 +92,67 @@
         data() {
             return {
                 currentNode:"",
+                currentNodeid:"",
                 currentNodeAttribute:[],
                 isCollapse: true,
                 isClick:false,
-                treeData:
-                    {
-                        name: '所有节点',
-                        value: 100,
-                        children: [
-                            {
-                                name: '球队',
-                                value: 4,
-                                children: [
+                Node:'',
+                treeData:''
 
-                                ]
-                            },
-                            {
-                                name: '球员',
-                                value: 4,
-                                children: [{
-                                    name: '前锋',
-                                    value: 4
-                                },
-                                    {
-                                        name: '后卫',
-                                        value: 4
-                                    },
-                                    {
-                                        name: '守门员',
-                                        value: 4
-                                    }]
-                            },
-                            {
-                                name: '联赛',
-                                value: 1,
-                                children: [
 
-                                ]
-                            }
-                        ]
-                    }
             }
         },
         mounted() {
-            this.drawLine(this.treeData);
+            this.getTree();
+            // console.log(this.treeData);
+
         },
         methods: {
+            getTree:function(){
+                // console.log(1111);
+                this.$axios({
+                    method:'get',
+                    url:"http://10.24.82.10:8088/getLevelRelation/"
+                }).then(res =>{
+                    this.treeData = toTree(res.data.data);
+                    console.log(this.treeData);
+                    console.log(1);
+                    this.drawLine(this.treeData);
+                    function toTree(data) {
+                        // console.log(data);
+                        // 删除 所有 children,以防止多次调用
+                        data.forEach(function (item) {
+                            delete item.children;
+                        });
+
+                        // 将数据存储为 以 id 为 KEY 的 map 索引数据列
+                        var map = {};
+                        data.forEach(function (item) {
+                            map[item.id] = item;
+                        });
+                        // console.log(map);
+
+                        var val = [];
+                        data.forEach(function (item) {
+
+                            // 以当前遍历项，的pid,去map对象中找到索引的id
+                            var parent = map[item.pid];
+                            // console.log(parent);
+                            // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
+                            if (parent !== item) {
+
+                                (parent.children || ( parent.children = [] )).push(item);
+                                // console.log(parent);
+                            } else {
+                                //如果没有在map中找到对应的索引ID,那么直接把 当前的item添加到 val结果集中，作为顶级
+                                val.push(item);
+                            }
+                        });
+                        // console.log(val);
+                        return val;
+                    }
+                })
+            },
             editAttribute(index){
                 this.$prompt('请输入属性值', '修改属性', {
                     confirmButtonText: '确定',
@@ -204,6 +219,20 @@
                     cancelButtonText: '取消',
 
                 }).then(({ value }) => {
+                    console.log('id');
+                    console.log(this.currentNodeid);
+                    this.$axios({
+                        method:'post',
+                        url:"http://10.24.82.10:8088/addNodeType/",
+                        data:{
+                            "name": 1, //放插入节点的名字
+                            "attribute_table_name":value, //属性表 也是用户输入
+                            "pid": this.currentNodeid
+
+                        }
+                    }).then(res =>{
+                        console.log(res);
+                    })
                     this.$message({
                         type: 'success',
                         message: '添加节点: ' + value,
@@ -241,83 +270,112 @@
                 this.isCollapse = false
                 document.getElementById("El-menu").style.display='block'
             },
-            drawLine(treedata){
+            drawLine(treedata) {
+                console.log(2)
                 console.log(treedata)
-                var checkName='';
+                var checkName = '';
                 // 基于准备好的dom，初始化echarts实例
                 var myChart = this.$echarts.init(document.getElementById('myChart'))
                 // 绘制图表
                 var Option = ({
-                    calculable : false,
-                    series : [
-                        {
-                            name:'树',
-                            type:'tree',
-                            symbolSize: [60,30],
-                            edgeShape:'polyline',
-                            expandAndCollapse : false,
-                            symbol : 'roundRect',
-                            orient: 'vertical',  // vertical horizontal
-                            rootLocation: {x: 'center',y: 50}, // 根节点位置  {x: 100, y: 'center'}
-                            nodePadding: 20,
-                            itemStyle: {
-                                normal: {
-                                    color: function (param){
-                                        //通过判断选中的名字改变柱子的颜色样式
-                                        if(checkName === param.name){
-                                            return '#ff8040';
-                                        }else {
-                                            return '#c23531';
+                        calculable: false,
+                        series: [
+                            {
+                                name: '树',
+                                type: 'tree',
+                                symbolSize: [60, 30],
+                                edgeShape: 'polyline',
+                                expandAndCollapse: false,
+                                symbol: 'roundRect',
+                                orient: 'vertical',  // vertical horizontal
+                                rootLocation: {x: 'center', y: 50}, // 根节点位置  {x: 100, y: 'center'}
+                                nodePadding: 20,
+                                itemStyle: {
+                                    normal: {
+                                        color: function (param) {
+                                            console.log(checkName)
+                                            //通过判断选中的名字改变柱子的颜色样式
+                                            if (checkName === param.name) {
+                                                return '#ff8040';
+                                            } else {
+                                                return '#c23531';
+                                            }
+                                        },
+                                        label: {
+                                            show: true,
+                                            formatter: "{b}",
+                                            color: "#fff"
+                                        },
+                                        lineStyle: {
+                                            shadowColor: '#000',
+                                            shadowBlur: 3,
+                                            shadowOffsetX: 3,
+                                            shadowOffsetY: 5,
+                                            // curveness: 0.5,
+                                            // type: 'broken' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
+
                                         }
                                     },
-                                    label: {
-                                        show: true,
-                                        formatter: "{b}",
-                                        color : "#fff"
-                                    },
-                                    lineStyle: {
-                                        shadowColor: '#000',
-                                        shadowBlur: 3,
-                                        shadowOffsetX: 3,
-                                        shadowOffsetY: 5,
-                                        // curveness: 0.5,
-                                        // type: 'broken' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
-
+                                    emphasis: {
+                                        label: {
+                                            show: true
+                                        }
                                     }
                                 },
-                                emphasis: {
-                                    label: {
-                                        show: true
-                                    }
-                                }
-                            },
-                            data: [treedata]
-                        }
-                    ]
+                                data: treedata
+                            }
+                        ]
 
-                }
+                    }
                 );
                 myChart.setOption(Option);
+
                 //点击事件
-                let that=this //echart中无法调用this的解决方法 let that = this, 然后再用this.
-                myChart.on("click", function (param){
-                    console.log(param.name);
+                let that = this //echart中无法调用this的解决方法 let that = this, 然后再用this.
+                myChart.on("click", function (param) {
                     checkName = param.name;
-                    myChart.setOption(Option);
-                    that.currentNode = param.name
+                    that.currentNode = param.name;
+                    that.currentNodeid = param.data.id;
+                    // console.log('id');
+                    // console.log(that.currentNodeid);
                     console.log(checkName);
-                    document.getElementById('buttons').style.display='block'
-                    document.getElementById('Attribute').style.display='block'
-                    document.getElementById('addAttribute').style.display='block'
-                    Vue.prototype.$axios.get("http://10.24.82.10:8088/getAttributeByName/"+param.name).then(response=>{ //Echart的特性，不能用this调用axios，应该用Vue.prototype.$axios
-                        console.log(response.data.data)
-                        var jsonObj = JSON.parse(JSON.stringify(response.data.data))
-                        that.currentNodeAttribute = jsonObj
-                        that.currentNodeAttribute.shift()
-                        console.log(that.currentNodeAttribute[1])
-                    },response=>{
-                        console.log('error')
-                    }
+                    myChart.setOption(Option);
+                    // that.$confirm('请选择操作类型', {
+                    //     confirmButtonText: '添加节点',
+                    //     cancelButtonText: '查看属性',
+                    // }).then(() => {
+                    // that.$prompt('请输入节点名字','添加节点', {
+                    //     confirmButtonText: '确定',
+                    //     cancelButtonText: '取消',
+                    // }).then(({ value }) => {
+                    //     console.log(param.data);
+                    //     if (param.data.children === null)
+                    //     {
+                    //         param.data.children={"name":value,"value":3};
+                    //     }
+                    //     else {
+                    //         param.data.children.push({"name": value, "value": 3});
+                    //     }
+                    //     let options = myChart.getOption();//获取已生成图形的Option param
+                    //     myChart.setOption(options,true);
+                    //     that.$message({
+                    //         type: 'success',
+                    //         message: '添加节点: ' + value,
+                    //     });
+                    // });
+
+                    document.getElementById('buttons').style.display = 'block'
+                    document.getElementById('Attribute').style.display = 'block'
+                    document.getElementById('addAttribute').style.display = 'block'
+                    Vue.prototype.$axios.get("http://10.24.82.10:8088/getAttributeByName/" + param.name).then(response => { //Echart的特性，不能用this调用axios，应该用Vue.prototype.$axios
+                            console.log(response.data.data)
+                            var jsonObj = JSON.parse(JSON.stringify(response.data.data))
+                            that.currentNodeAttribute = jsonObj
+                            that.currentNodeAttribute.shift()
+                            console.log(that.currentNodeAttribute[1])
+                        }, response => {
+                            console.log('error')
+                        }
                     )
 
                 });
