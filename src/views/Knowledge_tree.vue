@@ -259,13 +259,15 @@
                         url:"http://10.24.82.10:8088/addNodeType/",
                         data:{
                             "name": this.Nodename, //放插入节点的名字
-                            "attribute_table_name":this.MySQLName, //属性表 也是用户输入
+                            "attributeTableName":this.MySQLName, //属性表 也是用户输入
                             "pid": this.currentNodeid
 
                         }
                     }).then(res =>{
                         console.log(res);
                         this.$message("添加成功！")
+                        location.reload() //我这里是添加了一个页面刷新，不然好像没办法在tree上体现已经添加的节点
+
                     })
                 }).catch(_=>{})
                 // this.$prompt('请输入节点名字','添加节点', {
