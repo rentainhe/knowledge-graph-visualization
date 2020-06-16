@@ -14,13 +14,13 @@
 <!--                    <div><el-button>二级关系</el-button></div>-->
                 </div>
                 <div class="relation_change">
-                    <div><el-button type="primary" round=true class="one_relation" @click="oneRelation">一级关系</el-button></div>
-                    <div><el-button type="primary" round=true class="second_relation" @click="secondRelation">二级关系</el-button></div>
+                    <div><el-button id="OneRelation" style="display: none" type="primary" round=true class="one_relation" @click="oneRelation">一级关系</el-button></div>
+                    <div><el-button id="SecondRelation" style="display: none" type="primary" round=true class="second_relation" @click="secondRelation">二级关系</el-button></div>
                 </div>
                 <el-col :span="4" :offset="3">
                     <el-form :model="formInline" class="text_search">
                         <el-form-item>
-                            <el-input v-model="ask" placeholder="查询" clearable=1></el-input>
+                            <el-input v-model="default_ask" placeholder="查询" clearable=1></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
@@ -109,7 +109,6 @@
     }
     .one_relation{
         left: 25%;
-
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -117,7 +116,6 @@
     }
     .second_relation{
         left: 25%;
-
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -292,6 +290,7 @@
             return {
                 value : '0',
                 ask:'',
+                default_ask:'',
                 value1: true,
                 width: 800,
                 height: 800,
@@ -349,6 +348,7 @@
             // this.printData()
             this.init()
             this.getData()
+            this.ask = '皮克'
             // location.reload()
             // this.initGraph(this.newGraph)
         },
@@ -581,7 +581,7 @@
                     .on("end", dragended);
             },
             onSubmit:function(){
-                console.log(this.ask)
+                this.ask = this.default_ask
                 this.$axios({
                     method:'get',
                     url:'http://10.24.82.10:8088/getOneLevelNode/' + this.ask,
@@ -590,6 +590,8 @@
                     console.log(res.data)
                     if (!res.data.errno){
                         this.$message("查询成功！")
+                        document.getElementById("OneRelation").style.display='block'
+                        document.getElementById("SecondRelation").style.display='block'
                         this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
                         // console.log(this.myGraph["nodes"])
                         this.$axios({
