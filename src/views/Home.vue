@@ -1,4 +1,5 @@
 <template>
+<!--    <input type="hidden" id="refleshed" value="no"></input>-->
     <el-container style="height : 100%">
         <el-header height="8%" class="header_text">
             知识图谱展示
@@ -67,9 +68,9 @@
                     <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
                         <i class="el-icon-user el-icon--right"></i>
                     </el-button>
-                    <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入
-                        <i class="el-icon-coin el-icon--right"></i>
-                    </el-button><!--              <el-row class="col1"></el-row>-->
+<!--                    <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入-->
+<!--                        <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
+<!--                    </el-button>&lt;!&ndash;              <el-row class="col1"></el-row>&ndash;&gt;-->
                     <el-button type="primary" round=true  @click="Edit_knowledge_tree" class="el-button–Knowledge_tree">知识树编辑
                         <i class="el-icon-coin el-icon--right"></i>
                     </el-button>
@@ -203,7 +204,7 @@
     /*人工检查按钮样式*/
     .el-button-check {
         position: absolute;
-        top: 27%;
+        top: 38%;
         left: 25%;
         color: #fff;
         background-color: #303252;
@@ -353,6 +354,9 @@
             // this.initGraph(this.newGraph)
         },
         methods: {
+            window:addEventListener('popstate',function () {
+                location.reload()
+            }),
             init:function(){
                 // this.svg.selectAll("*").remove();
                 this.svg = d3.select(".graph")

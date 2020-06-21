@@ -13,13 +13,13 @@
                         <template slot="prepend">节点名</template>
                     </el-input>
                 </div>
-                <div class="MySQLNameInput">
-                    <p></p>
-<!--                    加入一个空行，看起来更舒服-->
-                    <el-input placeholder="节点对应的属性表名" v-model="MySQLName" clearable>
-                        <template slot="prepend">属性表</template>
-                    </el-input>
-                </div>
+<!--                <div class="MySQLNameInput">-->
+<!--                    <p></p>-->
+<!--&lt;!&ndash;                    加入一个空行，看起来更舒服&ndash;&gt;-->
+<!--                    <el-input placeholder="节点对应的属性表名" v-model="MySQLName" clearable>-->
+<!--                        <template slot="prepend">属性表</template>-->
+<!--                    </el-input>-->
+<!--                </div>-->
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
                     <el-button type="primary" @click="add_node">确 定</el-button>
@@ -251,6 +251,7 @@
             add_node:function(){
                 this.$confirm('确认添加节点？').then(_=>{
                     this.dialogVisible = false
+                    this.MySQLName = this.Nodename
                     console.log(this.Nodename)
                     console.log(this.MySQLName)
                     this.$axios({
