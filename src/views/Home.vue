@@ -74,6 +74,9 @@
                     <el-button type="primary" round=true  @click="Edit_knowledge_tree" class="el-button–Knowledge_tree">知识树编辑
                         <i class="el-icon-coin el-icon--right"></i>
                     </el-button>
+                    <el-button type="primary" round=true  @click="move_to_newgraph" class="el_button-newgraph">新的图谱
+                        <i class="el-icon-coin el-icon--right"></i>
+                    </el-button>
                 </div>
             </el-col>
             <!--                </el-main>-->
@@ -224,6 +227,15 @@
     .el-button–Knowledge_tree{
         position: absolute;
         top: 71%;
+        left: 24%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .el_button-newgraph{
+        position: absolute;
+        top: 85%;
         left: 24%;
         color: #fff;
         background-color: #303252;
@@ -631,6 +643,9 @@
             Edit_knowledge_tree(){
                 this.$router.push("/Knowledge_tree")
                 location.reload()
+            },
+            move_to_newgraph(){
+                this.$router.push("/Newgraph")
             }
         }
     }
