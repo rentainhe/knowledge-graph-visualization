@@ -132,7 +132,7 @@
                                 }
                             }
                         },
-                        backgroundColor: '#00000',
+                        backgroundColor: '#15161F',
                         legend: {
                             data: legendes,
                             textStyle: {
