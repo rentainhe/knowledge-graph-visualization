@@ -3,7 +3,7 @@
         <div class="header_text">知识图谱系统</div>
         <div class="container">
 <!--            <div class="left"></div>-->
-            <div class="right">
+            <div class="main">
                 <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
@@ -28,7 +28,7 @@
     .back_to_homepage {
         position: absolute;
         top: 73%;
-        left: 20%;
+        left: 80%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
@@ -59,7 +59,7 @@
     /*    height: 100%;*/
     /*    background-color: #15161F;*/
     /*}*/
-    .container .right{
+    .container .main{
         position: relative;
         float: right;
         width: 100%;
