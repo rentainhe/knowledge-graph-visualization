@@ -36,15 +36,15 @@
                     <el-button round  class="addNodes" @click="OpenDialog">添加节点</el-button>
                     <el-button round class="deleteNodes" @click="delete_node">删除节点</el-button>
                 </div>
-                <el-switch
-                        class="header_button"
-                        v-model="isCollapse"
-                        active-text="展开"
-                        :width="54"
-                        inactive-text="收起">
-                </el-switch>
-                <el-menu id="El-menu"  style="display:block;" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-                    <el-menu-item index="1">
+<!--                <el-switch-->
+<!--                        class="header_button"-->
+<!--                        v-model="isCollapse"-->
+<!--                        active-text="展开"-->
+<!--                        :width="54"-->
+<!--                        inactive-text="收起">-->
+<!--                </el-switch>-->
+<!--                <el-menu id="El-menu"  style="display:block;" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">-->
+<!--                    <el-menu-item index="1">-->
 <!--                        <template slot="title">-->
 <!--                            <i class="el-icon-location"></i>-->
 <!--                            <span slot="title">导航一</span>-->
@@ -61,26 +61,26 @@
 <!--                            <span slot="title">选项4</span>-->
 <!--                            <el-menu-item index="1-4-1">选项1</el-menu-item>-->
 <!--                        </el-submenu>-->
-                        <i class="el-icon-s-flag"></i>
-                        <span slot="title">联赛</span>
-                    </el-menu-item>
-                    <el-menu-item index="2">
-                        <i class="el-icon-football"></i>
-                        <span slot="title">球队</span>
-                    </el-menu-item>
-                    <el-submenu index="3">
-                        <template slot="title">
-                            <i class="el-icon-user-solid"></i>
-                            <span slot="title">球员</span>
-                        </template>
-                        <el-menu-item-group>
-                            <span slot="title" style="text-align: center">球员位置</span>
-                            <el-menu-item index="3-1" @click.native="Edit_Q">前锋</el-menu-item>
-                            <el-menu-item index="3-2">后卫</el-menu-item>
-                            <el-menu-item index="3-3">守门员</el-menu-item>
-                        </el-menu-item-group>
-                    </el-submenu>
-                </el-menu>
+<!--                        <i class="el-icon-s-flag"></i>-->
+<!--                        <span slot="title">联赛</span>-->
+<!--                    </el-menu-item>-->
+<!--                    <el-menu-item index="2">-->
+<!--                        <i class="el-icon-football"></i>-->
+<!--                        <span slot="title">球队</span>-->
+<!--                    </el-menu-item>-->
+<!--                    <el-submenu index="3">-->
+<!--                        <template slot="title">-->
+<!--                            <i class="el-icon-user-solid"></i>-->
+<!--                            <span slot="title">球员</span>-->
+<!--                        </template>-->
+<!--                        <el-menu-item-group>-->
+<!--                            <span slot="title" style="text-align: center">球员位置</span>-->
+<!--                            <el-menu-item index="3-1" @click.native="Edit_Q">前锋</el-menu-item>-->
+<!--                            <el-menu-item index="3-2">后卫</el-menu-item>-->
+<!--                            <el-menu-item index="3-3">守门员</el-menu-item>-->
+<!--                        </el-menu-item-group>-->
+<!--                    </el-submenu>-->
+<!--                </el-menu>-->
 
                 <el-button type="primary" round=true  @click="back_home" class="el-button–Edit">返回
                     <i class="el-icon-coin el-icon--right"></i>
