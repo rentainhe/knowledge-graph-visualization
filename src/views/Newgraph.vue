@@ -4,7 +4,7 @@
         <div class="container">
 <!--            <div class="left"></div>-->
             <div class="main">
-                <div id="myChart" style="position: absolute;top:15%;left: 20%" :style="{width: '537px', height: '500px'}"></div>
+                <div id="myChart" style="position: absolute;top:6%;left: 20%" :style="{width: '60%', height: '80%'}"></div>
                 <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
@@ -26,6 +26,7 @@
         },
         methods:{
             Draw_graph:function(){
+
                 var size = 60;
                 var size1 = 30;
                 var yy = 200;
@@ -38,26 +39,16 @@
                 var ope = "操作";
                 var che = "检查";
 
-//著需要设定一下四个参数
-//设定疾病名称
-                var diease = "disease";
-//设定传入的药品数组
-                var meds = ["med1", "med2", "med3", "med4"];
-//设定传入的操作数组
-                var opes = ["ope1", "ope2", "ope3"];
-//设定传入的检查数组
-                var ches = ["che1", "che2", "che3", "che4"];
-
                 function setData(arr, n) {
                     for (var i = 0; i < arr.length; i++) {
                         const flag = arr[i] === "disease"
                         listdata.push({
-                            x: i * 50,
-                            y: size + i * 10,
-                            "name": arr[i],
-                            "symbolSize": size,
-                            "category": -n,
-                            "nodeType" : flag,
+                            x: i*30,
+                            y: 30 + i * 10,
+                            "name": arr[i], // 各个节点的name参数不能重复，
+                            "symbolSize": size, // 该类目节点标记的大小
+                            "category": -n, // 该节点所在类目的index
+                            "nodeType" : flag, //
                             "draggable": "true"
                         })
                     }
@@ -76,6 +67,61 @@
                         })
                     }
                 }
+
+                //著需要设定一下四个参数
+                //设定疾病名称
+                var headquarter = "太平洋舰队\n司令部";
+                //设定传入的药品数组
+                var meds = ["med1", "med2", "med3", "med4"];
+                //设定传入的操作数组
+                var opes = ["第三舰队", "第七舰队"];
+                var CSG1 = ["第一航母打击群","第三航母打击群","第九航母打击群","第十一航母打击群","第三远征打击群"]
+                var CSG2 = ["第五航母打击群"]
+                //设定传入的检查数组
+                var base = ["冲绳白滩海军基地", "关岛阿普拉港海军基地", "横须贺海军基地", "圣坛戈海军基地","珍珠港海军基地","佐世保海军基地","樟宜海军基地","班戈海军基地"];
+
+                var legendes = ["司令部", "舰队", "基地", "舰艇","部队"];
+                var texts = [];
+                for (var i = 0; i < legendes.length; i++) {
+                    texts.push({
+                        "name": legendes[i],
+                    })
+                }
+
+                var cat1 = ["舰艇"];
+                // for (var i = 0; i < meds.length; i++) {
+                //     cat1.push(meds[i]);
+                // }
+
+                var fleet = ["舰队"];
+                for (var i = 0; i < opes.length; i++) {
+                    fleet.push(opes[i]);
+                }
+
+                var basement = ["基地"];
+                for (var i = 0; i < base.length; i++) {
+                    basement.push(base[i]);
+                }
+
+                var cat4 = [];
+                cat4.push(headquarter);
+
+                // setData(cat1, 3);
+                // setData()
+                setData(cat1,4)
+                setData(CSG2,3)
+                setData(CSG1,3)
+                setData(fleet, 1);
+                setData(basement, 2);
+                setData(cat4, 0);
+
+                setLinkData(cat1,CSG2[0])
+                setLinkData(CSG2,fleet[2])
+                setLinkData(CSG1.slice(0,5), fleet[1]); // 第三舰队
+                setLinkData(fleet.slice(1,3), fleet[0]); // 舰队
+                setLinkData(basement.slice(1,9), basement[0]);
+                setLinkData(legendes.slice(0,4), cat4[0]);
+
                 /**
                  * 绑定图表的点击事件
                  * @param chart
@@ -167,89 +213,58 @@
                     }
                     console.log(targetLinks);
                 }
-                var legendes = ["药物", "操作", "检查", "疾病"];
-                var texts = [];
-                for (var i = 0; i < legendes.length; i++) {
-                    texts.push({
-                        "name": legendes[i],
-                    })
-                }
 
-                var cat1 = ["药物"];
-                for (var i = 0; i < meds.length; i++) {
-                    cat1.push(meds[i]);
-                }
-                var cat2 = ["操作"];
-                for (var i = 0; i < opes.length; i++) {
-                    cat2.push(opes[i]);
-                }
-                var cat3 = ["检查"];
-                for (var i = 0; i < ches.length; i++) {
-                    cat3.push(ches[i]);
-                }
-                var cat4 = [];
-                cat4.push(diease);
-
-                setData(cat1, 3);
-                setData(cat2, 1);
-                setData(cat3, 2);
-                setData(cat4, 0);
-
-                setLinkData(cat1.slice(1,4), cat1[0]);
-                setLinkData(cat2.slice(1,4), cat2[0]);
-                setLinkData(cat3.slice(1,4), cat3[0]);
-                setLinkData(legendes.slice(0,3), cat4[0]);
                 this.myChart = this.$echarts.init(document.getElementById('myChart'))
                 console.log(legendes)
                 const option = ({
                         title: {
-                            text: "疾病知识图谱",
-                            top: "top",
-                            left: "left",
-                            textStyle: {
+                            text: "知识图谱系统", //主标题文本
+                            top: "top", // 距离容器组件上侧的距离
+                            left: "left", // 距离容器组件左侧的距离
+                            textStyle: { // 文字样式，字体风格颜色等参数设置
                                 color: '#f7f7f7'
                             }
                         },
-                        tooltip: {
-                            formatter: '{b}'
+                        tooltip: { // 提示框浮层内容格式器
+                            formatter: '{b}' // 鼠标悬浮在节点上，所显示的内容
                         },
-                        toolbox: {
+                        toolbox: { // 工具栏，可以在里面添加，导出图片，数据视图等功能
                             show: true,
-                            feature: {
-                                restore: {
+                            feature: { // 工具项配置，工具按钮
+                                restore: { // 还原配置项
                                     show: true
                                 },
-                                saveAsImage: {
-                                    show: true
+                                saveAsImage: { // 保存图片
+                                    show: true // 是否显示该工具
                                 }
                             }
                         },
                         backgroundColor: '#15161F',
-                        legend: {
+                        legend: { // 图例组件，显示图例
                             data: legendes,
                             textStyle: {
                                 color: '#fff'
                             },
-                            icon: 'circle',
-                            type: 'scroll',
-                            orient: 'vertical',
-                            left: 10,
-                            top: 20,
-                            bottom: 20,
-                            itemWidth: 10,
-                            itemHeight: 10
+                            icon: 'circle', // 图例标记，有 circle、rect、roundRect、triangle等
+                            type: 'scroll', // 图例类型，有 plain 和 scroll 两种
+                            orient: 'vertical', // 图例的布局朝向，有 vertical 和 horizontal 两种
+                            left: 10, // 距离容器左侧的距离，可以是10这种具体的像素值，也可以是10%这样的比例
+                            top: 20, // 距离容器上侧的距离
+                            bottom: 20, // 距离容器下侧的距离
+                            itemWidth: 15, // 图例标记的图形宽度
+                            itemHeight: 20 // 图例标记的图形高度
                         },
-                        animationDuration: 1000,
-                        animationEasingUpdate: 'quinticInOut',
+                        animationDuration: 1000, // 初始动画时长
+                        animationEasingUpdate: 'quinticInOut', // 数据更新时的动画效果
                         series: [{
                             name: '知识图谱',
                             type: 'graph',
-                            layout: 'force',
-                            force: {
-                                repulsion: 60,
-                                gravity: 0.1,
-                                edgeLength: 15,
-                                layoutAnimation: true,
+                            layout: 'force', // 图的布局，force：力导向图，circular：环形布局
+                            force: { // 模拟电荷，给两个节点间添加斥力，给相连节点添加引力
+                                repulsion: 50, // 斥力大小
+                                gravity: 0.1, // 受到中心节点引力的大小
+                                edgeLength: 30, // 节点之间的距离，也会受到replusion的影响
+                                layoutAnimation: true, // 显示布局的迭代动画
                             },
                             data: listdata,
                             links: links,
@@ -289,7 +304,7 @@
     .back_to_homepage {
         position: absolute;
         top: 73%;
-        left: 80%;
+        left: 85%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
