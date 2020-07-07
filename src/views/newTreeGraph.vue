@@ -268,12 +268,11 @@
                             left: '8%',
                             bottom: '22%',
                             right: '20%',
-
                             symbolSize: 7,
 
                             edgeShape: 'polyline',
                             edgeForkPosition: '63%',
-                            initialTreeDepth: 3,
+                            initialTreeDepth: 0,
 
                             lineStyle: {
                                 width: 2
