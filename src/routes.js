@@ -4,6 +4,7 @@ import Check_1 from "~/views/Check_1";
 import Check_2 from "~/views/Check_2";
 import Knowledge_tree from "~/views/Knowledge_tree";
 import Newgraph from "~/views/Newgraph";
+import newTreeGraph from "~/views/newTreeGraph";
 export const routes = [
     {
         path:'/Home',
@@ -28,5 +29,9 @@ export const routes = [
     {
         path: '/Newgraph',
         component: Newgraph
-    }
+    },
+    {
+        path: '/newTreeGraph',
+        component: newTreeGraph
+    },
 ]
