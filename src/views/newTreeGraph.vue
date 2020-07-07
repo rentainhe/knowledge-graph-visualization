@@ -63,14 +63,22 @@
                                                 {
                                                     "name": "舰艇",
                                                     "children":[
-
+                                                        {
+                                                            "name": "华盛顿号航空母舰"
+                                                        },
+                                                        {
+                                                            "name": "华盛顿号航空母舰2"
+                                                        },
+                                                        {
+                                                            "name": "华盛顿号航空母舰3"
+                                                        }
                                                     ]
                                                 },
                                                 {
                                                     "name": "部队",
                                                     "children": [
                                                         {
-                                                            // "name": ,
+                                                            "name":"第15驱逐舰中队"
                                                         }
                                                     ]
                                                 }
@@ -83,19 +91,158 @@
                                     "name": "第三舰队",
                                     "children": [
                                         {
-                                            "name": "第一航母打击群"
+                                            "name": "第一航母打击群",
+                                            "children": [
+                                                {
+                                                    "name": "舰艇",
+                                                    "children":[
+                                                        {
+                                                            "name": "尚普兰湖号巡洋舰"
+                                                        },
+                                                        {
+                                                            "name": "卡尔文森号航空母舰"
+                                                        },
+                                                        {
+                                                            "name": "邦克山号巡洋舰"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "部队",
+                                                    "children":[
+                                                        {
+                                                            "name": "第一驱逐舰中队"
+                                                        }
+                                                    ]
+                                                },
+                                            ]
                                         },
                                         {
-                                            "name": "第三航母打击群"
+                                            "name": "第三航母打击群",
+                                            "children": [
+                                                {
+                                                    "name": "舰艇",
+                                                    "children":[
+                                                        {
+                                                            "name": "独立级濒海战斗舰"
+                                                        },
+                                                        {
+                                                            "name": ""
+                                                        },
+                                                        {
+                                                            "name": ""
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "部队",
+                                                    "children":[
+                                                        {
+                                                            "name": "第1爆炸军械处理大队"
+                                                        },
+                                                        {
+                                                            "name": "海军航空与导弹防御司令部"
+                                                        },
+                                                        {
+                                                            "name": "第1濒海战斗舰中队"
+                                                        },
+                                                        {
+                                                            "name": "水雷及反潜作战司令部"
+                                                        },
+                                                        {
+                                                            "name": "第1沿海江河作战部队"
+                                                        },
+                                                        {
+                                                            "name": "海上攻击直升机联队"
+                                                        },
+                                                        {
+                                                            "name": "中太平洋水面大队"
+                                                        }
+                                                    ]
+                                                },
+                                            ]
+
                                         },
                                         {
-                                            "name": "第九航母打击群"
+                                            "name": "第九航母打击群",
+                                            "children": [
+                                                {
+                                                    "name": "舰艇",
+                                                    "children":[
+                                                        {
+                                                            "name": "里根号航空母舰"
+                                                        },
+                                                        {
+                                                            "name": "钱思勒斯维尔号巡洋舰"
+                                                        },
+                                                        {
+                                                            "name": "圣乔治角号巡洋舰"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "部队",
+                                                    "children":[
+                                                        {
+                                                            "name": "第九驱逐舰中队"
+                                                        }
+                                                    ]
+                                                },
+                                            ]
                                         },
                                         {
-                                            "name": "第十一航母打击群"
+                                            "name": "第十一航母打击群",
+                                            "children": [
+                                                {
+                                                    "name": "舰艇",
+                                                    "children":[
+                                                        {
+                                                            "name": "斯坦尼斯号航空母舰"
+                                                        },
+                                                        {
+                                                            "name": "莫比尔湾号巡洋舰"
+                                                        },
+                                                        {
+                                                            "name": "安蒂特姆河号巡洋舰"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "部队",
+                                                    "children":[
+                                                        {
+                                                            "name": "第22驱逐舰中队"
+                                                        }
+                                                    ]
+                                                },
+                                            ]
                                         },
                                         {
-                                            "name": "第三远征打击群"
+                                            "name": "第三远征打击群",
+                                            "children": [
+                                                {
+                                                    "name": "舰艇",
+                                                    "children":[
+                                                        {
+                                                            "name": "尼米兹号航空母舰"
+                                                        },
+                                                        {
+                                                            "name": "普林斯顿号巡洋舰"
+                                                        },
+                                                        {
+                                                            "name": "希金斯号驱逐舰"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "部队",
+                                                    "children":[
+                                                        {
+                                                            "name": "第23驱逐舰中队"
+                                                        }
+                                                    ]
+                                                },
+                                            ]
                                         }
                                     ]
                                 }
@@ -139,17 +286,19 @@
                             },
 
                             label: {
-                                backgroundColor: '#fff',
+                                backgroundColor: '#15161F',
                                 position: 'left',
                                 verticalAlign: 'middle',
-                                align: 'right'
+                                align: 'right',
+                                color: '#fff'
                             },
 
                             leaves: {
                                 label: {
                                     position: 'right',
                                     verticalAlign: 'middle',
-                                    align: 'left'
+                                    align: 'left',
+                                    color: '#fff'
                                 }
                             },
 

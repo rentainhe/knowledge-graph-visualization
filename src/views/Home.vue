@@ -77,6 +77,9 @@
                     <el-button type="primary" round=true  @click="move_to_newgraph" class="el_button-newgraph">新的图谱
                         <i class="el-icon-coin el-icon--right"></i>
                     </el-button>
+                    <el-button type="primary" round=true  @click="move_to_newTreeGraph" class="el_button-newTreeGraph">新的树图
+                        <i class="el-icon-coin el-icon--right"></i>
+                    </el-button>
                 </div>
             </el-col>
             <!--                </el-main>-->
@@ -236,6 +239,15 @@
     .el_button-newgraph{
         position: absolute;
         top: 85%;
+        left: 24%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .el_button-newTreeGraph{
+        position: absolute;
+        top: 53%;
         left: 24%;
         color: #fff;
         background-color: #303252;
@@ -646,6 +658,9 @@
             },
             move_to_newgraph(){
                 this.$router.push("/Newgraph")
+            },
+            move_to_newTreeGraph(){
+                this.$router.push("/newTreeGraph")
             }
         }
     }

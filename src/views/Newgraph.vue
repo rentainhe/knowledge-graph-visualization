@@ -23,6 +23,7 @@
         },
         mounted() {
             this.Draw_graph();
+            console.log(this.myChart.getOption());
         },
         methods:{
             Draw_graph:function(){
@@ -187,7 +188,7 @@
                         serieData = options.series[seriesIndex].data,
                         serieDataMap = new Map(),
                         serieLinkArr = [];
-                    console.log("open:" + open);
+                    // console.log("open:" + open);
                     console.log(options);
                     // 当前根节点是展开的，那么就需要关闭所有的根节点
                     if (open) {
