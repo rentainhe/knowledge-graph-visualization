@@ -35,9 +35,6 @@
                 var listdata = [];
                 var links = [];
 
-                var med = "药品";
-                var ope = "操作";
-                var che = "检查";
 
                 function setData(arr, n) {
                     for (var i = 0; i < arr.length; i++) {
@@ -69,18 +66,35 @@
                 }
 
                 //著需要设定一下四个参数
-                //设定疾病名称
+                //设总部名称
                 var headquarter = "太平洋舰队\n司令部";
-                //设定传入的药品数组
-                var meds = ["med1", "med2", "med3", "med4"];
-                //设定传入的操作数组
-                var opes = ["第三舰队", "第七舰队"];
-                var CSG1 = ["第一航母打击群","第三航母打击群","第九航母打击群","第十一航母打击群","第三远征打击群"]
-                var CSG2 = ["第五航母打击群"]
-                //设定传入的检查数组
-                var base = ["冲绳白滩海军基地", "关岛阿普拉港海军基地", "横须贺海军基地", "圣坛戈海军基地","珍珠港海军基地","佐世保海军基地","樟宜海军基地","班戈海军基地"];
+                // 二级节点
+                var second_nodes = ["基地","舰队"]
 
-                var legendes = ["司令部", "舰队", "基地", "舰艇","部队"];
+                var CSGS = ["第三舰队", "第七舰队"];
+                var CSG1 = ["第三舰队","第一航母打击群","第三航母打击群","第九航母打击群","第十一航母打击群","第三远征打击群"]
+                var first_troop = ["第一航母打击群","第一航母打击群舰艇","第一航母打击群部队","尚普兰湖号巡洋舰","卡尔文森号航空母舰","邦克山号巡洋舰",
+                                "第一驱逐舰中队"]
+                // 第三航母打击群
+                var third_troop = ["第三航母打击群","第三航母打击群舰艇","第三航母打击群部队","斯坦尼斯号航空母舰","莫比尔湾号巡洋舰","安蒂特姆河号巡洋舰"
+                                ,"第22驱逐舰中队"]
+                // 第九航母打击群
+                var ninth_troop = ["第九航母打击群","第九航母打击群舰艇","第九航母打击群部队","里根号航空母舰","钱思勒斯维尔号巡洋舰","圣乔治角号巡洋舰"
+                                ,"第九驱逐舰中队"]
+                // 第十一航母打击群
+                var eleventh_troop = ["第11航母打击群","第11航母打击群舰艇","第11航母打击群部队","尼米兹号航空母舰","普林斯顿号巡洋舰","希金斯号驱逐舰"
+                                ,"第23驱逐舰中队"]
+                // 第三远征打击群舰艇
+                var third_ESG_troop = ["第三远征打击群","第三远征打击群舰艇","第三远征打击群部队","独立级濒海战斗舰"
+                                ,"第1爆炸军械处理大队","海军航空与导弹防御司令部","第1濒海战斗舰中队","水雷及反潜作战司令部","第1沿海江河作战部队","海上攻击直升机联队","中太平洋水面大队"]
+                // 第五航母打击群
+                var fifth_troop = ["第五航母打击群","第五航母打击群舰艇","第五航母打击群部队","华盛顿号航空母舰","华盛顿号航空母舰2","华盛顿号航空母舰3",
+                                "第15驱逐舰中队"]
+                // 基地
+                var basement = ["基地","冲绳白滩海军基地", "关岛阿普拉港海军基地", "横须贺海军基地", "圣坛戈海军基地","珍珠港海军基地","佐世保海军基地","樟宜海军基地","班戈海军基地"];
+
+                var legendes = ["司令部", "基地", "舰队","第三舰队","第一航母打击群","第三航母打击群","第九航母打击群","第11航母打击群","第三远征打击群"
+                    ,"第七舰队","第五航母打击群"];
                 var texts = [];
                 for (var i = 0; i < legendes.length; i++) {
                     texts.push({
@@ -88,40 +102,59 @@
                     })
                 }
 
-                var cat1 = ["舰艇"];
-                // for (var i = 0; i < meds.length; i++) {
-                //     cat1.push(meds[i]);
-                // }
+                var Headquarter = []; // 司令部节点
+                Headquarter.push(headquarter);
 
-                var fleet = ["舰队"];
-                for (var i = 0; i < opes.length; i++) {
-                    fleet.push(opes[i]);
-                }
 
-                var basement = ["基地"];
-                for (var i = 0; i < base.length; i++) {
-                    basement.push(base[i]);
-                }
+                // 设置节点信息
+                setData(Headquarter, 0); //司令部节点，类别0
+                setData(basement,1); // 基地节点，类别1
+                setData(second_nodes.slice(1,2), 2); // 舰队节点，类别2
+                setData(CSGS.slice(0,1),3); // 第三舰队节点，类别3
+                setData(CSGS.slice(1,2),9); // 第七舰队节点，类别9（对应legend上位置9）
+                setData(first_troop,4) // 第一航母打击群，类别4
+                setData(third_troop,5) // 第三航母打击群，类别5
+                setData(ninth_troop,6) // 第九航母打击群，类别6
+                setData(eleventh_troop,7) // 第11航母打击群，类别7
+                setData(third_ESG_troop,8) // 第三远征打击群，类别8
+                setData(fifth_troop,10) // 第五航母打击群，类别10
+                // 设置节点关系
+                setLinkData(second_nodes, Headquarter[0]);
+                setLinkData(basement, second_nodes[0]);
+                setLinkData(CSGS.slice(1,2),second_nodes[1]) // 舰队 -> 第七舰队
+                setLinkData(CSGS.slice(0,1),second_nodes[1]) // 舰队 -> 第三舰队
 
-                var cat4 = [];
-                cat4.push(headquarter);
 
-                // setData(cat1, 3);
-                // setData()
-                setData(cat1,4)
-                setData(CSG2,3)
-                setData(CSG1,3)
-                setData(fleet, 1);
-                setData(basement, 2);
-                setData(cat4, 0);
 
-                setLinkData(cat1,CSG2[0])
-                setLinkData(CSG2,fleet[2])
-                setLinkData(CSG1.slice(0,5), fleet[1]); // 第三舰队
-                setLinkData(fleet.slice(1,3), fleet[0]); // 舰队
-                setLinkData(basement.slice(1,9), basement[0]);
-                setLinkData(legendes.slice(0,4), cat4[0]);
+                setLinkData(first_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第一航母打击群
+                setLinkData(first_troop.slice(1,3),first_troop[0]) // 第一航母打击群 -> 舰艇/部队
+                setLinkData(first_troop.slice(3,6),first_troop[1])
+                setLinkData(first_troop.slice(6,7),first_troop[2])
 
+                setLinkData(third_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第三航母打击群
+                setLinkData(third_troop.slice(1,3),third_troop[0]) // 第三航母打击群 -> 舰艇/部队
+                setLinkData(third_troop.slice(3,6),third_troop[1])
+                setLinkData(third_troop.slice(6,7),third_troop[2])
+
+                setLinkData(ninth_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第九航母打击群
+                setLinkData(ninth_troop.slice(1,3),ninth_troop[0]) // 第九航母打击群 -> 舰艇/部队
+                setLinkData(ninth_troop.slice(3,6),ninth_troop[1])
+                setLinkData(ninth_troop.slice(6,7),ninth_troop[2])
+
+                setLinkData(eleventh_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第11航母打击群
+                setLinkData(eleventh_troop.slice(1,3),eleventh_troop[0]) // 第11航母打击群 -> 舰艇/部队
+                setLinkData(eleventh_troop.slice(3,6),eleventh_troop[1])
+                setLinkData(eleventh_troop.slice(6,7),eleventh_troop[2])
+
+                setLinkData(third_ESG_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第三远征打击群
+                setLinkData(third_ESG_troop.slice(1,3),third_ESG_troop[0]) // 第三远征打击群 -> 舰艇/部队
+                setLinkData(third_ESG_troop.slice(3,4),third_ESG_troop[1])
+                setLinkData(third_ESG_troop.slice(4,11),third_ESG_troop[2])
+
+                setLinkData(fifth_troop.slice(0,1),"第七舰队") // 第七舰队 -> 第五航母打击群
+                setLinkData(fifth_troop.slice(1,3),fifth_troop[0]) // 第五航母打击群 -> 舰艇/部队
+                setLinkData(fifth_troop.slice(3,6),fifth_troop[1])
+                setLinkData(fifth_troop.slice(6,7),fifth_troop[2])
                 /**
                  * 绑定图表的点击事件
                  * @param chart
@@ -246,7 +279,7 @@
                                 color: '#fff'
                             },
                             icon: 'circle', // 图例标记，有 circle、rect、roundRect、triangle等
-                            type: 'scroll', // 图例类型，有 plain 和 scroll 两种
+                            type: 'scroll', // 图例类型，有 plain 和 scroll 两种，当图例较多的时候可以使用scroll，然后对其具体的属性再进行设置
                             orient: 'vertical', // 图例的布局朝向，有 vertical 和 horizontal 两种
                             left: 10, // 距离容器左侧的距离，可以是10这种具体的像素值，也可以是10%这样的比例
                             top: 20, // 距离容器上侧的距离
@@ -275,7 +308,7 @@
                                     show: true,
                                     position: 'inside',
                                     formatter: '{b}',
-                                    fontSize: 16,
+                                    fontSize: 12,
                                     fontStyle: '600',
                                 }
                             },
