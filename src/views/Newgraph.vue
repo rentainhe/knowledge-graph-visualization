@@ -41,7 +41,7 @@
                     for (var i = 0; i < arr.length; i++) {
                         const flag = arr[i] === "disease"
                         listdata.push({
-                            x: i*30,
+                            x: i*25,
                             y: 30 + i * 10,
                             "name": arr[i], // 各个节点的name参数不能重复，
                             "symbolSize": size, // 该类目节点标记的大小
@@ -52,11 +52,15 @@
                     }
                 }
 
-                function setLinkData(arr, title) {
+                function setLinkData(arr, title,relation) {
                     for (var i = 0; i < arr.length; i++) {
                         links.push({
                             "source": arr[i],
                             "target": title,
+                            label:{
+                                show: true,
+                                formatter:relation // 在formatter中添加文字可以实现将文字显示在关系上
+                            },
                             lineStyle: {
                                 normal: {
                                     color: 'source',
@@ -120,42 +124,42 @@
                 setData(third_ESG_troop,8) // 第三远征打击群，类别8
                 setData(fifth_troop,10) // 第五航母打击群，类别10
                 // 设置节点关系
-                setLinkData(second_nodes, Headquarter[0]);
-                setLinkData(basement, second_nodes[0]);
-                setLinkData(CSGS.slice(1,2),second_nodes[1]) // 舰队 -> 第七舰队
-                setLinkData(CSGS.slice(0,1),second_nodes[1]) // 舰队 -> 第三舰队
+                setLinkData(second_nodes, Headquarter[0],"");
+                setLinkData(basement.slice(1,9), second_nodes[0],"所属基地");
+                setLinkData(CSGS.slice(1,2),second_nodes[1],"下辖\n舰队") // 舰队 -> 第七舰队
+                setLinkData(CSGS.slice(0,1),second_nodes[1],"下辖\n舰队") // 舰队 -> 第三舰队
 
 
 
-                setLinkData(first_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第一航母打击群
-                setLinkData(first_troop.slice(1,3),first_troop[0]) // 第一航母打击群 -> 舰艇/部队
-                setLinkData(first_troop.slice(3,6),first_troop[1])
-                setLinkData(first_troop.slice(6,7),first_troop[2])
-
-                setLinkData(third_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第三航母打击群
-                setLinkData(third_troop.slice(1,3),third_troop[0]) // 第三航母打击群 -> 舰艇/部队
-                setLinkData(third_troop.slice(3,6),third_troop[1])
-                setLinkData(third_troop.slice(6,7),third_troop[2])
-
-                setLinkData(ninth_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第九航母打击群
-                setLinkData(ninth_troop.slice(1,3),ninth_troop[0]) // 第九航母打击群 -> 舰艇/部队
-                setLinkData(ninth_troop.slice(3,6),ninth_troop[1])
-                setLinkData(ninth_troop.slice(6,7),ninth_troop[2])
-
-                setLinkData(eleventh_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第11航母打击群
-                setLinkData(eleventh_troop.slice(1,3),eleventh_troop[0]) // 第11航母打击群 -> 舰艇/部队
-                setLinkData(eleventh_troop.slice(3,6),eleventh_troop[1])
-                setLinkData(eleventh_troop.slice(6,7),eleventh_troop[2])
-
-                setLinkData(third_ESG_troop.slice(0,1),"第三舰队") // 第三舰队 -> 第三远征打击群
-                setLinkData(third_ESG_troop.slice(1,3),third_ESG_troop[0]) // 第三远征打击群 -> 舰艇/部队
-                setLinkData(third_ESG_troop.slice(3,4),third_ESG_troop[1])
-                setLinkData(third_ESG_troop.slice(4,11),third_ESG_troop[2])
-
-                setLinkData(fifth_troop.slice(0,1),"第七舰队") // 第七舰队 -> 第五航母打击群
-                setLinkData(fifth_troop.slice(1,3),fifth_troop[0]) // 第五航母打击群 -> 舰艇/部队
-                setLinkData(fifth_troop.slice(3,6),fifth_troop[1])
-                setLinkData(fifth_troop.slice(6,7),fifth_troop[2])
+                setLinkData(first_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第一航母打击群
+                setLinkData(first_troop.slice(1,3),first_troop[0],"") // 第一航母打击群 -> 舰艇/部队
+                setLinkData(first_troop.slice(3,6),first_troop[1],"下辖\n舰队")
+                setLinkData(first_troop.slice(6,7),first_troop[2],"下辖\n部队")
+                //
+                setLinkData(third_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第三航母打击群
+                setLinkData(third_troop.slice(1,3),third_troop[0],"") // 第三航母打击群 -> 舰艇/部队
+                setLinkData(third_troop.slice(3,6),third_troop[1],"下辖\n舰队")
+                setLinkData(third_troop.slice(6,7),third_troop[2],"下辖\n部队")
+                //
+                setLinkData(ninth_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第九航母打击群
+                setLinkData(ninth_troop.slice(1,3),ninth_troop[0],"") // 第九航母打击群 -> 舰艇/部队
+                setLinkData(ninth_troop.slice(3,6),ninth_troop[1],"下辖\n舰队")
+                setLinkData(ninth_troop.slice(6,7),ninth_troop[2],"下辖\n部队")
+                //
+                setLinkData(eleventh_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第11航母打击群
+                setLinkData(eleventh_troop.slice(1,3),eleventh_troop[0],"") // 第11航母打击群 -> 舰艇/部队
+                setLinkData(eleventh_troop.slice(3,6),eleventh_troop[1],"下辖\n舰队")
+                setLinkData(eleventh_troop.slice(6,7),eleventh_troop[2],"下辖\n部队")
+                //
+                setLinkData(third_ESG_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第三远征打击群
+                setLinkData(third_ESG_troop.slice(1,3),third_ESG_troop[0],"") // 第三远征打击群 -> 舰艇/部队
+                setLinkData(third_ESG_troop.slice(3,4),third_ESG_troop[1],"下辖\n舰队")
+                setLinkData(third_ESG_troop.slice(4,11),third_ESG_troop[2],"下辖\n部队")
+                //
+                setLinkData(fifth_troop.slice(0,1),"第七舰队","下辖\n打击群") // 第七舰队 -> 第五航母打击群
+                setLinkData(fifth_troop.slice(1,3),fifth_troop[0],"") // 第五航母打击群 -> 舰艇/部队
+                setLinkData(fifth_troop.slice(3,6),fifth_troop[1],"下辖\n舰队")
+                setLinkData(fifth_troop.slice(6,7),fifth_troop[2],"下辖\n部队")
                 /**
                  * 绑定图表的点击事件
                  * @param chart
