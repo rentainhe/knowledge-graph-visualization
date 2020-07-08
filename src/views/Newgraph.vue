@@ -4,7 +4,29 @@
         <div class="container">
 <!--            <div class="left"></div>-->
             <div class="main">
+                <el-col :span="3" :offset="3">
+                    <el-form :model="formInline" class="text_search">
+                        <el-form-item>
+                            <el-input v-model="default_ask" placeholder="查询" clearable=1></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+
                 <div id="myChart" style="position: absolute;top:6%;left: 20%" :style="{width: '60%', height: '80%'}"></div>
+
+                <el-card class="box-card" id="Player_info" style="display: block">
+                    <div slot="header" class="clearfix">
+                        <span class="text item">节点信息</span>
+                    </div>
+<!--                    <div class="text item" v-for="(val,key,i) in currentPlayerNode" >-->
+<!--                        {{key}}:{{val}}-->
+<!--                    </div>-->
+                    <div></div>
+                </el-card>
+
                 <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
@@ -256,7 +278,7 @@
                 console.log(legendes)
                 const option = ({
                         title: {
-                            text: "知识图谱系统", //主标题文本
+                            text: "节点列表", //主标题文本
                             top: "top", // 距离容器组件上侧的距离
                             left: "left", // 距离容器组件左侧的距离
                             textStyle: { // 文字样式，字体风格颜色等参数设置
@@ -339,6 +361,28 @@
 </script>
 
 <style scoped>
+    .box-card{
+        position: absolute;
+        top:10%;
+        right: 2%;
+        background-color: #15161F;
+        width: 15%;
+    }
+
+    .text {
+        font-size: 14px;
+        color: #ffffff;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    .text_search {
+        position: absolute;
+        left:3%;
+        top: 10%;
+    }
     .back_to_homepage {
         position: absolute;
         top: 73%;
