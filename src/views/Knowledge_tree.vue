@@ -402,7 +402,7 @@
                 this.myChart.setOption(Option);
 
                 //点击事件
-                let that = this //echart中无法调用this的解决方法 let that = this, 然后再用this.
+                let that = this //echart中无法调用this的解决方法 let that = this, 然后用that.
                 this.myChart.on("click", function (param) {
                     checkName = param.name;
                     that.currentNode = param.name;

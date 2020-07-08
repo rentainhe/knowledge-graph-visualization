@@ -9,6 +9,23 @@
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
             </div>
+            <div class="right">
+                <el-card id="Attribute" class="box-card" >
+                    <div slot="header" class="clearfix">
+                        <span>节点属性</span>
+                        <!--                        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+                    </div>
+                    <div v-for="(item, index) in currentNodeAttribute"  class="text item">
+                        {{item}}
+                        <el-button style="float: right; padding: 3px 0 ;position: absolute;right: 20%" type="text" @click="editAttribute(index)">修改</el-button>
+                        <el-button style="float: right; padding: 3px 0;position: absolute;right: 8%" type="text" @click="deleteAttribute(index)">删除</el-button>
+
+                    </div>
+                </el-card>
+                <el-button id="addAttribute" style="display: none" type="primary" round=true  @click="addAttrubute" class="el-button–Edit">新增属性
+                    <i class="el-icon-coin el-icon--right"></i>
+                </el-button>
+            </div>
         </div>
     </div>
 </template>
@@ -19,6 +36,16 @@
         data() {
             return {
                 myChart: '',
+                Nodename:"", // 输入的节点名字
+                MySQLName:"", // 在后端创建的表的名字
+                dialogVisible:false,
+                currentNode:"",
+                currentNodeid:"",
+                currentNodeAttribute:[],
+                isCollapse: true,
+                isClick:false,
+                Node:'',
+                treeData:'',
                 data:{
                     "name": "太平洋舰队司令部",
                     "children": [
@@ -272,7 +299,7 @@
 
                             edgeShape: 'polyline',
                             edgeForkPosition: '63%',
-                            initialTreeDepth: 0,
+                            initialTreeDepth: 0,      //控制树图有几层
 
                             lineStyle: {
                                 width: 2
@@ -311,6 +338,72 @@
 </script>
 
 <style scoped>
+    .text {
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    /*.clearfix:before,*/
+    /*.clearfix:after {*/
+    /*    display: table;*/
+    /*    content: "";*/
+    /*}*/
+    /*.clearfix:after {*/
+    /*    clear: both*/
+    /*}*/
+
+    .box-card {
+        position: absolute;
+        top:15%;
+        left: 25%;
+        width: 50%;
+    }
+    .el-button–Edit{
+        position: absolute;
+        top: 85%;
+        right: 10%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .header_text{
+        font-family: "PingFang SC";
+        font-size: 30px;
+        letter-spacing: 6px;
+        color: #ffffff;
+        position: absolute;
+        top: 0%;
+        width: 100%;
+        height: 6%;
+        background-color: #15161F;
+    }
+    .container{
+        position: absolute;
+        top:6%;
+        background-color: #15161F;
+        width: 100%;
+        height: 100%;
+    }
+    .container .right{
+        position: absolute;
+        float: right;
+        right: 8%;
+        width: 20%;
+        height: 30%;
+        background-color: #15161F;
+    }
+    .box-card {
+        position: absolute;
+        top:15%;
+
+        left: 0%;
+        width: 100%;
+    }
     .back_to_homepage {
         position: absolute;
         top: 73%;
