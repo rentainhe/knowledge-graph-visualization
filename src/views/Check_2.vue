@@ -307,7 +307,7 @@
                 this.$router.push("/Check_1")
             },
             Back_to_homepage:function () {
-                this.$router.push("/Home")
+                this.$router.push("/")
             },
             //跳回文本审核界面
             Back_to_TextUpload:function () {

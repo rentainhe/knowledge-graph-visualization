@@ -564,7 +564,7 @@
             },
             //点击回主界面
             return_home: function () {
-                this.$router.push("/Home")
+                this.$router.push("/")
                 location.reload()
             },
             move_to_check2:function () {

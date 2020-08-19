@@ -78,7 +78,7 @@
             },
             //点击回主界面
             return_home: function () {
-                this.$router.push("/Home")
+                this.$router.push("/")
                 location.reload()
             },
             //点击开始审核

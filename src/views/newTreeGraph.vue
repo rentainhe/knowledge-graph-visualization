@@ -4,28 +4,64 @@
         <div class="container">
             <!--            <div class="left"></div>-->
             <div class="main">
-                <div id="myChart" style="position: absolute;top:6%;left: 20%" :style="{width: '60%', height: '80%'}"></div>
-                <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
+                <div class="label" style="position: absolute; top: 1.8%; left: 5%">
+                    <el-tabs v-model="activateName" type="card" @tab-click="handleClick">
+                        <el-tab-pane label="装备类型树" name="equipmentType"></el-tab-pane>
+                        <el-tab-pane label="装备树" name="equipmentTree"></el-tab-pane>
+                        <el-tab-pane label="单位树" name="unitTree"></el-tab-pane>
+                    </el-tabs>
+                </div>
+                <div id="knowledgeTreeSet" style="position: absolute;top:6%;left: 5%;background-color: #15161F; border:1px solid #ffffff" :style="{width: '50%', height: '85%'}">
+                    <div id="myChart" style="position: absolute;top:0%;left: 0%;" :style="{width: '100%', height: '100%'}"></div>
+                </div>
+                <div class="attributeList">
+<!--                    节点属性列表-->
+                    <el-table :data="attributeTable" highlight-current-row height="100%" border style="width: 100%">
+                        <el-table-column prop="attributeName" label="当前节点对应属性" width="150"></el-table-column>
+                        <el-table-column prop="content" label="属性内容" width="300"></el-table-column>
+                        <el-table-column prop="content" label="可选操作">
+                            <template slot-scope="scope">
+                                <el-button
+                                    size="mini"
+                                    @click="editCurrentNodeAttribute(scope.$index,scope.row)">编辑</el-button>
+                                <el-button
+                                    size="mini"
+                                    type="danger"
+                                    @click="deleteCurrentNodeAttribute(scope.$index,scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <div class="operation" style="border:2px solid #ffffff">
+                    <div class="chosenNodeName">当前选择节点:{{this.currentNodeName}}</div>
+                    <el-button type="primary" round=true @click="addChildNode" class="addChildNode">添加子节点
+                        <i class="el-icon-s-promotion el-icon-circle-plus-outline"></i>
+                    </el-button>
+<!--                    添加一个对话框来进行节点属性填充-->
+                    <el-dialog title="添加节点属性" :visible.sync="addNodeFormVisible" width="30%">
+                        <el-form ref="form" label-width="100px">
+                            <el-form-item v-for="(key,value,index) in addnewNodeWithAttribute" :key="index">
+                                <div v-if="key.attributeName!==currentParentId">
+                                    <el-form-item :label="key.attributeName" class="attributeNameText">
+                                        <el-input v-model="key.content"></el-input>
+                                    </el-form-item>
+                                </div>
+                            </el-form-item>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="addNodeFormVisible = false">取消</el-button>
+                            <el-button tyoe="primary" @click="uploadNewNode">确定</el-button>
+                        </div>
+                    </el-dialog>
+                    <el-button type="danger" round=true @click="deleteCurrentNode" class="deleteCurrentNode">删除当前节点
+                        <i class="el-icon-s-promotion el-icon-delete"></i>
+                    </el-button>
+                </div>
+                <el-button type="primary" round=true @click="Back_to_homepage" class="back_to_homepage">返回首页
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
             </div>
-            <div class="right">
-                <el-card id="Attribute" class="box-card" >
-                    <div slot="header" class="clearfix">
-                        <span>节点属性</span>
-                        <!--                        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
-                    </div>
-                    <div v-for="(item, index) in currentNodeAttribute"  class="text item">
-                        {{item}}
-                        <el-button style="float: right; padding: 3px 0 ;position: absolute;right: 20%" type="text" @click="editAttribute(index)">修改</el-button>
-                        <el-button style="float: right; padding: 3px 0;position: absolute;right: 8%" type="text" @click="deleteAttribute(index)">删除</el-button>
 
-                    </div>
-                </el-card>
-                <el-button id="addAttribute" style="display: none" type="primary" round=true  @click="addAttrubute" class="el-button–Edit">新增属性
-                    <i class="el-icon-coin el-icon--right"></i>
-                </el-button>
-            </div>
         </div>
     </div>
 </template>
@@ -190,61 +226,216 @@
                     this.getUnitTree()
                 }
             },
-            Draw_graph:function(data){
+            // 获取装备类型树节点信息
+            getEquipmentTypeTree:function(){
+                // console.log(1111);
+                this.$axios({
+                    method:'get',
+                    url:"http://192.168.1.2:8088/getEquipmentTypeLevelRelation"
+                }).then(res =>{
+                    this.treeData = ''
+                    this.treeData = toTree(res.data.data);
+                    console.log(this.treeData);
+                    console.log(1);
+                    this.Draw_graph(this.treeData);
+                    function toTree(data) {
+                        // console.log(data);
+                        // 删除 所有 children,以防止多次调用
+                        data.forEach(function (item) {
+                            delete item.children;
+                        });
+
+                        // 将数据存储为 以 id 为 KEY 的 map 索引数据列
+                        var map = {};
+                        data.forEach(function (item) {
+                            map[item.id] = item;
+                        });
+                        // console.log(map);
+
+                        var val = [];
+                        data.forEach(function (item) {
+
+                            // 以当前遍历项，的pid,去map对象中找到索引的id
+                            var parent = map[item.pid];
+                            // console.log(parent);
+                            // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
+                            if (parent !== item) {
+
+                                (parent.children || ( parent.children = [] )).push(item);
+                                // console.log(parent);
+                            } else {
+                                //如果没有在map中找到对应的索引ID,那么直接把 当前的item添加到 val结果集中，作为顶级
+                                val.push(item);
+                            }
+                        });
+                        return val;
+                    }
+                })
+            },
+            // 获取装备类型树节点信息
+            getUnitTree:function(){
+                // console.log(1111);
+                this.$axios({
+                    method:'get',
+                    url:"http://192.168.1.2:8088/getUnitSequenceLevelRelation"
+                }).then(res =>{
+                    this.treeData = ''
+                    this.treeData = toTree(res.data.data);
+                    console.log(this.treeData);
+                    console.log(1);
+                    this.Draw_graph(this.treeData);
+                    function toTree(data) {
+                        // console.log(data);
+                        // 删除 所有 children,以防止多次调用
+                        data.forEach(function (item) {
+                            delete item.children;
+                        });
+
+                        // 将数据存储为 以 id 为 KEY 的 map 索引数据列
+                        var map = {};
+                        data.forEach(function (item) {
+                            map[item.id] = item;
+                        });
+                        // console.log(map);
+
+                        var val = [];
+                        data.forEach(function (item) {
+
+                            // 以当前遍历项，的pid,去map对象中找到索引的id
+                            var parent = map[item.pid];
+                            // console.log(parent);
+                            // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
+                            if (parent !== item) {
+
+                                (parent.children || ( parent.children = [] )).push(item);
+                                // console.log(parent);
+                            } else {
+                                //如果没有在map中找到对应的索引ID,那么直接把 当前的item添加到 val结果集中，作为顶级
+                                val.push(item);
+                            }
+                        });
+                        return val;
+                    }
+                })
+            },
+            // 获取装备类型树节点信息
+            getEquipmentTree:function(){
+                // console.log(1111);
+                this.$axios({
+                    method:'get',
+                    url:"http://192.168.1.2:8088/getEquipmentTreeLevelRelation"
+                }).then(res =>{
+                    this.treeData = ''
+                    this.treeData = toTree(res.data.data);
+                    console.log(this.treeData);
+                    console.log(1);
+                    this.Draw_graph(this.treeData);
+                    function toTree(data) {
+                        // console.log(data);
+                        // 删除 所有 children,以防止多次调用
+                        data.forEach(function (item) {
+                            delete item.children;
+                        });
+
+                        // 将数据存储为 以 id 为 KEY 的 map 索引数据列
+                        var map = {};
+                        data.forEach(function (item) {
+                            map[item.id] = item;
+                        });
+                        // console.log(map);
+
+                        var val = [];
+                        data.forEach(function (item) {
+
+                            // 以当前遍历项，的pid,去map对象中找到索引的id
+                            var parent = map[item.pid];
+                            // console.log(parent);
+                            // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
+                            if (parent !== item) {
+
+                                (parent.children || ( parent.children = [] )).push(item);
+                                // console.log(parent);
+                            } else {
+                                //如果没有在map中找到对应的索引ID,那么直接把 当前的item添加到 val结果集中，作为顶级
+                                val.push(item);
+                            }
+                        });
+                        return val;
+                    }
+                })
+            },
+            Draw_graph:function(treedata){
+                var checkName= ' ';
                 this.myChart = this.$echarts.init(document.getElementById('myChart'))
-                var option = {
-                    tooltip: {
-                        trigger: 'item',
-                        triggerOn: 'mousemove'
-                    },
+                let that = this
+                var Option = {
+                    calculable: false,
+                    // tooltip: {
+                    //     trigger: 'item',
+                    //     triggerOn: 'mousemove'
+                    // },
                     series:[
                         {
                             type: 'tree',
-                            id: 0,
-                            name: 'tree1',
-                            data: [data],
-
-                            top: '10%',
-                            left: '8%',
-                            bottom: '22%',
-                            right: '20%',
-                            symbolSize: 7,
-
+                            name: '装备树',
+                            symbolSize:[60,30],
                             edgeShape: 'polyline',
-                            edgeForkPosition: '63%',
+                            expandAndCollapse: true,
                             initialTreeDepth: 0,      //控制树图有几层
-
-                            lineStyle: {
-                                width: 2
-                            },
-
-                            label: {
-                                backgroundColor: '#15161F',
-                                position: 'left',
-                                verticalAlign: 'middle',
-                                align: 'right',
-                                color: '#fff'
-                            },
-
-                            leaves: {
-                                label: {
-                                    position: 'right',
-                                    verticalAlign: 'middle',
-                                    align: 'left',
-                                    color: '#fff'
+                            symbol: 'roundRect',
+                            orient: 'horizontal', // vertical horizontal
+                            rootLocation:{x:'center', y:50}, //根节点位置
+                            nodePadding:20,
+                            itemStyle:{
+                                normal:{
+                                    color: function (param) {
+                                        console.log(checkName)
+                                        // 通过判断选中的名字改变柱子的颜色样式
+                                        if(checkName===param.name){
+                                            return '#ff8040';
+                                        }else{
+                                            return '#c23531';
+                                        }
+                                    },
+                                    label:{
+                                        show:true,
+                                        formatter:"{b}",
+                                        color: '#fff'
+                                    },
+                                    lineStyle:{
+                                        shadowColor: '#000',
+                                        shadowBlur: 3,
+                                        shadowOffsetX: 3,
+                                        shadowOffsetY: 5
+                                    }
+                                },
+                                emphasis:{
+                                    label:{
+                                        show:true
+                                    }
                                 }
                             },
-
-                            expandAndCollapse: true,
+                            data:treedata,
                             animationDuration: 550,
                             animationDurationUpdate: 750
                         }
                     ]
                 };
-                this.myChart.setOption(option);
+                this.myChart.setOption(Option);
+
+                this.myChart('mouseup', function (param) {
+                    that.currentNodeName = param.name
+                    checkName = param.name
+                    this.$axios({
+                        method:'get',
+                        url:'http://192.168.1.2:8088/getAttributeByTableAndName/'+that.currentNodeType+"/"+that.currentNodeName
+                    }).then(res=>{
+                        that.attributeTable = res.data.data
+                    })
+                })
             },
             Back_to_homepage:function () {
-                this.$router.push("/Home")
+                this.$router.push("/")
             }
         }
     }
