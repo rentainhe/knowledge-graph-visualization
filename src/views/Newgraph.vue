@@ -366,12 +366,29 @@
         top:23%;
         left:7.7%;
     }
+    .nodeSearch{
+        position: absolute;
+        left:10.1%;
+        top:17%;
+    }
+    .searchNodeInfo{
+        position: absolute;
+        top:6%;
+        left:2%;
+    }
     .box-card{
         position: absolute;
         top:10%;
         right: 2%;
         background-color: #15161F;
         width: 15%;
+    }
+    .Attribute_text{
+        font-size: 14px;
+        color: #ffffff;
+    }
+    .Attribute_item{
+        margin-bottom: 18px;
     }
 
     .text {
@@ -386,7 +403,34 @@
     .text_search {
         position: absolute;
         left:3%;
-        top: 10%;
+        top: 30%;
+    }
+    .text_upload{
+        position: absolute;
+        top:53%;
+        left:85.5%;
+        color:#ffffff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .manual_check{
+        position: absolute;
+        top:63%;
+        left:85%;
+        color:#fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .to_TreeGraph{
+        position: absolute;
+        top:73%;
+        left:85%;
+        color:#fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
     }
     .back_to_homepage {
         position: absolute;
