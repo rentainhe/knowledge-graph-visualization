@@ -92,8 +92,8 @@
             }
         },
         mounted() {
-            this.Draw_graph();
-            // this.getInitNodes();
+            // this.Draw_graph();
+            this.getInitNodes();
             console.log(this.myChart.getOption());
         },
         methods:{

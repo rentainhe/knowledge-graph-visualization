@@ -36,247 +36,160 @@
         data() {
             return {
                 myChart: '',
-                Nodename:"", // 输入的节点名字
-                MySQLName:"", // 在后端创建的表的名字
-                dialogVisible:false,
-                currentNode:"",
-                currentNodeid:"",
-                currentNodeAttribute:[],
-                isCollapse: true,
-                isClick:false,
-                Node:'',
                 treeData:'',
-                data:{
-                    "name": "太平洋舰队司令部",
-                    "children": [
-                        {
-                            "name": "基地",
-                            "children": [
-                                {
-                                    "name": "班戈海军基地"
-                                },
-                                {
-                                    "name": "樟宜海军基地"
-                                },
-                                {
-                                    "name": "佐世保海军基地"
-                                },
-                                {
-                                    "name": "珍珠港海军基地"
-                                },
-                                {
-                                    "name": "圣迭戈海军基地"
-                                },
-                                {
-                                    "name": "横须贺海军基地"
-                                },
-                                {
-                                    "name": "关岛阿普拉港海军基地"
-                                },
-                                {
-                                    "name": "冲绳白滩海军基地"
-                                }
-                            ]
-                        },
-                        {
-                            "name": "舰队",
-                            "children":[
-                                {
-                                    "name": "第七舰队",
-                                    "children": [
-                                        {
-                                            "name": "第五航母打击群",
-                                            "children":[
-                                                {
-                                                    "name": "舰艇",
-                                                    "children":[
-                                                        {
-                                                            "name": "华盛顿号航空母舰"
-                                                        },
-                                                        {
-                                                            "name": "华盛顿号航空母舰2"
-                                                        },
-                                                        {
-                                                            "name": "华盛顿号航空母舰3"
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    "name": "部队",
-                                                    "children": [
-                                                        {
-                                                            "name":"第15驱逐舰中队"
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
-                                    ]
+                activateName:'equipmentType',
+                addNodeFormVisible:false, // 用于控制对话框是否弹出
+                currentNodeName:"", // 当前选中的节点名字
+                currentNodeType:"EquipmentType", //当前选中的节点属于哪个知识树， 默认值为EquipmentType、
 
-                                },
-                                {
-                                    "name": "第三舰队",
-                                    "children": [
-                                        {
-                                            "name": "第一航母打击群",
-                                            "children": [
-                                                {
-                                                    "name": "舰艇",
-                                                    "children":[
-                                                        {
-                                                            "name": "尚普兰湖号巡洋舰"
-                                                        },
-                                                        {
-                                                            "name": "卡尔文森号航空母舰"
-                                                        },
-                                                        {
-                                                            "name": "邦克山号巡洋舰"
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    "name": "部队",
-                                                    "children":[
-                                                        {
-                                                            "name": "第一驱逐舰中队"
-                                                        }
-                                                    ]
-                                                },
-                                            ]
-                                        },
-                                        {
-                                            "name": "第三航母打击群",
-                                            "children": [
-                                                {
-                                                    "name": "舰艇",
-                                                    "children":[
-                                                        {
-                                                            "name": "独立级濒海战斗舰"
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    "name": "部队",
-                                                    "children":[
-                                                        {
-                                                            "name": "第1爆炸军械处理大队"
-                                                        },
-                                                        {
-                                                            "name": "海军航空与导弹防御司令部"
-                                                        },
-                                                        {
-                                                            "name": "第1濒海战斗舰中队"
-                                                        },
-                                                        {
-                                                            "name": "水雷及反潜作战司令部"
-                                                        },
-                                                        {
-                                                            "name": "第1沿海江河作战部队"
-                                                        },
-                                                        {
-                                                            "name": "海上攻击直升机联队"
-                                                        },
-                                                        {
-                                                            "name": "中太平洋水面大队"
-                                                        }
-                                                    ]
-                                                },
-                                            ]
-
-                                        },
-                                        {
-                                            "name": "第九航母打击群",
-                                            "children": [
-                                                {
-                                                    "name": "舰艇",
-                                                    "children":[
-                                                        {
-                                                            "name": "里根号航空母舰"
-                                                        },
-                                                        {
-                                                            "name": "钱思勒斯维尔号巡洋舰"
-                                                        },
-                                                        {
-                                                            "name": "圣乔治角号巡洋舰"
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    "name": "部队",
-                                                    "children":[
-                                                        {
-                                                            "name": "第九驱逐舰中队"
-                                                        }
-                                                    ]
-                                                },
-                                            ]
-                                        },
-                                        {
-                                            "name": "第十一航母打击群",
-                                            "children": [
-                                                {
-                                                    "name": "舰艇",
-                                                    "children":[
-                                                        {
-                                                            "name": "斯坦尼斯号航空母舰"
-                                                        },
-                                                        {
-                                                            "name": "莫比尔湾号巡洋舰"
-                                                        },
-                                                        {
-                                                            "name": "安蒂特姆河号巡洋舰"
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    "name": "部队",
-                                                    "children":[
-                                                        {
-                                                            "name": "第22驱逐舰中队"
-                                                        }
-                                                    ]
-                                                },
-                                            ]
-                                        },
-                                        {
-                                            "name": "第三远征打击群",
-                                            "children": [
-                                                {
-                                                    "name": "舰艇",
-                                                    "children":[
-                                                        {
-                                                            "name": "尼米兹号航空母舰"
-                                                        },
-                                                        {
-                                                            "name": "普林斯顿号巡洋舰"
-                                                        },
-                                                        {
-                                                            "name": "希金斯号驱逐舰"
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    "name": "部队",
-                                                    "children":[
-                                                        {
-                                                            "name": "第23驱逐舰中队"
-                                                        }
-                                                    ]
-                                                },
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
+                currentAddChildNodeOperation:"/addEquipmentType", // 后端添加节点的URL不同，所以添加一个变量来进行控制
+                currentDeleteNodeOperation:"/deleteEquipmentType/",
+                currentParentId:'pid', // 存放对应当前节点id的那个attribute的值
+                currentParentAttributeName:'装备类型ID', // 存放当前节点对应父亲节点id的那个attribute的值
+                addnewNodeWithAttribute:[], // 存放添加节点的属性
+                attributeTable:[] // 存放读取到的属性列表
             }
         },
         mounted() {
-            this.Draw_graph(this.data);
+            this.getEquipmentTypeTree()
+            // this.Draw_graph(this.data);
         },
         methods: {
+            editCurrentNodeAttribute:function(){
+                console.log(index,row)
+                this.$prompt('请输入修改的值','修改'+row.attributeName,{
+                    confirmButtonText:'确定',
+                    cancelButtonText:'取消'
+                }).then(({value})=>{
+                    this.$message({
+                        type:'success',
+                        message:'修改的信息为'+value
+                    });
+                }).catch(()=>{
+                    this.$message({
+                        type:'info',
+                        message:'取消输入'
+                    })
+                })
+            },
+            deleteCurrentNodeAttribute:function(index,row){
+                // row.splice(index,1)
+                console.log(index,row)
+                this.$confirm('此操作将永久删除该属性，是否继续？','提示',{
+                    confirmButtonText:'确定',
+                    cancelButtonText:'取消',
+                    type:'warning'
+                }).then(({value})=>{
+                    this.$message({
+                        type:'success',
+                        message:'删除成功！'
+                    });
+                }).catch(()=>{
+                    this.$message({
+                        type:'info',
+                        message:'已取消删除'
+                    })
+                })
+            },
+            deleteCurrentNode:function(){
+                this.$confirm("确认删除该节点？").then(()=>{
+                    this.$axios({
+                        method:'post',
+                        url:"http://192.168.1.2:8088/"+this.currentDeleteNodeOperation+this.currentNodeName
+                    }).then(res=>{
+                        this.myChart.clear()
+                        if(this.currentNodeType=="EquipmentType"){
+                            this.getEquipmentTypeTree()
+                        }
+                        else if(this.currentNodeType=="EquipmentTree"){
+                            this.getEquipmentTree()
+                        }
+                        else if(this.currentNodeType=="UnitSequence"){
+                            this.getUnitTree()
+                        }
+                        this.$message("删除成功")
+                    })
+                })
+            },
+            uploadNewNode:function(){
+                console.log(this.addnewNodeWithAttribute)
+                console.log(this.currentNodeName)
+                var obj = new Object()
+                for(var i in this.addnewNodeWithAttribute){
+                    obj[this.addnewNodeWithAttribute[i].attributeName] = this.addnewNodeWithAttribute[i].content;
+                }
+                console.log(obj)
+                this.$axios({
+                    method:'post',
+                    url:"http://192.168.1.2:8088/"+this.currentAddChildNodeOperation,
+                    data:obj
+                }).then(res=>{
+                    this.$message("添加成功")
+                    this.addNodeFormVisible=false
+                    this.myChart.clear()
+                    if(this.currentNodeType=="EquipmentType"){
+                        this.getEquipmentTypeTree();
+                    }
+                    else if(this.currentNodeType=="EquipmentTree"){
+                        this.getEquipmentTree();
+                    }
+                    else if(this.currentNodeType=="UnitSequence"){
+                        this.getUnitTree();
+                    }
+                }).catch(error=>{
+                    console.log(error.config)
+                })
+            },
+            addChildNode:function(){
+                this.$axios({
+                    method:'get',
+                    url:'http://192.168.1.2:8088/getEmptyAttributeByTable/'+this.currentNodeType
+                }).then(res=>{
+                    this.addnewNodeWithAttribute = res.data.data
+                    for(let i=0,len=this.addnewNodeWithAttribute.length;i<len;i++){
+                        if(this.addnewNodeWithAttribute[i].attributeName == this.currentParentId){
+                            // 先找到当前所点击节点中，自身id
+                            for(let j=0,leng = this.attributeTable.length; j<len;j++){
+                                if(this.attributeTable[j].attributeName==this.currentParentAttributeName){
+                                    // 再找到子节点对应其父亲节点id的部分，让其子节点的pid与自身id相同
+                                    this.addnewNodeWithAttribute[i].content = this.attributeTable[j].content
+                                    console.log(this.addnewNodeWithAttribute[i].content)
+                                }
+                            }
+                        }
+                    }
+                })
+                this.addNodeFormVisible = true
+            },
+            handleClick(tab,event){
+                if(tab.name=="equipmentType"){
+                    this.myChart.clear()
+                    this.currentNodeType = "EquipmentType"
+                    this.currentAddChildNodeOperation = "/addEquipmentType"
+                    this.currentDeleteNodeOperation = "/deleteEquipmentType/"
+                    this.currentParentId = "pid"
+                    this.currentParentAttributeName = "装备类型ID"
+                    this.getEquipmentTypeTree()
+                }
+                else if(tab.name=="equipmentTree"){
+                    this.myChart.clear()
+                    this.currentNodeType = "EquipmentTree"
+                    this.currentAddChildNodeOperation = "/addEquipmentTree"
+                    this.currentDeleteNodeOperation = "/deleteEquipmentTree/"
+                    this.currentParentId = "装备类型ID"
+                    this.currentParentAttributeName = "装备ID"
+                    this.getEquipmentTree()
+                }
+                else if(tab.name=="unitTree"){
+                    this.myChart.clear()
+                    this.currentNodeType = "UnitSequence"
+                    this.currentAddChildNodeOperation = "/addUnitSequence"
+                    this.currentDeleteNodeOperation = "/deleteUnitSequence/"
+                    this.currentParentId = "pid"
+                    this.currentParentAttributeName = "装备类型ID"
+                    this.getUnitTree()
+                }
+            },
             Draw_graph:function(data){
                 this.myChart = this.$echarts.init(document.getElementById('myChart'))
                 var option = {
@@ -338,6 +251,50 @@
 </script>
 
 <style scoped>
+    .deleteCurrentNode{
+        position: absolute;
+        right:20%;
+        top:50%;
+    }
+    .addChildNode{
+        position: absolute;
+        left:19%;
+        top:50%;
+    }
+    .attributeNameText{
+        font-family: "PingFang SC";
+        font-size: 25px;
+        letter-spacing: 2px;
+        text-align: left;
+    }
+    .chosenNodeName{
+        font-family: "PingFang SC";
+        font-size: 25px;
+        letter-spacing: 6px;
+        color:#ffffff;
+        text-align: center;
+        width:100%;
+        height:27%;
+        background-color: #15161F;
+        border-bottom: 2px solid;
+        border-color: white;
+    }
+    .operation{
+        width: 37%;
+        height:15%;
+        position: absolute;
+        left: 59%;
+        top:50%;
+        background-color: #15161F;
+    }
+    .attributeList{
+        width: 37%;
+        height:40%;
+        position: absolute;
+        left:59%;
+        top:6%;
+        background-color: #ff7f0e;
+    }
     .text {
         font-size: 14px;
         text-align: left;
@@ -406,8 +363,8 @@
     }
     .back_to_homepage {
         position: absolute;
-        top: 73%;
-        left: 85%;
+        top: 87%;
+        left: 87%;
         color: #fff;
         background-color: #303252;
         border-color: #9593A7;
