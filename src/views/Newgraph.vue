@@ -361,6 +361,11 @@
 </script>
 
 <style scoped>
+    .nodeRelationSearch{
+        position: absolute;
+        top:23%;
+        left:7.7%;
+    }
     .box-card{
         position: absolute;
         top:10%;
