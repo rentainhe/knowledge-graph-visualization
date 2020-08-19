@@ -27,7 +27,7 @@ export const routes = [
         component: Knowledge_tree
     },
     {
-        path: '/Newgraph',
+        path: '/',
         component: Newgraph
     },
     {

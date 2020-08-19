@@ -4,29 +4,55 @@
         <div class="container">
 <!--            <div class="left"></div>-->
             <div class="main">
-                <el-col :span="3" :offset="3">
-                    <el-form :model="formInline" class="text_search">
-                        <el-form-item>
-                            <el-input v-model="default_ask" placeholder="查询" clearable=1></el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-col>
-
+<!--                <el-col :span="3" :offset="3">-->
+<!--                    <el-form :model="formInline" class="text_search">-->
+<!--                        <el-form-item>-->
+<!--                            <el-input v-model="default_ask" placeholder="查询" clearable=1></el-input>-->
+<!--                        </el-form-item>-->
+<!--                        <el-form-item>-->
+<!--                            <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>-->
+<!--                        </el-form-item>-->
+<!--                    </el-form>-->
+<!--                </el-col>-->
+                <el-tabs class="searchNodeInfo" v-model="activateName" type="card" @tab-click="handleClick">
+                    <el-tab-pane label="节点信息查询" name="first">
+                        <el-col :span="24">
+<!--                            通过el-col+span的组合来限制输入框的宽度-->
+                            <el-input v-model="single_node_search_temp" placeholder="查询" clearable="1"></el-input>
+                        </el-col>
+                    </el-tab-pane>
+                    <el-tab-pane label="节点关系查询" name="second">
+                        <el-col :span="24">
+                            <el-input v-model="start_node_temp" placeholder="起始节点" clearable="1"></el-input>
+                            <p></p>
+                            <el-input v-mode="end_node_temp" placeholder="终止节点" clearable="1"></el-input>
+                        </el-col>
+                    </el-tab-pane>
+                </el-tabs>
+                <el-button id="nodeSearch" style="display: block" class="nodeSearch" icon="el-icon-upload" type="primary" @click="singleNodeSearch">节点查询</el-button>
+                <el-button id="nodeRelationSearch" style="display: none" class="nodeRelationSearch" icon="el-icon-upload" type="primary" @click="relationSearch">节点关系查询</el-button>
                 <div id="myChart" style="position: absolute;top:6%;left: 20%" :style="{width: '60%', height: '80%'}"></div>
 
-                <el-card class="box-card" id="Player_info" style="display: block">
+                <el-card class="box-card" id="Player_info" style="display: none">
                     <div slot="header" class="clearfix">
-                        <span class="text item">节点信息</span>
+                        <span class="Attribute_item Attribute_text">节点信息</span>
                     </div>
 <!--                    <div class="text item" v-for="(val,key,i) in currentPlayerNode" >-->
 <!--                        {{key}}:{{val}}-->
 <!--                    </div>-->
-                    <div></div>
+                    <div class="Attribute_text Attribute_item" v-for="(val,key,i) in currentNode">
+                        {{key}}:{{val}}
+                    </div>
                 </el-card>
-
+                <el-button type="primary" round=true  @click="goToTextUpload" class="text_upload">文本导入
+                    <i class="el-icon-s-promotion el-icon--right"></i>
+                </el-button>
+                <el-button type="primary" round=true  @click="manualCheck" class="manual_check">人工审核
+                    <i class="el-icon-s-promotion el-icon--right"></i>
+                </el-button>
+                <el-button type="primary" round=true  @click="goToKnowledgeTree" class="to_TreeGraph">知识树展示
+                    <i class="el-icon-s-promotion el-icon--right"></i>
+                </el-button>
                 <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
@@ -40,15 +66,128 @@
         name: "Newgraph",
         data (){
             return{
-                myChart:''
+                currentNode:{
+                }, // 当前节点信息
+                myChart:'',
+                init_data:[], // 存储初始所有节点的列表
+                init_links:[], // 存储初始所有的relation列表
+                activateName:'first',
+                single_node_search_temp:"", // 如果不设置default_ask 与 input的v-model 绑定的话，在前端ui部分无法输入
+                single_node_search:"",
+
+                single_node_data:[], // 单个节点查询的存储列表
+                single_node_links:[], // 单个节点查询，存储其子节点关系
+
+                start_node_temp:"",
+                end_node_temp:"",
+                start_node:"",
+                end_node:"",
+                search_node_data:[], // 查询到的节点列表
+                search_node_relation:[], // 查询到的节点关系列表
+                // 控制graph的参数
+                ifUnfold:true,
+                X : 0,
+                Y : 0,
+                Z : 0,
             }
         },
         mounted() {
             this.Draw_graph();
+            // this.getInitNodes();
             console.log(this.myChart.getOption());
         },
         methods:{
-            Draw_graph:function(){
+            singleNodeSearch:function(){
+                this.$axios({
+                    method:'get',
+                    url:'http://192.168.1.2:8088/queryNodeLabelByName/'+this.single_node_search_temp
+                }) .then(res=>{
+                    if(res.status==200){
+                        this.single_node_data = res.data.data
+                        console.log(this.single_node_data)
+                        this.$axios({
+                            method:'get',
+                            url:'http://192.168.1.2:8088/queryNodeRelationByName/'+this.single_node_search_temp
+                        }).then(res=>{
+                            this.single_node_links = res.data.data
+                            if(res.data.data.length >= 20){
+                                console.log(this.single_node_links)
+                                this.X = 10
+                                this.Y = 20
+                                this.Z = 6
+                                this.ifUnfold = false
+                            }else{
+                                this.X = 80
+                                this.Y = 80
+                                this.Z = 10
+                                this.ifUnfold = false
+                            }
+                            this.Draw_graph(this.single_node_data,this.single_node_links)
+                        })
+                    }
+                })
+            },
+            relationSearch:function(){
+                this.start_node = this.start_node_temp
+                this.end_node = this.end_node_temp
+                this.$axios({
+                    method:'get',
+                    url:'http://192.168.1.2:8088/queryNodeLabelBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+                }).then(res=>{
+                    if(res.status == 200){
+                        console.log(res)
+                        console.log(res.data.data)
+                        this.search_node_data = res.data.data
+                        this.$axios({
+                            method:'get',
+                            url:'http://192.168.1.2:8088/queryNodeRelationBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+                        }).then(response=>{
+                            console.log(response.data.data)
+                            this.search_node_relation = response.data.data
+                            this.X = 30
+                            this.Y = 30
+                            this.Z = 50
+                            this.ifUnfold = false
+                            this.Draw_graph(this.search_node_data,this.search_node_relation)
+                        })
+                    }
+                })
+            },
+            handleClick(tab,event){
+                if(tab.name=="first"){
+                    document.getElementById("nodeSearch").style.display='block'
+                    document.getElementById("nodeRelationSearch").style.display='none'
+                }
+                else if(tab.name=="second"){
+                    document.getElementById("nodeSearch").style.display='none'
+                    document.getElementById("nodeRelationSearch").style.display='block'
+                }
+            },
+            getInitNodes:function(){
+                this.$axios({
+                    method:'get',
+                    url:"http://192.168.1.2:8088/queryAllNodesWithLabel"
+                }).then(res=>{
+                    this.init_data = res.data.data
+                    console.log(this.init_data)
+                    this.getInitRelation()
+                })
+            },
+            getInitRelation:function(){
+                this.$axios({
+                    method:'get',
+                    url:"http://192.168.1.2:8088/queryAllNodesRelationship"
+                }).then(res=>{
+                    this.init_links = res.data.data
+                    console.log(this.init_links)
+                    this.X = 20
+                    this.Y = 20
+                    this.Z = 30
+                    this.ifUnfold = false
+                    this.Draw_graph(this.init_data,this.init_links);
+                })
+            },
+            Draw_graph:function(allNodes,allLinks){
 
                 var size = 60;
                 var size1 = 30;
@@ -58,130 +197,113 @@
                 var listdata = [];
                 var links = [];
 
+                var newdata=[];
+                newdata = this.init_links
 
-                function setData(arr, n) {
-                    for (var i = 0; i < arr.length; i++) {
-                        const flag = arr[i] === "disease"
-                        listdata.push({
-                            x: i*25,
-                            y: 30 + i * 10,
-                            "name": arr[i], // 各个节点的name参数不能重复，
-                            "symbolSize": size, // 该类目节点标记的大小
-                            "category": -n, // 该节点所在类目的index
-                            "nodeType" : flag, //
-                            "draggable": "true"
-                        })
+                // function setData(arr, n) {
+                //     for (var i = 0; i < arr.length; i++) {
+                //         const flag = arr[i] === "disease"
+                //         listdata.push({
+                //             x: i*25,
+                //             y: 30 + i * 10,
+                //             "name": arr[i], // 各个节点的name参数不能重复，
+                //             "symbolSize": size, // 该类目节点标记的大小
+                //             "category": -n, // 该节点所在类目的index
+                //             "nodeType" : flag, //
+                //             "draggable": "true"
+                //         })
+                //     }
+                // }
+
+                function setData(arr, n,i,X,Y,Z,Unfold) {
+                    if(Unfold == false){
+                        n = -n
                     }
+                    const flag = arr === "disease"
+                    listdata.push({
+                        x: X*i,
+                        y: Y + Z*i,
+                        "name":arr, // 各个节点的name参数不能重复
+                        "symbolSize":size, // 该类目节点标记的大小
+                        "category": -n, // 该节点所在类目的index
+                        "nodeType": flag, //
+                        "draggable": "true",
+                        "open" : "true"
+                    })
                 }
 
+                // function setLinkData(arr, title,relation) {
+                //     for (var i = 0; i < arr.length; i++) {
+                //         links.push({
+                //             "source": arr[i],
+                //             "target": title,
+                //             label:{
+                //                 show: true,
+                //                 formatter:relation // 在formatter中添加文字可以实现将文字显示在关系上
+                //             },
+                //             lineStyle: {
+                //                 normal: {
+                //                     color: 'source',
+                //                 }
+                //             }
+                //         })
+                //     }
+                // }
                 function setLinkData(arr, title,relation) {
-                    for (var i = 0; i < arr.length; i++) {
-                        links.push({
-                            "source": arr[i],
-                            "target": title,
-                            label:{
-                                show: true,
-                                formatter:relation // 在formatter中添加文字可以实现将文字显示在关系上
-                            },
-                            lineStyle: {
-                                normal: {
-                                    color: 'source',
-                                }
+                    links.push({
+                        "source": arr,
+                        "target": title,
+                        label:{
+                            show: true,
+                            formatter:relation // 在formatter中添加文字可以实现将文字显示在关系上
+                        },
+                        lineStyle: {
+                            normal: {
+                                color: 'source',
                             }
-                        })
-                    }
+                        }
+                    })
+
                 }
 
-                //著需要设定一下四个参数
-                //设总部名称
-                var headquarter = "太平洋舰队\n司令部";
-                // 二级节点
-                var second_nodes = ["基地","舰队"]
-
-                var CSGS = ["第三舰队", "第七舰队"];
-                var CSG1 = ["第三舰队","第一航母打击群","第三航母打击群","第九航母打击群","第十一航母打击群","第三远征打击群"]
-                var first_troop = ["第一航母打击群","第一航母打击群舰艇","第一航母打击群部队","尚普兰湖号巡洋舰","卡尔文森号航空母舰","邦克山号巡洋舰",
-                                "第一驱逐舰中队"]
-                // 第三航母打击群
-                var third_troop = ["第三航母打击群","第三航母打击群舰艇","第三航母打击群部队","斯坦尼斯号航空母舰","莫比尔湾号巡洋舰","安蒂特姆河号巡洋舰"
-                                ,"第22驱逐舰中队"]
-                // 第九航母打击群
-                var ninth_troop = ["第九航母打击群","第九航母打击群舰艇","第九航母打击群部队","里根号航空母舰","钱思勒斯维尔号巡洋舰","圣乔治角号巡洋舰"
-                                ,"第九驱逐舰中队"]
-                // 第十一航母打击群
-                var eleventh_troop = ["第11航母打击群","第11航母打击群舰艇","第11航母打击群部队","尼米兹号航空母舰","普林斯顿号巡洋舰","希金斯号驱逐舰"
-                                ,"第23驱逐舰中队"]
-                // 第三远征打击群舰艇
-                var third_ESG_troop = ["第三远征打击群","第三远征打击群舰艇","第三远征打击群部队","独立级濒海战斗舰"
-                                ,"第1爆炸军械处理大队","海军航空与导弹防御司令部","第1濒海战斗舰中队","水雷及反潜作战司令部","第1沿海江河作战部队","海上攻击直升机联队","中太平洋水面大队"]
-                // 第五航母打击群
-                var fifth_troop = ["第五航母打击群","第五航母打击群舰艇","第五航母打击群部队","华盛顿号航空母舰","华盛顿号航空母舰2","华盛顿号航空母舰3",
-                                "第15驱逐舰中队"]
-                // 基地
-                var basement = ["基地","冲绳白滩海军基地", "关岛阿普拉港海军基地", "横须贺海军基地", "圣坛戈海军基地","珍珠港海军基地","佐世保海军基地","樟宜海军基地","班戈海军基地"];
-
-                var legendes = ["司令部", "基地", "舰队","第三舰队","第一航母打击群","第三航母打击群","第九航母打击群","第11航母打击群","第三远征打击群"
-                    ,"第七舰队","第五航母打击群"];
+                for(let i=0,len=allNodes.length;i<len;i++){
+                    setData(allNodes[i].nodeName, allNodes[i].label, i, this.X, this.Y, this.Z, this.ifUnfold)
+                }
+                for(let i=0,len=allLinks.length;i<len;i++){
+                    setData(allLinks[i].childNode, allLinks[i].fatherNode, i,allLinks[i].nodeRelationType)
+                }
+                console.log(listdata)
+                console.log(links)
+                // 需要设定4个参数
+                // 设总部名称
+                var headquarter = "太平洋舰队\n司令部"
+                var legendes = ["单位","人员","装备"]
                 var texts = [];
-                for (var i = 0; i < legendes.length; i++) {
+                for (var i =0; i<legendes.length;i++){
                     texts.push({
-                        "name": legendes[i],
+                        "name":legendes[i],
                     })
                 }
 
                 var Headquarter = []; // 司令部节点
                 Headquarter.push(headquarter);
 
+                let that = this
+                function showNodeAttribute(chart) { // 展示节点属性
+                    chart.on('mouseover',function (params) {
+                        console.log(params.name)
+                        this.$axios({
+                            method:'get',
+                            url:'http://192.168.1.2:8088/getAttributeValueByNodeName/' + params.name
+                        }).then(response=>{
+                            that.currentNode = response.data.data // 这里不能用this, 必须用that，否则数据传输不到currentNode
+                            console.log(this.currentNode)
+                            document.getElementById("Node_Attribute_Info").style.display = 'block'
+                        })
+                    })
 
-                // 设置节点信息
-                setData(Headquarter, 0); //司令部节点，类别0
-                setData(basement,1); // 基地节点，类别1
-                setData(second_nodes.slice(1,2), 2); // 舰队节点，类别2
-                setData(CSGS.slice(0,1),3); // 第三舰队节点，类别3
-                setData(CSGS.slice(1,2),9); // 第七舰队节点，类别9（对应legend上位置9）
-                setData(first_troop,4) // 第一航母打击群，类别4
-                setData(third_troop,5) // 第三航母打击群，类别5
-                setData(ninth_troop,6) // 第九航母打击群，类别6
-                setData(eleventh_troop,7) // 第11航母打击群，类别7
-                setData(third_ESG_troop,8) // 第三远征打击群，类别8
-                setData(fifth_troop,10) // 第五航母打击群，类别10
-                // 设置节点关系
-                setLinkData(second_nodes, Headquarter[0],"");
-                setLinkData(basement.slice(1,9), second_nodes[0],"所属基地");
-                setLinkData(CSGS.slice(1,2),second_nodes[1],"下辖\n舰队") // 舰队 -> 第七舰队
-                setLinkData(CSGS.slice(0,1),second_nodes[1],"下辖\n舰队") // 舰队 -> 第三舰队
+                }
 
-
-
-                setLinkData(first_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第一航母打击群
-                setLinkData(first_troop.slice(1,3),first_troop[0],"") // 第一航母打击群 -> 舰艇/部队
-                setLinkData(first_troop.slice(3,6),first_troop[1],"下辖\n舰队")
-                setLinkData(first_troop.slice(6,7),first_troop[2],"下辖\n部队")
-                //
-                setLinkData(third_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第三航母打击群
-                setLinkData(third_troop.slice(1,3),third_troop[0],"") // 第三航母打击群 -> 舰艇/部队
-                setLinkData(third_troop.slice(3,6),third_troop[1],"下辖\n舰队")
-                setLinkData(third_troop.slice(6,7),third_troop[2],"下辖\n部队")
-                //
-                setLinkData(ninth_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第九航母打击群
-                setLinkData(ninth_troop.slice(1,3),ninth_troop[0],"") // 第九航母打击群 -> 舰艇/部队
-                setLinkData(ninth_troop.slice(3,6),ninth_troop[1],"下辖\n舰队")
-                setLinkData(ninth_troop.slice(6,7),ninth_troop[2],"下辖\n部队")
-                //
-                setLinkData(eleventh_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第11航母打击群
-                setLinkData(eleventh_troop.slice(1,3),eleventh_troop[0],"") // 第11航母打击群 -> 舰艇/部队
-                setLinkData(eleventh_troop.slice(3,6),eleventh_troop[1],"下辖\n舰队")
-                setLinkData(eleventh_troop.slice(6,7),eleventh_troop[2],"下辖\n部队")
-                //
-                setLinkData(third_ESG_troop.slice(0,1),"第三舰队","下辖\n打击群") // 第三舰队 -> 第三远征打击群
-                setLinkData(third_ESG_troop.slice(1,3),third_ESG_troop[0],"") // 第三远征打击群 -> 舰艇/部队
-                setLinkData(third_ESG_troop.slice(3,4),third_ESG_troop[1],"下辖\n舰队")
-                setLinkData(third_ESG_troop.slice(4,11),third_ESG_troop[2],"下辖\n部队")
-                //
-                setLinkData(fifth_troop.slice(0,1),"第七舰队","下辖\n打击群") // 第七舰队 -> 第五航母打击群
-                setLinkData(fifth_troop.slice(1,3),fifth_troop[0],"") // 第五航母打击群 -> 舰艇/部队
-                setLinkData(fifth_troop.slice(3,6),fifth_troop[1],"下辖\n舰队")
-                setLinkData(fifth_troop.slice(6,7),fifth_troop[2],"下辖\n部队")
                 /**
                  * 绑定图表的点击事件
                  * @param chart
@@ -351,6 +473,16 @@
                 );
                 this.myChart.setOption(option);
                 bindChartClickEvent(this.myChart);
+                // showNodeAttribute(this.myChart);
+            },
+            goToTextUpload:function(){
+                this.$router.push("/TextUpload")
+            },
+            goToKnowledgeTree:function(){
+                this.$router.push("/newTreeGraph")
+            },
+            manualCheck:function(){
+                this.$router.push("/Check_1")
             },
             Back_to_homepage:function () {
                 this.$router.push("/Home")
@@ -363,13 +495,13 @@
 <style scoped>
     .nodeRelationSearch{
         position: absolute;
-        top:23%;
-        left:7.7%;
+        top:25%;
+        left:7%;
     }
     .nodeSearch{
         position: absolute;
-        left:10.1%;
-        top:17%;
+        left:9%;
+        top:18.5%;
     }
     .searchNodeInfo{
         position: absolute;
@@ -434,7 +566,7 @@
     }
     .back_to_homepage {
         position: absolute;
-        top: 73%;
+        top: 83%;
         left: 85%;
         color: #fff;
         background-color: #303252;
