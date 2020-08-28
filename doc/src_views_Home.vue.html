@@ -1,95 +1,136 @@
-<template>
-    <!--    <input type="hidden" id="refleshed" value="no"></input>-->
-    <el-container style="height : 100%">
-        <el-header height="8%" class="header_text">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>src/views/Home.vue - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-home.html">home</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~change_to_text">change_to_text</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~initGraph">initGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~move_to_newTreeGraph">move_to_newTreeGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~oneRelation">oneRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~onSubmit">onSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~secondRelation">secondRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~user_Check">user_Check</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/views/Home.vue</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;template>
+    &lt;!--    &lt;input type="hidden" id="refleshed" value="no">&lt;/input>-->
+    &lt;el-container style="height : 100%">
+        &lt;el-header height="8%" class="header_text">
             知识图谱展示
-        </el-header>
-        <el-container>
-            <el-aside width="25%">
-                <!--                    <el-container>-->
-                <div class="indicator">
-                    <div><span class="span" style="background-color: white"></span>节点列表</div>
-                    <div><span class="span" style="background-color: #ff7f0e"></span>球员</div>
-                    <div><span class="span" style="background-color: #1f77b4"></span>所属球队</div>
-                    <!--                    <div><el-button>一级关系</el-button></div>-->
-                    <!--                    <div><el-button>二级关系</el-button></div>-->
-                </div>
-                <div class="relation_change">
-                    <div><el-button id="OneRelation" style="display: none" type="primary" round=true class="one_relation" @click="oneRelation">一级关系</el-button></div>
-                    <div><el-button id="SecondRelation" style="display: none" type="primary" round=true class="second_relation" @click="secondRelation">二级关系</el-button></div>
-                </div>
-                <el-col :span="4" :offset="3">
-                    <el-form :model="formInline" class="text_search">
-                        <el-form-item>
-                            <el-input v-model="default_ask" placeholder="查询" clearable=1></el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询</el-button>
-                        </el-form-item>
-                    </el-form>
-                </el-col>
-                <!--                        <el-switch-->
-                <!--                                v-model="value1" active-text="Text" inactive-text="Nodes" active-color="#F0FFFF">-->
-                <!--                        </el-switch>-->
-                <!--                    </el-container>-->
-            </el-aside>
-            <!--主要区域-->
-            <!--                <el-main>-->
-            <!--图谱放置的主要区域-->
-            <el-col :span="15" class="graph">
-                <!--这是我的图！！！！！！！！！-->
-                <!--                        <div class="cc"></div>-->
-            </el-col>
-            <el-col :span="7" class="right-side" >
-                <!-- 节点信息区域-->
-                <div class="personal_Information">
-                    <el-card class="box-card" id="Player_info" style="display: none">
-                        <div slot="header" class="clearfix">
-                            <span class="text item">节点信息</span>
-                        </div>
-                        <div class="text item" v-for="(val,key,i) in currentPlayerNode" >
+        &lt;/el-header>
+        &lt;el-container>
+            &lt;el-aside width="25%">
+                &lt;!--                    &lt;el-container>-->
+                &lt;div class="indicator">
+                    &lt;div>&lt;span class="span" style="background-color: white">&lt;/span>节点列表&lt;/div>
+                    &lt;div>&lt;span class="span" style="background-color: #ff7f0e">&lt;/span>球员&lt;/div>
+                    &lt;div>&lt;span class="span" style="background-color: #1f77b4">&lt;/span>所属球队&lt;/div>
+                    &lt;!--                    &lt;div>&lt;el-button>一级关系&lt;/el-button>&lt;/div>-->
+                    &lt;!--                    &lt;div>&lt;el-button>二级关系&lt;/el-button>&lt;/div>-->
+                &lt;/div>
+                &lt;div class="relation_change">
+                    &lt;div>&lt;el-button id="OneRelation" style="display: none" type="primary" round=true class="one_relation" @click="oneRelation">一级关系&lt;/el-button>&lt;/div>
+                    &lt;div>&lt;el-button id="SecondRelation" style="display: none" type="primary" round=true class="second_relation" @click="secondRelation">二级关系&lt;/el-button>&lt;/div>
+                &lt;/div>
+                &lt;el-col :span="4" :offset="3">
+                    &lt;el-form :model="formInline" class="text_search">
+                        &lt;el-form-item>
+                            &lt;el-input v-model="default_ask" placeholder="查询" clearable=1>&lt;/el-input>
+                        &lt;/el-form-item>
+                        &lt;el-form-item>
+                            &lt;el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询&lt;/el-button>
+                        &lt;/el-form-item>
+                    &lt;/el-form>
+                &lt;/el-col>
+                &lt;!--                        &lt;el-switch-->
+                &lt;!--                                v-model="value1" active-text="Text" inactive-text="Nodes" active-color="#F0FFFF">-->
+                &lt;!--                        &lt;/el-switch>-->
+                &lt;!--                    &lt;/el-container>-->
+            &lt;/el-aside>
+            &lt;!--主要区域-->
+            &lt;!--                &lt;el-main>-->
+            &lt;!--图谱放置的主要区域-->
+            &lt;el-col :span="15" class="graph">
+                &lt;!--这是我的图！！！！！！！！！-->
+                &lt;!--                        &lt;div class="cc">&lt;/div>-->
+            &lt;/el-col>
+            &lt;el-col :span="7" class="right-side" >
+                &lt;!-- 节点信息区域-->
+                &lt;div class="personal_Information">
+                    &lt;el-card class="box-card" id="Player_info" style="display: none">
+                        &lt;div slot="header" class="clearfix">
+                            &lt;span class="text item">节点信息&lt;/span>
+                        &lt;/div>
+                        &lt;div class="text item" v-for="(val,key,i) in currentPlayerNode" >
                             {{key}}:{{val}}
-                        </div>
-                    </el-card>
-                    <el-card class="box-card" id="Team_info" style="display: none">
-                        <div slot="header" class="clearfix">
-                            <span class="text item">节点信息</span>
-                        </div>
-                        <div class="text item" v-for="(val,key,i) in currentTeamNode" >
+                        &lt;/div>
+                    &lt;/el-card>
+                    &lt;el-card class="box-card" id="Team_info" style="display: none">
+                        &lt;div slot="header" class="clearfix">
+                            &lt;span class="text item">节点信息&lt;/span>
+                        &lt;/div>
+                        &lt;div class="text item" v-for="(val,key,i) in currentTeamNode" >
                             {{key}}:{{val}}
-                        </div>
-                    </el-card>
-                </div>
-                <!-- 基本功能按钮区域-->
-                <div class="buttons">
-                    <el-button type="primary" round=true @click="change_to_text" class="el-button–upload">文本导入
-                        <i class="el-icon-upload el-icon--right"></i>
-                    </el-button>
-                    <el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
-                        <i class="el-icon-user el-icon--right"></i>
-                    </el-button>
-                    <!--                    <el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入-->
-                    <!--                        <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
-                    <!--                    </el-button>&lt;!&ndash;              <el-row class="col1"></el-row>&ndash;&gt;-->
-                    <el-button type="primary" round=true  @click="Edit_knowledge_tree" class="el-button–Knowledge_tree">知识树编辑
-                        <i class="el-icon-coin el-icon--right"></i>
-                    </el-button>
-                    <el-button type="primary" round=true  @click="move_to_newgraph" class="el_button-newgraph">新的图谱
-                        <i class="el-icon-coin el-icon--right"></i>
-                    </el-button>
-                    <el-button type="primary" round=true  @click="move_to_newTreeGraph" class="el_button-newTreeGraph">新的树图
-                        <i class="el-icon-coin el-icon--right"></i>
-                    </el-button>
-                </div>
-            </el-col>
-            <!--                </el-main>-->
+                        &lt;/div>
+                    &lt;/el-card>
+                &lt;/div>
+                &lt;!-- 基本功能按钮区域-->
+                &lt;div class="buttons">
+                    &lt;el-button type="primary" round=true @click="change_to_text" class="el-button–upload">文本导入
+                        &lt;i class="el-icon-upload el-icon--right">&lt;/i>
+                    &lt;/el-button>
+                    &lt;el-button type="primary" round=true @click="user_Check" class="el-button-check">人工审核
+                        &lt;i class="el-icon-user el-icon--right">&lt;/i>
+                    &lt;/el-button>
+                    &lt;!--                    &lt;el-button type="primary" round=true  @click="put_into_Database" class="el-button–mysql">数据库导入-->
+                    &lt;!--                        &lt;i class="el-icon-coin el-icon&amp;#45;&amp;#45;right">&lt;/i>-->
+                    &lt;!--                    &lt;/el-button>&amp;lt;!&amp;ndash;              &lt;el-row class="col1">&lt;/el-row>&amp;ndash;&amp;gt;-->
+                    &lt;el-button type="primary" round=true  @click="Edit_knowledge_tree" class="el-button–Knowledge_tree">知识树编辑
+                        &lt;i class="el-icon-coin el-icon--right">&lt;/i>
+                    &lt;/el-button>
+                    &lt;el-button type="primary" round=true  @click="move_to_newgraph" class="el_button-newgraph">新的图谱
+                        &lt;i class="el-icon-coin el-icon--right">&lt;/i>
+                    &lt;/el-button>
+                    &lt;el-button type="primary" round=true  @click="move_to_newTreeGraph" class="el_button-newTreeGraph">新的树图
+                        &lt;i class="el-icon-coin el-icon--right">&lt;/i>
+                    &lt;/el-button>
+                &lt;/div>
+            &lt;/el-col>
+            &lt;!--                &lt;/el-main>-->
 
-        </el-container>
+        &lt;/el-container>
 
-    </el-container>
-</template>
+    &lt;/el-container>
+&lt;/template>
 
-<style>
+&lt;style>
     .text {
         font-size: 14px;
         color: #ffffff;
@@ -303,10 +344,10 @@
     }
 
 
-</style>
+&lt;/style>
 
-<!-- 查询框-->
-<script>
+&lt;!-- 查询框-->
+&lt;script>
     // 画图
     import * as d3 from 'd3'
     // var _this = this
@@ -712,8 +753,27 @@
             }
         }
     }
-</script>
+&lt;/script>
 
-<style scoped>
+&lt;style scoped>
 
-</style>
+&lt;/style>
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Fri Aug 28 2020 13:47:57 GMT+0800 (China Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

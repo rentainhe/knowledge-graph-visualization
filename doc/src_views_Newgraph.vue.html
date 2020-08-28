@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>src/views/Newgraph.vue - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-home.html">home</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~change_to_text">change_to_text</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~initGraph">initGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~move_to_newTreeGraph">move_to_newTreeGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~oneRelation">oneRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~onSubmit">onSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~secondRelation">secondRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~user_Check">user_Check</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/views/Newgraph.vue</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;template>
+    &lt;div>
+        &lt;div class="header_text">知识图谱系统&lt;/div>
+        &lt;div class="container">
+&lt;!--            &lt;div class="left">&lt;/div>-->
+            &lt;div class="main">
+&lt;!--                &lt;el-col :span="3" :offset="3">-->
+&lt;!--                    &lt;el-form :model="formInline" class="text_search">-->
+&lt;!--                        &lt;el-form-item>-->
+&lt;!--                            &lt;el-input v-model="default_ask" placeholder="查询" clearable=1>&lt;/el-input>-->
+&lt;!--                        &lt;/el-form-item>-->
+&lt;!--                        &lt;el-form-item>-->
+&lt;!--                            &lt;el-button icon="el-icon-upload" type="primary" @click="onSubmit">节点查询&lt;/el-button>-->
+&lt;!--                        &lt;/el-form-item>-->
+&lt;!--                    &lt;/el-form>-->
+&lt;!--                &lt;/el-col>-->
+                &lt;el-tabs class="searchNodeInfo" v-model="activateName" type="card" @tab-click="handleClick">
+                    &lt;el-tab-pane label="节点信息查询" name="first">
+                        &lt;el-col :span="24">
+&lt;!--                            通过el-col+span的组合来限制输入框的宽度-->
+                            &lt;el-input v-model="single_node_search_temp" placeholder="查询" clearable="1">&lt;/el-input>
+                        &lt;/el-col>
+                    &lt;/el-tab-pane>
+                    &lt;el-tab-pane label="节点关系查询" name="second">
+                        &lt;el-col :span="24">
+                            &lt;el-input v-model="start_node_temp" placeholder="起始节点" clearable="1">&lt;/el-input>
+                            &lt;p>&lt;/p>
+                            &lt;el-input v-mode="end_node_temp" placeholder="终止节点" clearable="1">&lt;/el-input>
+                        &lt;/el-col>
+                    &lt;/el-tab-pane>
+                &lt;/el-tabs>
+                &lt;el-button id="nodeSearch" style="display: block" class="nodeSearch" icon="el-icon-upload" type="primary" @click="singleNodeSearch">节点查询&lt;/el-button>
+                &lt;el-button id="nodeRelationSearch" style="display: none" class="nodeRelationSearch" icon="el-icon-upload" type="primary" @click="relationSearch">节点关系查询&lt;/el-button>
+                &lt;div id="myChart" style="position: absolute;top:6%;left: 20%" :style="{width: '60%', height: '80%'}">&lt;/div>
+
+                &lt;el-card class="box-card" id="Player_info" style="display: none">
+                    &lt;div slot="header" class="clearfix">
+                        &lt;span class="Attribute_item Attribute_text">节点信息&lt;/span>
+                    &lt;/div>
+&lt;!--                    &lt;div class="text item" v-for="(val,key,i) in currentPlayerNode" >-->
+&lt;!--                        {{key}}:{{val}}-->
+&lt;!--                    &lt;/div>-->
+                    &lt;div class="Attribute_text Attribute_item" v-for="(val,key,i) in currentNode">
+                        {{key}}:{{val}}
+                    &lt;/div>
+                &lt;/el-card>
+                &lt;el-button type="primary" round=true  @click="goToTextUpload" class="text_upload">文本导入
+                    &lt;i class="el-icon-s-promotion el-icon--right">&lt;/i>
+                &lt;/el-button>
+                &lt;el-button type="primary" round=true  @click="manualCheck" class="manual_check">人工审核
+                    &lt;i class="el-icon-s-promotion el-icon--right">&lt;/i>
+                &lt;/el-button>
+                &lt;el-button type="primary" round=true  @click="goToKnowledgeTree" class="to_TreeGraph">知识树展示
+                    &lt;i class="el-icon-s-promotion el-icon--right">&lt;/i>
+                &lt;/el-button>
+                &lt;el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
+                    &lt;i class="el-icon-s-promotion el-icon--right">&lt;/i>
+                &lt;/el-button>
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>
+&lt;/template>
+
+&lt;script>
+    export default {
+        name: "Newgraph",
+        data (){
+            return{
+                currentNode:{
+                }, // 当前节点信息
+                myChart:'',
+                init_data:[], // 存储初始所有节点的列表
+                init_links:[], // 存储初始所有的relation列表
+                activateName:'first',
+                single_node_search_temp:"", // 如果不设置default_ask 与 input的v-model 绑定的话，在前端ui部分无法输入
+                single_node_search:"",
+
+                single_node_data:[], // 单个节点查询的存储列表
+                single_node_links:[], // 单个节点查询，存储其子节点关系
+
+                start_node_temp:"",
+                end_node_temp:"",
+                start_node:"",
+                end_node:"",
+                search_node_data:[], // 查询到的节点列表
+                search_node_relation:[], // 查询到的节点关系列表
+                // 控制graph的参数
+                ifUnfold:true,
+                X : 0,
+                Y : 0,
+                Z : 0,
+            }
+        },
+        mounted() {
+            // this.Draw_graph();
+            this.getInitNodes();
+            console.log(this.myChart.getOption());
+        },
+        methods:{
+            singleNodeSearch:function(){
+                this.$axios({
+                    method:'get',
+                    url:'http://192.168.1.2:8088/queryNodeLabelByName/'+this.single_node_search_temp
+                }) .then(res=>{
+                    if(res.status==200){
+                        this.single_node_data = res.data.data
+                        console.log(this.single_node_data)
+                        this.$axios({
+                            method:'get',
+                            url:'http://192.168.1.2:8088/queryNodeRelationByName/'+this.single_node_search_temp
+                        }).then(res=>{
+                            this.single_node_links = res.data.data
+                            if(res.data.data.length >= 20){
+                                console.log(this.single_node_links)
+                                this.X = 10
+                                this.Y = 20
+                                this.Z = 6
+                                this.ifUnfold = false
+                            }else{
+                                this.X = 80
+                                this.Y = 80
+                                this.Z = 10
+                                this.ifUnfold = false
+                            }
+                            this.Draw_graph(this.single_node_data,this.single_node_links)
+                        })
+                    }
+                })
+            },
+            relationSearch:function(){
+                this.start_node = this.start_node_temp
+                this.end_node = this.end_node_temp
+                this.$axios({
+                    method:'get',
+                    url:'http://192.168.1.2:8088/queryNodeLabelBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+                }).then(res=>{
+                    if(res.status == 200){
+                        console.log(res)
+                        console.log(res.data.data)
+                        this.search_node_data = res.data.data
+                        this.$axios({
+                            method:'get',
+                            url:'http://192.168.1.2:8088/queryNodeRelationBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+                        }).then(response=>{
+                            console.log(response.data.data)
+                            this.search_node_relation = response.data.data
+                            this.X = 30
+                            this.Y = 30
+                            this.Z = 50
+                            this.ifUnfold = false
+                            this.Draw_graph(this.search_node_data,this.search_node_relation)
+                        })
+                    }
+                })
+            },
+            handleClick(tab,event){
+                if(tab.name=="first"){
+                    document.getElementById("nodeSearch").style.display='block'
+                    document.getElementById("nodeRelationSearch").style.display='none'
+                }
+                else if(tab.name=="second"){
+                    document.getElementById("nodeSearch").style.display='none'
+                    document.getElementById("nodeRelationSearch").style.display='block'
+                }
+            },
+            getInitNodes:function(){
+                this.$axios({
+                    method:'get',
+                    url:"http://192.168.1.2:8088/queryAllNodesWithLabel"
+                }).then(res=>{
+                    this.init_data = res.data.data
+                    console.log(this.init_data)
+                    this.getInitRelation()
+                })
+            },
+            getInitRelation:function(){
+                this.$axios({
+                    method:'get',
+                    url:"http://192.168.1.2:8088/queryAllNodesRelationship"
+                }).then(res=>{
+                    this.init_links = res.data.data
+                    console.log(this.init_links)
+                    this.X = 20
+                    this.Y = 20
+                    this.Z = 30
+                    this.ifUnfold = false
+                    this.Draw_graph(this.init_data,this.init_links);
+                })
+            },
+            Draw_graph:function(allNodes,allLinks){
+
+                var size = 60;
+                var size1 = 30;
+                var yy = 200;
+                var yy1 = 250;
+
+                var listdata = [];
+                var links = [];
+
+                var newdata=[];
+                newdata = this.init_links
+
+                // function setData(arr, n) {
+                //     for (var i = 0; i &lt; arr.length; i++) {
+                //         const flag = arr[i] === "disease"
+                //         listdata.push({
+                //             x: i*25,
+                //             y: 30 + i * 10,
+                //             "name": arr[i], // 各个节点的name参数不能重复，
+                //             "symbolSize": size, // 该类目节点标记的大小
+                //             "category": -n, // 该节点所在类目的index
+                //             "nodeType" : flag, //
+                //             "draggable": "true"
+                //         })
+                //     }
+                // }
+
+                function setData(arr, n,i,X,Y,Z,Unfold) {
+                    if(Unfold == false){
+                        n = -n
+                    }
+                    const flag = arr === "disease"
+                    listdata.push({
+                        x: X*i,
+                        y: Y + Z*i,
+                        "name":arr, // 各个节点的name参数不能重复
+                        "symbolSize":size, // 该类目节点标记的大小
+                        "category": -n, // 该节点所在类目的index
+                        "nodeType": flag, //
+                        "draggable": "true",
+                        "open" : "true"
+                    })
+                }
+
+                // function setLinkData(arr, title,relation) {
+                //     for (var i = 0; i &lt; arr.length; i++) {
+                //         links.push({
+                //             "source": arr[i],
+                //             "target": title,
+                //             label:{
+                //                 show: true,
+                //                 formatter:relation // 在formatter中添加文字可以实现将文字显示在关系上
+                //             },
+                //             lineStyle: {
+                //                 normal: {
+                //                     color: 'source',
+                //                 }
+                //             }
+                //         })
+                //     }
+                // }
+                function setLinkData(arr, title,relation) {
+                    links.push({
+                        "source": arr,
+                        "target": title,
+                        label:{
+                            show: true,
+                            formatter:relation // 在formatter中添加文字可以实现将文字显示在关系上
+                        },
+                        lineStyle: {
+                            normal: {
+                                color: 'source',
+                            }
+                        }
+                    })
+
+                }
+
+                for(let i=0,len=allNodes.length;i&lt;len;i++){
+                    setData(allNodes[i].nodeName, allNodes[i].label, i, this.X, this.Y, this.Z, this.ifUnfold)
+                }
+                for(let i=0,len=allLinks.length;i&lt;len;i++){
+                    setData(allLinks[i].childNode, allLinks[i].fatherNode, i,allLinks[i].nodeRelationType)
+                }
+                console.log(listdata)
+                console.log(links)
+                // 需要设定4个参数
+                // 设总部名称
+                var headquarter = "太平洋舰队\n司令部"
+                var legendes = ["单位","人员","装备"]
+                var texts = [];
+                for (var i =0; i&lt;legendes.length;i++){
+                    texts.push({
+                        "name":legendes[i],
+                    })
+                }
+
+                var Headquarter = []; // 司令部节点
+                Headquarter.push(headquarter);
+
+                let that = this
+                function showNodeAttribute(chart) { // 展示节点属性
+                    chart.on('mouseover',function (params) {
+                        console.log(params.name)
+                        this.$axios({
+                            method:'get',
+                            url:'http://192.168.1.2:8088/getAttributeValueByNodeName/' + params.name
+                        }).then(response=>{
+                            that.currentNode = response.data.data // 这里不能用this, 必须用that，否则数据传输不到currentNode
+                            console.log(this.currentNode)
+                            document.getElementById("Node_Attribute_Info").style.display = 'block'
+                        })
+                    })
+
+                }
+
+                /**
+                 * 绑定图表的点击事件
+                 * @param chart
+                 */
+                function bindChartClickEvent(chart) {
+                    chart.on('click', function (params) {
+                        console.log(params)
+                        var category = params.data.category,
+                            nodeType = params.data.nodeType;
+                        // console.log(nodeType);
+                        toggleShowNodes(chart, params);
+                        // if (category === 0 || nodeType === 1) {
+                        //     toggleShowNodes(chart, params);
+                        // }
+                    });
+                }
+
+                /**
+                 * 展开或关闭节点
+                 * @param chart
+                 * @param params
+                 */
+                function toggleShowNodes(chart, params) {
+                    var open = !!params.data.open,
+
+                        options = chart.getOption(),
+                        seriesIndex = params.seriesIndex,
+                        srcLinkName = params.name,
+                        serieLinks = options.series[seriesIndex].links,
+                        serieData = options.series[seriesIndex].data,
+                        serieDataMap = new Map(),
+                        serieLinkArr = [];
+                    // console.log("open:" + open);
+                    console.log(options);
+                    // 当前根节点是展开的，那么就需要关闭所有的根节点
+                    if (open) {
+                        // 递归找到所有的link节点的target的值
+                        findLinks(serieLinkArr, srcLinkName, serieLinks, true);
+                        if (serieLinkArr.length) {
+                            serieData.forEach(sd => serieDataMap.set(sd.name, sd));
+                            for (var i = 0; i &lt; serieLinkArr.length; i++) {
+                                if (serieDataMap.has(serieLinkArr[i])) {
+                                    var currentData = serieDataMap.get(serieLinkArr[i]);
+                                    currentData.category = -Math.abs(currentData.category);
+                                    if (currentData.nodeType === 1) {
+                                        currentData.open = false;
+                                    }
+                                }
+                            }
+                            serieDataMap.get(srcLinkName).open = false;
+                            chart.setOption(options);
+                        }
+                    } else {
+                        // 当前根节点是关闭的，那么就需要展开第一层根节点
+                        // console.log(open);
+                        findLinks(serieLinkArr, srcLinkName, serieLinks, false);
+                        if (serieLinkArr.length) {
+                            serieData.forEach(sd => serieDataMap.set(sd.name, sd));
+                            for (var j = 0; j &lt; serieLinkArr.length; j++) {
+                                if (serieDataMap.has(serieLinkArr[j])) {
+                                    var currentData = serieDataMap.get(serieLinkArr[j]);
+                                    currentData.category = Math.abs(currentData.category);
+                                }
+                            }
+                            serieDataMap.get(srcLinkName).open = true;
+                            chart.setOption(options);
+                        }
+                    }
+                }
+
+                /**
+                 * 查找连接关系
+                 * @param links 返回的节点放入此集合
+                 * @param srcLinkName 源线的名称
+                 * @param serieLinks 需要查找的集合
+                 * @param deep 是否需要递归进行查找
+                 */
+                function findLinks(links, srcLinkName, serieLinks, deep) {
+                    var targetLinks = [];
+                    serieLinks.filter(link => link.target === srcLinkName).forEach(link => {
+                        targetLinks.push(link.source);
+                        links.push(link.source)
+                    });
+                    console.log(targetLinks);
+                    if (deep) {
+                        for (var i = 0; i &lt; targetLinks.length; i++) {
+                            findLinks(links, targetLinks[i], serieLinks, deep);
+                        }
+                    }
+                    console.log(targetLinks);
+                }
+
+                this.myChart = this.$echarts.init(document.getElementById('myChart'))
+                console.log(legendes)
+                const option = ({
+                        title: {
+                            text: "节点列表", //主标题文本
+                            top: "top", // 距离容器组件上侧的距离
+                            left: "left", // 距离容器组件左侧的距离
+                            textStyle: { // 文字样式，字体风格颜色等参数设置
+                                color: '#f7f7f7'
+                            }
+                        },
+                        tooltip: { // 提示框浮层内容格式器
+                            formatter: '{b}' // 鼠标悬浮在节点上，所显示的内容
+                        },
+                        toolbox: { // 工具栏，可以在里面添加，导出图片，数据视图等功能
+                            show: true,
+                            feature: { // 工具项配置，工具按钮
+                                restore: { // 还原配置项
+                                    show: true
+                                },
+                                saveAsImage: { // 保存图片
+                                    show: true // 是否显示该工具
+                                }
+                            }
+                        },
+                        backgroundColor: '#15161F',
+                        legend: { // 图例组件，显示图例
+                            data: legendes,
+                            textStyle: {
+                                color: '#fff'
+                            },
+                            icon: 'circle', // 图例标记，有 circle、rect、roundRect、triangle等
+                            type: 'scroll', // 图例类型，有 plain 和 scroll 两种，当图例较多的时候可以使用scroll，然后对其具体的属性再进行设置
+                            orient: 'vertical', // 图例的布局朝向，有 vertical 和 horizontal 两种
+                            left: 10, // 距离容器左侧的距离，可以是10这种具体的像素值，也可以是10%这样的比例
+                            top: 20, // 距离容器上侧的距离
+                            bottom: 20, // 距离容器下侧的距离
+                            itemWidth: 15, // 图例标记的图形宽度
+                            itemHeight: 20 // 图例标记的图形高度
+                        },
+                        animationDuration: 1000, // 初始动画时长
+                        animationEasingUpdate: 'quinticInOut', // 数据更新时的动画效果
+                        series: [{
+                            name: '知识图谱',
+                            type: 'graph',
+                            layout: 'force', // 图的布局，force：力导向图，circular：环形布局
+                            force: { // 模拟电荷，给两个节点间添加斥力，给相连节点添加引力
+                                repulsion: 50, // 斥力大小
+                                gravity: 0.1, // 受到中心节点引力的大小
+                                edgeLength: 30, // 节点之间的距离，也会受到replusion的影响
+                                layoutAnimation: true, // 显示布局的迭代动画
+                            },
+                            data: listdata,
+                            links: links,
+                            categories: texts,
+                            roam: false,
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'inside',
+                                    formatter: '{b}',
+                                    fontSize: 12,
+                                    fontStyle: '600',
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    opacity: 0.9,
+                                    width: 1.5,
+                                    curveness: 0
+                                }
+                            }
+                        }]
+                    }
+                );
+                this.myChart.setOption(option);
+                bindChartClickEvent(this.myChart);
+                // showNodeAttribute(this.myChart);
+            },
+            goToTextUpload:function(){
+                this.$router.push("/TextUpload")
+            },
+            goToKnowledgeTree:function(){
+                this.$router.push("/newTreeGraph")
+            },
+            manualCheck:function(){
+                this.$router.push("/Check_1")
+            },
+            Back_to_homepage:function () {
+                this.$router.push("/Home")
+            }
+        }
+    }
+
+&lt;/script>
+
+&lt;style scoped>
+    .nodeRelationSearch{
+        position: absolute;
+        top:25%;
+        left:7%;
+    }
+    .nodeSearch{
+        position: absolute;
+        left:9%;
+        top:18.5%;
+    }
+    .searchNodeInfo{
+        position: absolute;
+        top:6%;
+        left:2%;
+    }
+    .box-card{
+        position: absolute;
+        top:10%;
+        right: 2%;
+        background-color: #15161F;
+        width: 15%;
+    }
+    .Attribute_text{
+        font-size: 14px;
+        color: #ffffff;
+    }
+    .Attribute_item{
+        margin-bottom: 18px;
+    }
+
+    .text {
+        font-size: 14px;
+        color: #ffffff;
+    }
+
+    .item {
+        margin-bottom: 18px;
+    }
+
+    .text_search {
+        position: absolute;
+        left:3%;
+        top: 30%;
+    }
+    .text_upload{
+        position: absolute;
+        top:53%;
+        left:85.5%;
+        color:#ffffff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .manual_check{
+        position: absolute;
+        top:63%;
+        left:85%;
+        color:#fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .to_TreeGraph{
+        position: absolute;
+        top:73%;
+        left:85%;
+        color:#fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .back_to_homepage {
+        position: absolute;
+        top: 83%;
+        left: 85%;
+        color: #fff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .header_text{
+        font-family: "PingFang SC";
+        font-size: 30px;
+        letter-spacing: 6px;
+        color: #ffffff;
+        position: absolute;
+        top: 0%;
+        width: 100%;
+        height: 6%;
+        background-color: #15161F;
+    }
+    .container{
+        position: absolute;
+        top:6%;
+        background-color: #15161F;
+        width: 100%;
+        height: 100%;
+    }
+    /*.container .left{*/
+    /*    position: relative;*/
+    /*    float: left;*/
+    /*    width: 50%;*/
+    /*    height: 100%;*/
+    /*    background-color: #15161F;*/
+    /*}*/
+    .container .main{
+        position: relative;
+        float: right;
+        width: 100%;
+        height: 100%;
+        background-color: #15161F;
+    }
+&lt;/style></code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Fri Aug 28 2020 13:47:57 GMT+0800 (China Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
