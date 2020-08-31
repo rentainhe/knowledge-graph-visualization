@@ -221,7 +221,12 @@
 
 <!-- 查询框-->
 <script>
+    /**
+     * 展示待审核信息界面
+     * @module Check_2
+     */
     export default {
+        name:"Check_2",
         data() {
             return {
                 value : '0',
@@ -281,6 +286,10 @@
                 })
                 },
             //获取所有未审核的节点
+            /**
+             * 获取所有未审核的节点
+             * @function getAllTexts
+             */
             getAllTexts:function(){
                 var _this = this
                 _this.$axios.get("http://10.24.82.10:8088/allText").then(response =>{
@@ -299,17 +308,34 @@
             Skip() {
                 console.log('跳过');
             },
+            /**
+             * 删除节点
+             * @function Give_up
+             *
+             */
             Give_up(){
                 console.log('这是放弃节点')
             },
             //跳转审核界面
+            /**
+             * 跳转审核界面
+             * @function Back_to_lastpage
+             */
             Back_to_lastpage:function(){
                 this.$router.push("/Check_1")
             },
+            /**
+             * 返回主页
+             * @function Back_to_homepage
+             */
             Back_to_homepage:function () {
                 this.$router.push("/")
             },
             //跳回文本审核界面
+            /**
+             * 跳回文本审核界面
+             * @function Back_to_TextUpload
+             */
             Back_to_TextUpload:function () {
                 this.$router.push("/TextUpload")
                 location.reload()

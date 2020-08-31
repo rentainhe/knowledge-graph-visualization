@@ -1,114 +1,155 @@
-<template>
-    <div>
-        <div class="header_text">知识图谱系统</div>
-        <div class="container">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>src/views/Knowledge_tree.vue - Documentation</title>
 
-            <el-dialog
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-home.html">home</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~begin_upload">begin_upload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~begin_upload">begin_upload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~change_to_text">change_to_text</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~confirm_to_add_Node">confirm_to_add_Node</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~find_first_relation">find_first_relation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~find_second_relation">find_second_relation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~initGraph">initGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~initGraph">initGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~move_to_check2">move_to_check2</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~move_to_newTreeGraph">move_to_newTreeGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~oneRelation">oneRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~onSubmit">onSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~PreviewNewGraph">PreviewNewGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~refuse_to_add_Node">refuse_to_add_Node</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~return_home">return_home</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~save_it_later">save_it_later</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~secondRelation">secondRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~user_Check">user_Check</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-newTreeGraph.html">newTreeGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~addChildNode">addChildNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~Back_to_homepage">Back_to_homepage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~deleteCurrentNodeAttribute">deleteCurrentNodeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~deleteCurrentNodeAttribute">deleteCurrentNodeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~Draw_graph">Draw_graph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~editCurrentNodeAttribute">editCurrentNodeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~getEquipmentTypeTree">getEquipmentTypeTree</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~handleClick">handleClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~uploadNewNode">uploadNewNode</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#add_node">add_node</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/views/Knowledge_tree.vue</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;template>
+    &lt;div>
+        &lt;div class="header_text">知识图谱系统&lt;/div>
+        &lt;div class="container">
+
+            &lt;el-dialog
                     title="添加节点"
                     :visible.sync="dialogVisible"
                     width="20%"
                     :before-close="DialogClose">
-                <div class="NodeNameInput">
-                    <el-input placeholder="需要插入的节点名称" v-model="Nodename" clearable>
-                        <template slot="prepend">节点名</template>
-                    </el-input>
-                </div>
-<!--                <div class="MySQLNameInput">-->
-<!--                    <p></p>-->
-<!--&lt;!&ndash;                    加入一个空行，看起来更舒服&ndash;&gt;-->
-<!--                    <el-input placeholder="节点对应的属性表名" v-model="MySQLName" clearable>-->
-<!--                        <template slot="prepend">属性表</template>-->
-<!--                    </el-input>-->
-<!--                </div>-->
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="add_node">确 定</el-button>
-                </span>
-            </el-dialog>
+                &lt;div class="NodeNameInput">
+                    &lt;el-input placeholder="需要插入的节点名称" v-model="Nodename" clearable>
+                        &lt;template slot="prepend">节点名&lt;/template>
+                    &lt;/el-input>
+                &lt;/div>
+&lt;!--                &lt;div class="MySQLNameInput">-->
+&lt;!--                    &lt;p>&lt;/p>-->
+&lt;!--&amp;lt;!&amp;ndash;                    加入一个空行，看起来更舒服&amp;ndash;&amp;gt;-->
+&lt;!--                    &lt;el-input placeholder="节点对应的属性表名" v-model="MySQLName" clearable>-->
+&lt;!--                        &lt;template slot="prepend">属性表&lt;/template>-->
+&lt;!--                    &lt;/el-input>-->
+&lt;!--                &lt;/div>-->
+                &lt;span slot="footer" class="dialog-footer">
+                    &lt;el-button @click="dialogVisible = false">取 消&lt;/el-button>
+                    &lt;el-button type="primary" @click="add_node">确 定&lt;/el-button>
+                &lt;/span>
+            &lt;/el-dialog>
 
-            <div class="left">
-                <div id="myChart" style="position: absolute;top:5%;left: 20%" :style="{width: '537px', height: '500px'}"></div>
-<!--                <el-radio-group id="El-radio-group" class="header_button" v-model="isCollapse" style="margin-bottom: 20px;display: block" @change="Edit">-->
-<!--                    <el-radio-button :label="false" >展开</el-radio-button>-->
-<!--                    <el-radio-button :label="true" >收起</el-radio-button>-->
-<!--                </el-radio-group>-->
-                <div class="buttons" id="buttons" style="display: none">
-                    <el-button round  class="addNodes" @click="OpenDialog">添加节点</el-button>
-                    <el-button round class="deleteNodes" @click="delete_node">删除节点</el-button>
-                </div>
-<!--                <el-switch-->
-<!--                        class="header_button"-->
-<!--                        v-model="isCollapse"-->
-<!--                        active-text="展开"-->
-<!--                        :width="54"-->
-<!--                        inactive-text="收起">-->
-<!--                </el-switch>-->
-<!--                <el-menu id="El-menu"  style="display:block;" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">-->
-<!--                    <el-menu-item index="1">-->
-<!--                        <template slot="title">-->
-<!--                            <i class="el-icon-location"></i>-->
-<!--                            <span slot="title">导航一</span>-->
-<!--                        </template>-->
-<!--                        <el-menu-item-group>-->
-<!--                            <span slot="title">分组一</span>-->
-<!--                            <el-menu-item index="1-1">选项1</el-menu-item>-->
-<!--                            <el-menu-item index="1-2">选项2</el-menu-item>-->
-<!--                        </el-menu-item-group>-->
-<!--                        <el-menu-item-group title="分组2">-->
-<!--                            <el-menu-item index="1-3">选项3</el-menu-item>-->
-<!--                        </el-menu-item-group>-->
-<!--                        <el-submenu index="1-4">-->
-<!--                            <span slot="title">选项4</span>-->
-<!--                            <el-menu-item index="1-4-1">选项1</el-menu-item>-->
-<!--                        </el-submenu>-->
-<!--                        <i class="el-icon-s-flag"></i>-->
-<!--                        <span slot="title">联赛</span>-->
-<!--                    </el-menu-item>-->
-<!--                    <el-menu-item index="2">-->
-<!--                        <i class="el-icon-football"></i>-->
-<!--                        <span slot="title">球队</span>-->
-<!--                    </el-menu-item>-->
-<!--                    <el-submenu index="3">-->
-<!--                        <template slot="title">-->
-<!--                            <i class="el-icon-user-solid"></i>-->
-<!--                            <span slot="title">球员</span>-->
-<!--                        </template>-->
-<!--                        <el-menu-item-group>-->
-<!--                            <span slot="title" style="text-align: center">球员位置</span>-->
-<!--                            <el-menu-item index="3-1" @click.native="Edit_Q">前锋</el-menu-item>-->
-<!--                            <el-menu-item index="3-2">后卫</el-menu-item>-->
-<!--                            <el-menu-item index="3-3">守门员</el-menu-item>-->
-<!--                        </el-menu-item-group>-->
-<!--                    </el-submenu>-->
-<!--                </el-menu>-->
+            &lt;div class="left">
+                &lt;div id="myChart" style="position: absolute;top:5%;left: 20%" :style="{width: '537px', height: '500px'}">&lt;/div>
+&lt;!--                &lt;el-radio-group id="El-radio-group" class="header_button" v-model="isCollapse" style="margin-bottom: 20px;display: block" @change="Edit">-->
+&lt;!--                    &lt;el-radio-button :label="false" >展开&lt;/el-radio-button>-->
+&lt;!--                    &lt;el-radio-button :label="true" >收起&lt;/el-radio-button>-->
+&lt;!--                &lt;/el-radio-group>-->
+                &lt;div class="buttons" id="buttons" style="display: none">
+                    &lt;el-button round  class="addNodes" @click="OpenDialog">添加节点&lt;/el-button>
+                    &lt;el-button round class="deleteNodes" @click="delete_node">删除节点&lt;/el-button>
+                &lt;/div>
+&lt;!--                &lt;el-switch-->
+&lt;!--                        class="header_button"-->
+&lt;!--                        v-model="isCollapse"-->
+&lt;!--                        active-text="展开"-->
+&lt;!--                        :width="54"-->
+&lt;!--                        inactive-text="收起">-->
+&lt;!--                &lt;/el-switch>-->
+&lt;!--                &lt;el-menu id="El-menu"  style="display:block;" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">-->
+&lt;!--                    &lt;el-menu-item index="1">-->
+&lt;!--                        &lt;template slot="title">-->
+&lt;!--                            &lt;i class="el-icon-location">&lt;/i>-->
+&lt;!--                            &lt;span slot="title">导航一&lt;/span>-->
+&lt;!--                        &lt;/template>-->
+&lt;!--                        &lt;el-menu-item-group>-->
+&lt;!--                            &lt;span slot="title">分组一&lt;/span>-->
+&lt;!--                            &lt;el-menu-item index="1-1">选项1&lt;/el-menu-item>-->
+&lt;!--                            &lt;el-menu-item index="1-2">选项2&lt;/el-menu-item>-->
+&lt;!--                        &lt;/el-menu-item-group>-->
+&lt;!--                        &lt;el-menu-item-group title="分组2">-->
+&lt;!--                            &lt;el-menu-item index="1-3">选项3&lt;/el-menu-item>-->
+&lt;!--                        &lt;/el-menu-item-group>-->
+&lt;!--                        &lt;el-submenu index="1-4">-->
+&lt;!--                            &lt;span slot="title">选项4&lt;/span>-->
+&lt;!--                            &lt;el-menu-item index="1-4-1">选项1&lt;/el-menu-item>-->
+&lt;!--                        &lt;/el-submenu>-->
+&lt;!--                        &lt;i class="el-icon-s-flag">&lt;/i>-->
+&lt;!--                        &lt;span slot="title">联赛&lt;/span>-->
+&lt;!--                    &lt;/el-menu-item>-->
+&lt;!--                    &lt;el-menu-item index="2">-->
+&lt;!--                        &lt;i class="el-icon-football">&lt;/i>-->
+&lt;!--                        &lt;span slot="title">球队&lt;/span>-->
+&lt;!--                    &lt;/el-menu-item>-->
+&lt;!--                    &lt;el-submenu index="3">-->
+&lt;!--                        &lt;template slot="title">-->
+&lt;!--                            &lt;i class="el-icon-user-solid">&lt;/i>-->
+&lt;!--                            &lt;span slot="title">球员&lt;/span>-->
+&lt;!--                        &lt;/template>-->
+&lt;!--                        &lt;el-menu-item-group>-->
+&lt;!--                            &lt;span slot="title" style="text-align: center">球员位置&lt;/span>-->
+&lt;!--                            &lt;el-menu-item index="3-1" @click.native="Edit_Q">前锋&lt;/el-menu-item>-->
+&lt;!--                            &lt;el-menu-item index="3-2">后卫&lt;/el-menu-item>-->
+&lt;!--                            &lt;el-menu-item index="3-3">守门员&lt;/el-menu-item>-->
+&lt;!--                        &lt;/el-menu-item-group>-->
+&lt;!--                    &lt;/el-submenu>-->
+&lt;!--                &lt;/el-menu>-->
 
-                <el-button type="primary" round=true  @click="back_home" class="el-button–Edit">返回
-                    <i class="el-icon-coin el-icon--right"></i>
-                </el-button>
+                &lt;el-button type="primary" round=true  @click="back_home" class="el-button–Edit">返回
+                    &lt;i class="el-icon-coin el-icon--right">&lt;/i>
+                &lt;/el-button>
 
-            </div>
-            <div class="right">
-                <el-card id="Attribute" class="box-card" style="display: none">
-                    <div slot="header" class="clearfix">
-                        <span>{{currentNode}}节点属性</span>
-<!--                        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
-                    </div>
-                    <div v-for="(item, index) in currentNodeAttribute"  class="text item">
+            &lt;/div>
+            &lt;div class="right">
+                &lt;el-card id="Attribute" class="box-card" style="display: none">
+                    &lt;div slot="header" class="clearfix">
+                        &lt;span>{{currentNode}}节点属性&lt;/span>
+&lt;!--                        &lt;el-button style="float: right; padding: 3px 0" type="text">操作按钮&lt;/el-button>-->
+                    &lt;/div>
+                    &lt;div v-for="(item, index) in currentNodeAttribute"  class="text item">
                         {{item}}
-                        <el-button style="float: right; padding: 3px 0 ;position: absolute;right: 20%" type="text" @click="editAttribute(index)">修改</el-button>
-                        <el-button style="float: right; padding: 3px 0;position: absolute;right: 8%" type="text" @click="deleteAttribute(index)">删除</el-button>
+                        &lt;el-button style="float: right; padding: 3px 0 ;position: absolute;right: 20%" type="text" @click="editAttribute(index)">修改&lt;/el-button>
+                        &lt;el-button style="float: right; padding: 3px 0;position: absolute;right: 8%" type="text" @click="deleteAttribute(index)">删除&lt;/el-button>
 
-                    </div>
-                </el-card>
-                <el-button id="addAttribute" style="display: none" type="primary" round=true  @click="addAttrubute" class="el-button–Edit">新增属性
-                    <i class="el-icon-coin el-icon--right"></i>
-                </el-button>
-            </div>
-        </div>
-    </div>
-</template>
+                    &lt;/div>
+                &lt;/el-card>
+                &lt;el-button id="addAttribute" style="display: none" type="primary" round=true  @click="addAttrubute" class="el-button–Edit">新增属性
+                    &lt;i class="el-icon-coin el-icon--right">&lt;/i>
+                &lt;/el-button>
+            &lt;/div>
+        &lt;/div>
+    &lt;/div>
+&lt;/template>
 
-<script>
+&lt;script>
     import Vue from "vue";
 
     export default {
@@ -249,6 +290,10 @@
                 this.MySQLName = ""
                 this.dialogVisible = true
             },
+            /**
+             * 添加节点到数据库
+             * @function add_node
+             */
             add_node:function(){
                 this.$confirm('确认添加节点？').then(_=>{
                     this.dialogVisible = false
@@ -458,9 +503,9 @@
             }
         }
     }
-</script>
+&lt;/script>
 
-<style>
+&lt;style>
     .NodeNameInput{
         /*float: right;*/
         width: 100%;
@@ -587,4 +632,22 @@
         border-color: #9593A7;
         border-width: 2px;
     }
-</style>
+&lt;/style></code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Mon Aug 31 2020 15:55:02 GMT+0800 (China Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

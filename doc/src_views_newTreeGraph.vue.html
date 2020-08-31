@@ -1,72 +1,113 @@
-<template>
-    <div>
-        <div class="header_text">知识图谱系统</div>
-        <div class="container">
-            <!--            <div class="left"></div>-->
-            <div class="main">
-                <div class="label" style="position: absolute; top: 1.8%; left: 5%">
-                    <el-tabs v-model="activateName" type="card" @tab-click="handleClick">
-                        <el-tab-pane label="装备类型树" name="equipmentType"></el-tab-pane>
-                        <el-tab-pane label="装备树" name="equipmentTree"></el-tab-pane>
-                        <el-tab-pane label="单位树" name="unitTree"></el-tab-pane>
-                    </el-tabs>
-                </div>
-                <div id="knowledgeTreeSet" style="position: absolute;top:6%;left: 5%;background-color: #15161F; border:1px solid #ffffff" :style="{width: '50%', height: '85%'}">
-                    <div id="myChart" style="position: absolute;top:0%;left: 0%;" :style="{width: '100%', height: '100%'}"></div>
-                </div>
-                <div class="attributeList">
-<!--                    节点属性列表-->
-                    <el-table :data="attributeTable" highlight-current-row height="100%" border style="width: 100%">
-                        <el-table-column prop="attributeName" label="当前节点对应属性" width="150"></el-table-column>
-                        <el-table-column prop="content" label="属性内容" width="300"></el-table-column>
-                        <el-table-column prop="content" label="可选操作">
-                            <template slot-scope="scope">
-                                <el-button
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>src/views/newTreeGraph.vue - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Check_1.html">Check_1</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_1.html#~begin_to_check">begin_to_check</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_1.html#~getAllTexts">getAllTexts</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_1.html#~return_home">return_home</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Check_2.html">Check_2</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~Back_to_homepage">Back_to_homepage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~Back_to_lastpage">Back_to_lastpage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~Back_to_TextUpload">Back_to_TextUpload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~getAllTexts">getAllTexts</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~Give_up">Give_up</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-home.html">home</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~change_to_text">change_to_text</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~initGraph">initGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~move_to_newTreeGraph">move_to_newTreeGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~oneRelation">oneRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~onSubmit">onSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~secondRelation">secondRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~user_Check">user_Check</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-newTreeGraph.html">newTreeGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~addChildNode">addChildNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~Back_to_homepage">Back_to_homepage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~deleteCurrentNode">deleteCurrentNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~deleteCurrentNodeAttribute">deleteCurrentNodeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~Draw_graph">Draw_graph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~editCurrentNodeAttribute">editCurrentNodeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~getEquipmentTree">getEquipmentTree</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~getEquipmentTypeTree">getEquipmentTypeTree</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~getUnitTree">getUnitTree</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~handleClick">handleClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~uploadNewNode">uploadNewNode</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-TextUpload.html">TextUpload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~begin_upload">begin_upload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~confirm_to_add_Node">confirm_to_add_Node</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~extract">extract</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~find_first_relation">find_first_relation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~find_second_relation">find_second_relation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~initGraph">initGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~move_to_check2">move_to_check2</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~PreviewNewGraph">PreviewNewGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~refuse_to_add_Node">refuse_to_add_Node</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~return_home">return_home</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~save_it_later">save_it_later</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/views/newTreeGraph.vue</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;template>
+    &lt;div>
+        &lt;div class="header_text">知识图谱系统&lt;/div>
+        &lt;div class="container">
+            &lt;!--            &lt;div class="left">&lt;/div>-->
+            &lt;div class="main">
+                &lt;div class="label" style="position: absolute; top: 1.8%; left: 5%">
+                    &lt;el-tabs v-model="activateName" type="card" @tab-click="handleClick">
+                        &lt;el-tab-pane label="装备类型树" name="equipmentType">&lt;/el-tab-pane>
+                        &lt;el-tab-pane label="装备树" name="equipmentTree">&lt;/el-tab-pane>
+                        &lt;el-tab-pane label="单位树" name="unitTree">&lt;/el-tab-pane>
+                    &lt;/el-tabs>
+                &lt;/div>
+                &lt;div id="knowledgeTreeSet" style="position: absolute;top:6%;left: 5%;background-color: #15161F; border:1px solid #ffffff" :style="{width: '50%', height: '85%'}">
+                    &lt;div id="myChart" style="position: absolute;top:0%;left: 0%;" :style="{width: '100%', height: '100%'}">&lt;/div>
+                &lt;/div>
+                &lt;div class="attributeList">
+&lt;!--                    节点属性列表-->
+                    &lt;el-table :data="attributeTable" highlight-current-row height="100%" border style="width: 100%">
+                        &lt;el-table-column prop="attributeName" label="当前节点对应属性" width="150">&lt;/el-table-column>
+                        &lt;el-table-column prop="content" label="属性内容" width="300">&lt;/el-table-column>
+                        &lt;el-table-column prop="content" label="可选操作">
+                            &lt;template slot-scope="scope">
+                                &lt;el-button
                                     size="mini"
-                                    @click="editCurrentNodeAttribute(scope.$index,scope.row)">编辑</el-button>
-                                <el-button
+                                    @click="editCurrentNodeAttribute(scope.$index,scope.row)">编辑&lt;/el-button>
+                                &lt;el-button
                                     size="mini"
                                     type="danger"
-                                    @click="deleteCurrentNodeAttribute(scope.$index,scope.row)">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-                <div class="operation" style="border:2px solid #ffffff">
-                    <div class="chosenNodeName">当前选择节点:{{this.currentNodeName}}</div>
-                    <el-button type="primary" round=true @click="addChildNode" class="addChildNode">添加子节点
-                        <i class="el-icon-s-promotion el-icon-circle-plus-outline"></i>
-                    </el-button>
-<!--                    添加一个对话框来进行节点属性填充-->
-                    <el-dialog title="添加节点属性" :visible.sync="addNodeFormVisible" width="30%">
-                        <el-form ref="form" label-width="100px">
-                            <el-form-item v-for="(key,value,index) in addnewNodeWithAttribute" :key="index">
-                                <div v-if="key.attributeName!==currentParentId">
-                                    <el-form-item :label="key.attributeName" class="attributeNameText">
-                                        <el-input v-model="key.content"></el-input>
-                                    </el-form-item>
-                                </div>
-                            </el-form-item>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="addNodeFormVisible = false">取消</el-button>
-                            <el-button tyoe="primary" @click="uploadNewNode">确定</el-button>
-                        </div>
-                    </el-dialog>
-                    <el-button type="danger" round=true @click="deleteCurrentNode" class="deleteCurrentNode">删除当前节点
-                        <i class="el-icon-s-promotion el-icon-delete"></i>
-                    </el-button>
-                </div>
-                <el-button type="primary" round=true @click="Back_to_homepage" class="back_to_homepage">返回首页
-                    <i class="el-icon-s-promotion el-icon--right"></i>
-                </el-button>
-            </div>
+                                    @click="deleteCurrentNodeAttribute(scope.$index,scope.row)">删除&lt;/el-button>
+                            &lt;/template>
+                        &lt;/el-table-column>
+                    &lt;/el-table>
+                &lt;/div>
+                &lt;div class="operation" style="border:2px solid #ffffff">
+                    &lt;div class="chosenNodeName">当前选择节点:{{this.currentNodeName}}&lt;/div>
+                    &lt;el-button type="primary" round=true @click="addChildNode" class="addChildNode">添加子节点
+                        &lt;i class="el-icon-s-promotion el-icon-circle-plus-outline">&lt;/i>
+                    &lt;/el-button>
+&lt;!--                    添加一个对话框来进行节点属性填充-->
+                    &lt;el-dialog title="添加节点属性" :visible.sync="addNodeFormVisible" width="30%">
+                        &lt;el-form ref="form" label-width="100px">
+                            &lt;el-form-item v-for="(key,value,index) in addnewNodeWithAttribute" :key="index">
+                                &lt;div v-if="key.attributeName!==currentParentId">
+                                    &lt;el-form-item :label="key.attributeName" class="attributeNameText">
+                                        &lt;el-input v-model="key.content">&lt;/el-input>
+                                    &lt;/el-form-item>
+                                &lt;/div>
+                            &lt;/el-form-item>
+                        &lt;/el-form>
+                        &lt;div slot="footer" class="dialog-footer">
+                            &lt;el-button @click="addNodeFormVisible = false">取消&lt;/el-button>
+                            &lt;el-button tyoe="primary" @click="uploadNewNode">确定&lt;/el-button>
+                        &lt;/div>
+                    &lt;/el-dialog>
+                    &lt;el-button type="danger" round=true @click="deleteCurrentNode" class="deleteCurrentNode">删除当前节点
+                        &lt;i class="el-icon-s-promotion el-icon-delete">&lt;/i>
+                    &lt;/el-button>
+                &lt;/div>
+                &lt;el-button type="primary" round=true @click="Back_to_homepage" class="back_to_homepage">返回首页
+                    &lt;i class="el-icon-s-promotion el-icon--right">&lt;/i>
+                &lt;/el-button>
+            &lt;/div>
 
-        </div>
-    </div>
-</template>
+        &lt;/div>
+    &lt;/div>
+&lt;/template>
 
-<script>
+&lt;script>
     /**
      * 知识树展示页面
      * @module newTreeGraph
@@ -211,10 +252,10 @@
                     url:'http://192.168.1.2:8088/getEmptyAttributeByTable/'+this.currentNodeType
                 }).then(res=>{
                     this.addnewNodeWithAttribute = res.data.data
-                    for(let i=0,len=this.addnewNodeWithAttribute.length;i<len;i++){
+                    for(let i=0,len=this.addnewNodeWithAttribute.length;i&lt;len;i++){
                         if(this.addnewNodeWithAttribute[i].attributeName == this.currentParentId){
                             // 先找到当前所点击节点中，自身id
-                            for(let j=0,leng = this.attributeTable.length; j<len;j++){
+                            for(let j=0,leng = this.attributeTable.length; j&lt;len;j++){
                                 if(this.attributeTable[j].attributeName==this.currentParentAttributeName){
                                     // 再找到子节点对应其父亲节点id的部分，让其子节点的pid与自身id相同
                                     this.addnewNodeWithAttribute[i].content = this.attributeTable[j].content
@@ -498,9 +539,9 @@
             }
         }
     }
-</script>
+&lt;/script>
 
-<style scoped>
+&lt;style scoped>
     .deleteCurrentNode{
         position: absolute;
         right:20%;
@@ -645,4 +686,22 @@
         height: 100%;
         background-color: #15161F;
     }
-</style>
+&lt;/style></code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Mon Aug 31 2020 16:23:24 GMT+0800 (China Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

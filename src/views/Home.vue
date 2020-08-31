@@ -387,8 +387,8 @@
                 location.reload()
             }),
             /**
+             * 初始化
              * @function init
-             *
              */
             init:function(){
                 // this.svg.selectAll("*").remove();

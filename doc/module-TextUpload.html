@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>home - Documentation</title>
+    <title>TextUpload - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -29,7 +29,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">home</h1>
+    <h1 class="page-title">TextUpload</h1>
     
 
     
@@ -51,7 +51,7 @@
     <div class="container-overview">
     
         
-            <div class="description">主页</div>
+            <div class="description">文本导入页面</div>
         
 
         
@@ -93,7 +93,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line5">line 5</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line3">line 3</a>
     </li></ul></dd>
     
 
@@ -152,14 +152,14 @@
 
     
 
-    <h4 class="name" id="~change_to_text"><span class="type-signature">(inner) </span>change_to_text<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~begin_upload"><span class="type-signature">(inner) </span>begin_upload<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    跳转至上传文件界面
+    上传输入的文本内容，用于提取实体信息
 </div>
 
 
@@ -195,7 +195,339 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line152">line 152</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line476">line 476</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="~confirm_to_add_Node"><span class="type-signature">(inner) </span>confirm_to_add_Node<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    添加本条关系至数据库
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line208">line 208</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="~extract"><span class="type-signature">(inner) </span>extract<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    根据文本内容，返回抽取出的实体信息
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line438">line 438</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="~find_first_relation"><span class="type-signature">(inner) </span>find_first_relation<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    展示一级关系
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line235">line 235</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="~find_second_relation"><span class="type-signature">(inner) </span>find_second_relation<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    展示二级关系
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line266">line 266</a>
     </li></ul></dd>
     
 
@@ -242,7 +574,7 @@
 
 
 <div class="description">
-    获取初始化节点数据
+    获取初始化数据
 </div>
 
 
@@ -278,90 +610,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line166">line 166</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-        
-            
-<div class="section-method">
-
-    
-
-    <h4 class="name" id="~init"><span class="type-signature">(inner) </span>init<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    初始化
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line81">line 81</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line134">line 134</a>
     </li></ul></dd>
     
 
@@ -408,63 +657,9 @@
 
 
 <div class="description">
-    画图函数
+    画图
 </div>
 
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><code>Array</code></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">节点及其之间的关系数据</td>
-        </tr>
-
-        
-
-    
-    </tbody>
-</table>
 
 
 
@@ -498,7 +693,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line195">line 195</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line322">line 322</a>
     </li></ul></dd>
     
 
@@ -538,14 +733,14 @@
 
     
 
-    <h4 class="name" id="~move_to_newTreeGraph"><span class="type-signature">(inner) </span>move_to_newTreeGraph<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~move_to_check2"><span class="type-signature">(inner) </span>move_to_check2<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    跳转到知识树界面
+    进入文本审核页面
 </div>
 
 
@@ -581,7 +776,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line397">line 397</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line508">line 508</a>
     </li></ul></dd>
     
 
@@ -621,14 +816,14 @@
 
     
 
-    <h4 class="name" id="~oneRelation"><span class="type-signature">(inner) </span>oneRelation<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~PreviewNewGraph"><span class="type-signature">(inner) </span>PreviewNewGraph<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    展示节点间一级关系
+    预览抽取出的实体关系
 </div>
 
 
@@ -664,7 +859,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line93">line 93</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -704,14 +899,14 @@
 
     
 
-    <h4 class="name" id="~onSubmit"><span class="type-signature">(inner) </span>onSubmit<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~refuse_to_add_Node"><span class="type-signature">(inner) </span>refuse_to_add_Node<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    到数据库中查询此节点，并返回与这个节点的一级关系和二级关系
+    删除本条关系
 </div>
 
 
@@ -747,7 +942,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line337">line 337</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line181">line 181</a>
     </li></ul></dd>
     
 
@@ -787,14 +982,14 @@
 
     
 
-    <h4 class="name" id="~secondRelation"><span class="type-signature">(inner) </span>secondRelation<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~return_home"><span class="type-signature">(inner) </span>return_home<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    展示节点间二级关系
+    返回主页面
 </div>
 
 
@@ -830,7 +1025,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line122">line 122</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line500">line 500</a>
     </li></ul></dd>
     
 
@@ -870,14 +1065,14 @@
 
     
 
-    <h4 class="name" id="~user_Check"><span class="type-signature">(inner) </span>user_Check<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~save_it_later"><span class="type-signature">(inner) </span>save_it_later<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    跳转审核界面
+    稍后审核
 </div>
 
 
@@ -913,7 +1108,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="src_views_Home.vue.html">src/views/Home.vue</a>, <a href="src_views_Home.vue.html#line379">line 379</a>
+        <a href="src_views_TextUpload.vue.html">src/views/TextUpload.vue</a>, <a href="src_views_TextUpload.vue.html#line173">line 173</a>
     </li></ul></dd>
     
 

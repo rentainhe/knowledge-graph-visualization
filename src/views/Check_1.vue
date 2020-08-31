@@ -29,7 +29,12 @@
 </template>
 
 <script>
+    /**
+     * 展示待审核信息界面
+     * @module Check_1
+     */
     export default {
+        name:"Check_1",
         data() {
             return {
                 textarea: '',
@@ -41,6 +46,10 @@
             this.getAllTexts()
         },
         methods: {
+            /**
+             * 获取未审核信息
+             * @function getAllTexts
+             */
             getAllTexts:function() {
                 var _this = this
                 _this.$axios.get("http://10.24.82.10:8088/allText").then(response => {
@@ -77,11 +86,19 @@
                 })
             },
             //点击回主界面
+            /**
+             * 返回主页面
+             * @function return_home
+             */
             return_home: function () {
                 this.$router.push("/")
                 location.reload()
             },
             //点击开始审核
+            /**
+             * 开始审核
+             * @function begin_to_check
+             */
             begin_to_check: function () {
                 this.$router.push("/Check_2")
                 location.reload()

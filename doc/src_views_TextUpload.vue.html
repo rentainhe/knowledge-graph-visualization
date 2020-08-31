@@ -1,113 +1,154 @@
-<template>
-    <div>
-        <div class="header_text">知识图谱系统</div>
-<!--        <el-container>-->
-        <div class="container">
-            <div class = 'left'>
-<!--                上传文本的文本框和按钮-->
-                <div class="inputText">
-                    <div class="textUpLoader">
-<!--                        文本框的参数直接在这里面调-->
-                        <el-input clearable
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>src/views/TextUpload.vue - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Check_1.html">Check_1</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_1.html#~begin_to_check">begin_to_check</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_1.html#~getAllTexts">getAllTexts</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_1.html#~return_home">return_home</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-Check_2.html">Check_2</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~Back_to_homepage">Back_to_homepage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~Back_to_lastpage">Back_to_lastpage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~Back_to_TextUpload">Back_to_TextUpload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~getAllTexts">getAllTexts</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-Check_2.html#~Give_up">Give_up</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-home.html">home</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~change_to_text">change_to_text</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~initGraph">initGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~move_to_newTreeGraph">move_to_newTreeGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~oneRelation">oneRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~onSubmit">onSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~secondRelation">secondRelation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-home.html#~user_Check">user_Check</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-newTreeGraph.html">newTreeGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~addChildNode">addChildNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~Back_to_homepage">Back_to_homepage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~deleteCurrentNode">deleteCurrentNode</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~deleteCurrentNodeAttribute">deleteCurrentNodeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~Draw_graph">Draw_graph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~editCurrentNodeAttribute">editCurrentNodeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~getEquipmentTree">getEquipmentTree</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~getEquipmentTypeTree">getEquipmentTypeTree</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~getUnitTree">getUnitTree</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~handleClick">handleClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-newTreeGraph.html#~uploadNewNode">uploadNewNode</a></span></li><li class="nav-heading"><span class="nav-item-type type-module">M</span><span class="nav-item-name"><a href="module-TextUpload.html">TextUpload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~begin_upload">begin_upload</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~confirm_to_add_Node">confirm_to_add_Node</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~extract">extract</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~find_first_relation">find_first_relation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~find_second_relation">find_second_relation</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~getData">getData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~initGraph">initGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~move_to_check2">move_to_check2</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~PreviewNewGraph">PreviewNewGraph</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~refuse_to_add_Node">refuse_to_add_Node</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~return_home">return_home</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="module-TextUpload.html#~save_it_later">save_it_later</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/views/TextUpload.vue</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>&lt;template>
+    &lt;div>
+        &lt;div class="header_text">知识图谱系统&lt;/div>
+&lt;!--        &lt;el-container>-->
+        &lt;div class="container">
+            &lt;div class = 'left'>
+&lt;!--                上传文本的文本框和按钮-->
+                &lt;div class="inputText">
+                    &lt;div class="textUpLoader">
+&lt;!--                        文本框的参数直接在这里面调-->
+                        &lt;el-input clearable
                                   type="textarea"
                                   class="textarea"
                                   style="left:5%; top:20%; width: 73%;  "
                                   :rows="10"
                                   placeholder="请输入内容"
                                   v-model="textarea">
-                        </el-input>
-                    </div>
-                    <div class="textExtract">
-                        <div class="extractButton">
-                            <el-button class="buttons" type="primary" round=true @click="begin_upload">开始抽取
-                                <i class="el-icon-caret-right el-icon--right"></i>
-                            </el-button>
-                        </div>
-                        <div class="backButton" >
-                            <el-button class="buttons" type="primary" round=true @click="return_home">返回
-                                <i class="el-icon-s-promotion el-icon--right"></i>
-                            </el-button>
-                        </div>
-                    </div>
-                </div>
-<!--                现有知识图谱放置在这个区域-->
-                <div class="temp_Graph" id="TempGraph" style="display: none">
-                    <p class="temp_Graph_Text"> 现有知识图谱如下所示</p>
-                    <el-button id="delete_new_Nodes" class="delete_Nodes" style="display: none" type="primary" round=true @click="refuse_to_add_Node">删除该节点</el-button>
-                    <el-button id="add_new_Nodes" class="add_Nodes" style="display: none" type="primary" round=true @click="confirm_to_add_Node">存入数据库</el-button>
-                    <el-button id="save_it_later" class="save_nodes_later" style="display: none" type="primary" round=true @click="save_it_later">稍后审核</el-button>
-                </div>
-            </div>
+                        &lt;/el-input>
+                    &lt;/div>
+                    &lt;div class="textExtract">
+                        &lt;div class="extractButton">
+                            &lt;el-button class="buttons" type="primary" round=true @click="begin_upload">开始抽取
+                                &lt;i class="el-icon-caret-right el-icon--right">&lt;/i>
+                            &lt;/el-button>
+                        &lt;/div>
+                        &lt;div class="backButton" >
+                            &lt;el-button class="buttons" type="primary" round=true @click="return_home">返回
+                                &lt;i class="el-icon-s-promotion el-icon--right">&lt;/i>
+                            &lt;/el-button>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+&lt;!--                现有知识图谱放置在这个区域-->
+                &lt;div class="temp_Graph" id="TempGraph" style="display: none">
+                    &lt;p class="temp_Graph_Text"> 现有知识图谱如下所示&lt;/p>
+                    &lt;el-button id="delete_new_Nodes" class="delete_Nodes" style="display: none" type="primary" round=true @click="refuse_to_add_Node">删除该节点&lt;/el-button>
+                    &lt;el-button id="add_new_Nodes" class="add_Nodes" style="display: none" type="primary" round=true @click="confirm_to_add_Node">存入数据库&lt;/el-button>
+                    &lt;el-button id="save_it_later" class="save_nodes_later" style="display: none" type="primary" round=true @click="save_it_later">稍后审核&lt;/el-button>
+                &lt;/div>
+            &lt;/div>
 
-            <div class="right">
-                <div class="Nodes">
-                    <h3 class="extractNodesInfo">所抽取到的节点如下</h3>
-                    <el-button class="extractPlayer" id="Player_extracted" style="display:none;" type="primary"  @click="find_first_relation">{{player}}
-                        <i class="el-icon-user el-icon--right"></i>
-                    </el-button>
-                    <el-button class="extractTeam" type="primary" id="Team_extracted" style="display: none" @click="find_second_relation">{{team}}
-                        <i class="el-icon-football el-icon--right"></i>
-                    </el-button>
-                </div>
-                <div class="Links">
-                    <h3 class="extractNodesInfo">所抽取到的关系如下</h3>
-                    <el-card class="box-card">
-                        <ol>
-<!--                            <div  v-for="links in this.table_Graph.links":key="links"  class="text item">-->
-                            <div  class="text item" id="extract_links" style="display: none">
-                                <li>{{this.player+"转会至"+this.team}}</li>
-                            </div>
-                        </ol>
-                    </el-card>
-                </div>
-                <div class="change_url_buttons">
-                    <h3 class="extractNodesInfo">可选择的操作如下</h3>
-                    <el-button class="Preview"  round=true type="primary"  @click="PreviewNewGraph">实体预览
-                        <i class="el-icon-edit el-icon--right"></i>
-                    </el-button>
+            &lt;div class="right">
+                &lt;div class="Nodes">
+                    &lt;h3 class="extractNodesInfo">所抽取到的节点如下&lt;/h3>
+                    &lt;el-button class="extractPlayer" id="Player_extracted" style="display:none;" type="primary"  @click="find_first_relation">{{player}}
+                        &lt;i class="el-icon-user el-icon--right">&lt;/i>
+                    &lt;/el-button>
+                    &lt;el-button class="extractTeam" type="primary" id="Team_extracted" style="display: none" @click="find_second_relation">{{team}}
+                        &lt;i class="el-icon-football el-icon--right">&lt;/i>
+                    &lt;/el-button>
+                &lt;/div>
+                &lt;div class="Links">
+                    &lt;h3 class="extractNodesInfo">所抽取到的关系如下&lt;/h3>
+                    &lt;el-card class="box-card">
+                        &lt;ol>
+&lt;!--                            &lt;div  v-for="links in this.table_Graph.links":key="links"  class="text item">-->
+                            &lt;div  class="text item" id="extract_links" style="display: none">
+                                &lt;li>{{this.player+"转会至"+this.team}}&lt;/li>
+                            &lt;/div>
+                        &lt;/ol>
+                    &lt;/el-card>
+                &lt;/div>
+                &lt;div class="change_url_buttons">
+                    &lt;h3 class="extractNodesInfo">可选择的操作如下&lt;/h3>
+                    &lt;el-button class="Preview"  round=true type="primary"  @click="PreviewNewGraph">实体预览
+                        &lt;i class="el-icon-edit el-icon--right">&lt;/i>
+                    &lt;/el-button>
 
-<!--                    dialogVisible = true-->
-<!--                    <el-dialog-->
-<!--                            title="预 览"-->
-<!--                            :visible.sync="dialogVisible"-->
-<!--                            width="30%"-->
-<!--                            :before-close="handleClose">-->
-<!--                        <span>这里放预览的图片</span>-->
-<!--                        <span slot="footer" class="dialog-footer">-->
-<!--                            <el-button type="primary" round=true @click="dialogVisible = false">返 回</el-button>-->
-<!--                            <el-button type="primary" round=true @click="refuse_to_add_Node">删除该节点</el-button>-->
-<!--                            <el-button type="primary" @click="confirm_to_add_Node">存入数据库</el-button>-->
-<!--                        </span>-->
-<!--                    </el-dialog>-->
-                    <el-button class="move_to_check2_button"  round=true type="primary"  @click="move_to_check2">进入文本审核界面
-                        <i class="el-icon-edit el-icon--right"></i>
-                    </el-button>
-                </div>
-            </div>
-            </div>
-<!--                最初的节点信息，我这边先注释掉，如果有需要再取消注释即可-->
-<!--                <div class="buttons">-->
-<!--&lt;!&ndash;                    //发送数据&ndash;&gt;-->
-<!--                    <el-button type="primary" round=true @click="begin_upload" >确认上传-->
-<!--                        <i class="el-icon-upload el-icon&#45;&#45;right"></i>-->
-<!--                    </el-button>-->
-<!--                </div>-->
-<!--                <div class="buttons">-->
-<!--                    <el-button type="primary" round=true @click="extract">开始抽取-->
-<!--                        <i class="el-icon-caret-right el-icon&#45;&#45;right"></i>-->
-<!--                    </el-button>-->
-<!--                </div>-->
-<!--                <div class="buttons" style="left: auto">-->
-<!--                    <el-button type="primary" round=true @click="return_home">返回-->
-<!--                        <i class="el-icon-caret-right el-icon&#45;&#45;right"></i>-->
-<!--                    </el-button>-->
-<!--                </div>-->
-    </div>
-<!--        </el-container>-->
-<!--    </el-container>-->
-</template>
+&lt;!--                    dialogVisible = true-->
+&lt;!--                    &lt;el-dialog-->
+&lt;!--                            title="预 览"-->
+&lt;!--                            :visible.sync="dialogVisible"-->
+&lt;!--                            width="30%"-->
+&lt;!--                            :before-close="handleClose">-->
+&lt;!--                        &lt;span>这里放预览的图片&lt;/span>-->
+&lt;!--                        &lt;span slot="footer" class="dialog-footer">-->
+&lt;!--                            &lt;el-button type="primary" round=true @click="dialogVisible = false">返 回&lt;/el-button>-->
+&lt;!--                            &lt;el-button type="primary" round=true @click="refuse_to_add_Node">删除该节点&lt;/el-button>-->
+&lt;!--                            &lt;el-button type="primary" @click="confirm_to_add_Node">存入数据库&lt;/el-button>-->
+&lt;!--                        &lt;/span>-->
+&lt;!--                    &lt;/el-dialog>-->
+                    &lt;el-button class="move_to_check2_button"  round=true type="primary"  @click="move_to_check2">进入文本审核界面
+                        &lt;i class="el-icon-edit el-icon--right">&lt;/i>
+                    &lt;/el-button>
+                &lt;/div>
+            &lt;/div>
+            &lt;/div>
+&lt;!--                最初的节点信息，我这边先注释掉，如果有需要再取消注释即可-->
+&lt;!--                &lt;div class="buttons">-->
+&lt;!--&amp;lt;!&amp;ndash;                    //发送数据&amp;ndash;&amp;gt;-->
+&lt;!--                    &lt;el-button type="primary" round=true @click="begin_upload" >确认上传-->
+&lt;!--                        &lt;i class="el-icon-upload el-icon&amp;#45;&amp;#45;right">&lt;/i>-->
+&lt;!--                    &lt;/el-button>-->
+&lt;!--                &lt;/div>-->
+&lt;!--                &lt;div class="buttons">-->
+&lt;!--                    &lt;el-button type="primary" round=true @click="extract">开始抽取-->
+&lt;!--                        &lt;i class="el-icon-caret-right el-icon&amp;#45;&amp;#45;right">&lt;/i>-->
+&lt;!--                    &lt;/el-button>-->
+&lt;!--                &lt;/div>-->
+&lt;!--                &lt;div class="buttons" style="left: auto">-->
+&lt;!--                    &lt;el-button type="primary" round=true @click="return_home">返回-->
+&lt;!--                        &lt;i class="el-icon-caret-right el-icon&amp;#45;&amp;#45;right">&lt;/i>-->
+&lt;!--                    &lt;/el-button>-->
+&lt;!--                &lt;/div>-->
+    &lt;/div>
+&lt;!--        &lt;/el-container>-->
+&lt;!--    &lt;/el-container>-->
+&lt;/template>
 
-<script>
+&lt;script>
     import * as d3 from "d3";
     /**
      * 文本导入页面
@@ -624,9 +665,9 @@
             }
     }
     }
-</script>
+&lt;/script>
 
-<style>
+&lt;style>
     /*.temp_Graph{*/
     /*    background-color: #15161F;*/
     /*    !*height: 40%;*!*/
@@ -913,4 +954,22 @@
     .el-container:nth-child(7) .el-aside {
         line-height: 320px;
     }
-</style>
+&lt;/style></code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Mon Aug 31 2020 16:23:24 GMT+0800 (China Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
