@@ -166,7 +166,8 @@
             getInitNodes:function(){
                 this.$axios({
                     method:'get',
-                    url:"http://192.168.1.2:8088/queryAllNodesWithLabel"
+                    // url:"http://192.168.1.2:8088/queryAllNodesWithLabel"
+                    url:"http://39.108.102.157:8088/queryAllNodesWithLabel"
                 }).then(res=>{
                     this.init_data = res.data.data
                     console.log(this.init_data)
@@ -176,9 +177,11 @@
             getInitRelation:function(){
                 this.$axios({
                     method:'get',
-                    url:"http://192.168.1.2:8088/queryAllNodesRelationship"
+                    // url:"http://192.168.1.2:8088/queryAllNodesRelationship"
+                    url:"http://39.108.102.157:8088/queryAllNodesRelationship"
                 }).then(res=>{
                     this.init_links = res.data.data
+                    console.log(1111)
                     console.log(this.init_links)
                     this.X = 20
                     this.Y = 20

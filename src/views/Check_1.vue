@@ -47,7 +47,7 @@
         },
         methods: {
             /**
-             * 获取未审核信息
+             * 获取所有未审核的节点关系
              * @function getAllTexts
              */
             getAllTexts:function() {
@@ -61,14 +61,15 @@
                     console.log("error")
                 })
             },
-            //上传成功提示
+            // 上传成功
             successMessage() {
                 this.$message('上传成功')
             },
+            // 上传失败
             errorMessage() {
                 this.$message('上传失败')
             },
-            //上传文件
+            // 上传文本
             begin_upload: function () {
                 this.$axios({
                     method: 'post',
@@ -96,7 +97,7 @@
             },
             //点击开始审核
             /**
-             * 开始审核
+             * 跳转到文本审核界面
              * @function begin_to_check
              */
             begin_to_check: function () {
