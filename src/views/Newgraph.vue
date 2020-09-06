@@ -273,7 +273,7 @@
                     setData(allNodes[i].nodeName, allNodes[i].label, i, this.X, this.Y, this.Z, this.ifUnfold)
                 }
                 for(let i=0,len=allLinks.length;i<len;i++){
-                    setData(allLinks[i].childNode, allLinks[i].fatherNode, i,allLinks[i].nodeRelationType)
+                    setLinkData(allLinks[i].childNode, allLinks[i].fatherNode, i,allLinks[i].nodeRelationType)
                 }
                 console.log(listdata)
                 console.log(links)
