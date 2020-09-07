@@ -478,6 +478,7 @@
              */
             getData(){
                 // var _this = this
+                console.log("开始获取节点")
                 this.$axios.get("http://10.24.82.10:8088/initNodes").then( response =>{
                     // 处理json数据
                     var jsonObj = JSON.parse(JSON.stringify(response.data.data));

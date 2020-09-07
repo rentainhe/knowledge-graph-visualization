@@ -148,18 +148,20 @@
              */
             deleteCurrentNode:function(){
                 this.$confirm("确认删除该节点？").then(()=>{
+                    console.log('name');
+                    console.log(this.currentNodeName);
                     this.$axios({
                         method:'post',
-                        url:"http://192.168.1.2:8088/"+this.currentDeleteNodeOperation+this.currentNodeName
+                        url:"http://39.108.102.157:8088/"+this.currentDeleteNodeOperation+this.currentNodeName
                     }).then(res=>{
                         this.myChart.clear()
-                        if(this.currentNodeType=="EquipmentType"){
+                        if(this.currentNodeType==="EquipmentType"){
                             this.getEquipmentTypeTree()
                         }
-                        else if(this.currentNodeType=="EquipmentTree"){
+                        else if(this.currentNodeType==="EquipmentTree"){
                             this.getEquipmentTree()
                         }
-                        else if(this.currentNodeType=="UnitSequence"){
+                        else if(this.currentNodeType==="UnitSequence"){
                             this.getUnitTree()
                         }
                         this.$message("删除成功")
@@ -181,7 +183,7 @@
                 console.log(obj)
                 this.$axios({
                     method:'post',
-                    url:"http://192.168.1.2:8088/"+this.currentAddChildNodeOperation,
+                    url:"http://39.108.102.157:8088/"+this.currentAddChildNodeOperation,
                     data:obj
                 }).then(res=>{
                     this.$message("添加成功")
@@ -208,7 +210,7 @@
             addChildNode:function(){
                 this.$axios({
                     method:'get',
-                    url:'http://192.168.1.2:8088/getEmptyAttributeByTable/'+this.currentNodeType
+                    url:'http://39.108.102.157:8088/getEmptyAttributeByTable/'+this.currentNodeType
                 }).then(res=>{
                     this.addnewNodeWithAttribute = res.data.data
                     for(let i=0,len=this.addnewNodeWithAttribute.length;i<len;i++){
@@ -267,13 +269,15 @@
              *
              */
             getEquipmentTypeTree:function(){
-                // console.log(1111);
+                console.log(1111);
                 this.$axios({
                     method:'get',
-                    url:"http://192.168.1.2:8088/getEquipmentTypeLevelRelation"
+                    url:"http://39.108.102.157:8088/getEquipmentTypeLevelRelation"
                 }).then(res =>{
                     this.treeData = ''
+                    console.log(res);
                     this.treeData = toTree(res.data.data);
+                    // this.treeData = res.data.data;
                     console.log(this.treeData);
                     console.log(1);
                     this.Draw_graph(this.treeData);
@@ -296,6 +300,7 @@
 
                             // 以当前遍历项，的pid,去map对象中找到索引的id
                             var parent = map[item.pid];
+                            console.log(parent);
                             // console.log(parent);
                             // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中
                             if (parent !== item) {
@@ -318,13 +323,14 @@
              *
              */
             getUnitTree:function(){
-                // console.log(1111);
+                console.log(1111);
                 this.$axios({
                     method:'get',
-                    url:"http://192.168.1.2:8088/getUnitSequenceLevelRelation"
+                    url:"http://39.108.102.157:8088/getUnitSequenceLevelRelation"
                 }).then(res =>{
                     this.treeData = ''
                     this.treeData = toTree(res.data.data);
+                    // this.treeData = res.data.data;
                     console.log(this.treeData);
                     console.log(1);
                     this.Draw_graph(this.treeData);
@@ -372,7 +378,7 @@
                 // console.log(1111);
                 this.$axios({
                     method:'get',
-                    url:"http://192.168.1.2:8088/getEquipmentTreeLevelRelation"
+                    url:"http://39.108.102.157:8088/getEquipmentTreeLevelRelation"
                 }).then(res =>{
                     this.treeData = ''
                     this.treeData = toTree(res.data.data);
@@ -478,11 +484,12 @@
                 this.myChart.setOption(Option);
 
                 this.myChart('mouseup', function (param) {
+                    console.log(param.name)
                     that.currentNodeName = param.name
                     checkName = param.name
                     this.$axios({
                         method:'get',
-                        url:'http://192.168.1.2:8088/getAttributeByTableAndName/'+that.currentNodeType+"/"+that.currentNodeName
+                        url:'http://39.108.102.157:8088/getAttributeByTableAndName/'+that.currentNodeType+"/"+that.currentNodeName
                     }).then(res=>{
                         that.attributeTable = res.data.data
                     })

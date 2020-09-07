@@ -25,7 +25,7 @@
                         <el-col :span="24">
                             <el-input v-model="start_node_temp" placeholder="起始节点" clearable="1"></el-input>
                             <p></p>
-                            <el-input v-mode="end_node_temp" placeholder="终止节点" clearable="1"></el-input>
+                            <el-input v-model="end_node_temp" placeholder="终止节点" clearable="1"></el-input>
                         </el-col>
                     </el-tab-pane>
                 </el-tabs>
@@ -100,14 +100,14 @@
             singleNodeSearch:function(){
                 this.$axios({
                     method:'get',
-                    url:'http://192.168.1.2:8088/queryNodeLabelByName/'+this.single_node_search_temp
+                    url:'http://39.108.102.157:8088/queryNodeLabelByName/'+this.single_node_search_temp
                 }) .then(res=>{
-                    if(res.status==200){
+                    if(res.status===200){
                         this.single_node_data = res.data.data
                         console.log(this.single_node_data)
                         this.$axios({
                             method:'get',
-                            url:'http://192.168.1.2:8088/queryNodeRelationByName/'+this.single_node_search_temp
+                            url:'http://39.108.102.157:8088/queryNodeRelationByName/'+this.single_node_search_temp
                         }).then(res=>{
                             this.single_node_links = res.data.data
                             if(res.data.data.length >= 20){
@@ -130,9 +130,11 @@
             relationSearch:function(){
                 this.start_node = this.start_node_temp
                 this.end_node = this.end_node_temp
+                console.log("end_node")
+                console.log(this.end_node_temp)
                 this.$axios({
                     method:'get',
-                    url:'http://192.168.1.2:8088/queryNodeLabelBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+                    url:'http://39.108.102.157:8088/queryNodeLabelBetweenTwoNodes/'+this.start_node+'/'+this.end_node
                 }).then(res=>{
                     if(res.status == 200){
                         console.log(res)
@@ -140,7 +142,7 @@
                         this.search_node_data = res.data.data
                         this.$axios({
                             method:'get',
-                            url:'http://192.168.1.2:8088/queryNodeRelationBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+                            url:'http://39.108.102.157:8088/queryNodeRelationBetweenTwoNodes/'+this.start_node+'/'+this.end_node
                         }).then(response=>{
                             console.log(response.data.data)
                             this.search_node_relation = response.data.data
@@ -166,23 +168,24 @@
             getInitNodes:function(){
                 this.$axios({
                     method:'get',
-                    // url:"http://192.168.1.2:8088/queryAllNodesWithLabel"
+                    // url:"http://39.108.102.157:8088/queryAllNodesWithLabel"
                     url:"http://39.108.102.157:8088/queryAllNodesWithLabel"
                 }).then(res=>{
+                    console.log("get data")
                     this.init_data = res.data.data
-                    console.log(this.init_data)
+                    // console.log(this.init_data)
                     this.getInitRelation()
                 })
             },
             getInitRelation:function(){
                 this.$axios({
                     method:'get',
-                    // url:"http://192.168.1.2:8088/queryAllNodesRelationship"
+                    // url:"http://39.108.102.157:8088/queryAllNodesRelationship"
                     url:"http://39.108.102.157:8088/queryAllNodesRelationship"
                 }).then(res=>{
                     this.init_links = res.data.data
-                    console.log(1111)
-                    console.log(this.init_links)
+                    // console.log(1111)
+                    // console.log(this.init_links)
                     this.X = 20
                     this.Y = 20
                     this.Z = 30
@@ -191,6 +194,10 @@
                 })
             },
             Draw_graph:function(allNodes,allLinks){
+                console.log("nodes");
+                console.log(allNodes);
+                console.log("links")
+                console.log(allLinks);
 
                 var size = 60;
                 var size1 = 30;
@@ -219,7 +226,7 @@
                 // }
 
                 function setData(arr, n,i,X,Y,Z,Unfold) {
-                    if(Unfold == false){
+                    if(Unfold === false){
                         n = -n
                     }
                     const flag = arr === "disease"
@@ -234,7 +241,6 @@
                         "open" : "true"
                     })
                 }
-
                 // function setLinkData(arr, title,relation) {
                 //     for (var i = 0; i < arr.length; i++) {
                 //         links.push({
@@ -266,7 +272,6 @@
                             }
                         }
                     })
-
                 }
 
                 for(let i=0,len=allNodes.length;i<len;i++){
@@ -297,7 +302,7 @@
                         console.log(params.name)
                         this.$axios({
                             method:'get',
-                            url:'http://192.168.1.2:8088/getAttributeValueByNodeName/' + params.name
+                            url:'http://39.108.102.157:8088/getAttributeValueByNodeName/' + params.name
                         }).then(response=>{
                             that.currentNode = response.data.data // 这里不能用this, 必须用that，否则数据传输不到currentNode
                             console.log(this.currentNode)
