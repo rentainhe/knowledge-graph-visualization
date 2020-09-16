@@ -136,7 +136,7 @@
                     method:'get',
                     url:'http://39.108.102.157:8088/queryNodeLabelBetweenTwoNodes/'+this.start_node+'/'+this.end_node
                 }).then(res=>{
-                    if(res.status == 200){
+                    if(res.status === 200){
                         console.log(res)
                         console.log(res.data.data)
                         this.search_node_data = res.data.data
@@ -156,11 +156,11 @@
                 })
             },
             handleClick(tab,event){
-                if(tab.name=="first"){
+                if(tab.name==="first"){
                     document.getElementById("nodeSearch").style.display='block'
                     document.getElementById("nodeRelationSearch").style.display='none'
                 }
-                else if(tab.name=="second"){
+                else if(tab.name==="second"){
                     document.getElementById("nodeSearch").style.display='none'
                     document.getElementById("nodeRelationSearch").style.display='block'
                 }

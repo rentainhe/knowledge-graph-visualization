@@ -180,6 +180,7 @@
                 for(var i in this.addnewNodeWithAttribute){
                     obj[this.addnewNodeWithAttribute[i].attributeName] = this.addnewNodeWithAttribute[i].content;
                 }
+                console.log('obj')
                 console.log(obj)
                 this.$axios({
                     method:'post',
@@ -189,13 +190,13 @@
                     this.$message("添加成功")
                     this.addNodeFormVisible=false
                     this.myChart.clear()
-                    if(this.currentNodeType=="EquipmentType"){
+                    if(this.currentNodeType==="EquipmentType"){
                         this.getEquipmentTypeTree();
                     }
-                    else if(this.currentNodeType=="EquipmentTree"){
+                    else if(this.currentNodeType==="EquipmentTree"){
                         this.getEquipmentTree();
                     }
-                    else if(this.currentNodeType=="UnitSequence"){
+                    else if(this.currentNodeType==="UnitSequence"){
                         this.getUnitTree();
                     }
                 }).catch(error=>{
@@ -214,10 +215,10 @@
                 }).then(res=>{
                     this.addnewNodeWithAttribute = res.data.data
                     for(let i=0,len=this.addnewNodeWithAttribute.length;i<len;i++){
-                        if(this.addnewNodeWithAttribute[i].attributeName == this.currentParentId){
+                        if(this.addnewNodeWithAttribute[i].attributeName === this.currentParentId){
                             // 先找到当前所点击节点中，自身id
                             for(let j=0,leng = this.attributeTable.length; j<len;j++){
-                                if(this.attributeTable[j].attributeName==this.currentParentAttributeName){
+                                if(this.attributeTable[j].attributeName === this.currentParentAttributeName){
                                     // 再找到子节点对应其父亲节点id的部分，让其子节点的pid与自身id相同
                                     this.addnewNodeWithAttribute[i].content = this.attributeTable[j].content
                                     console.log(this.addnewNodeWithAttribute[i].content)
@@ -483,7 +484,7 @@
                 };
                 this.myChart.setOption(Option);
 
-                this.myChart('mouseup', function (param) {
+                this.myChart.on('mouseup', function (param) {
                     console.log(param.name)
                     that.currentNodeName = param.name
                     checkName = param.name
