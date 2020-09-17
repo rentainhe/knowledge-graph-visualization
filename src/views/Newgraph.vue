@@ -69,6 +69,9 @@
                 currentNode:{
                 }, // 当前节点信息
                 myChart:'',
+                new_data:[{nodeName:'美军',label:0},{nodeName: '武器',label:1},{nodeName: '基地',label: 2}],
+                new_links:[{fatherNode:'武器',childNode:'美军',nodeRelationType:'拥有'},{fatherNode:'基地',childNode:'美军',nodeRelationType:'属于'},{fatherNode:'美军',childNode:'武器',nodeRelationType:'装备'},
+                    {fatherNode:'武器',childNode:'美军',nodeRelationType:'部署'},{fatherNode:'武器',childNode:'美军',nodeRelationType:'部署'}],
                 init_data:[], // 存储初始所有节点的列表
                 init_links:[], // 存储初始所有的relation列表
                 activateName:'first',
@@ -85,16 +88,16 @@
                 search_node_data:[], // 查询到的节点列表
                 search_node_relation:[], // 查询到的节点关系列表
                 // 控制graph的参数
-                ifUnfold:true,
-                X : 0,
-                Y : 0,
-                Z : 0,
+                ifUnfold:false,
+                X : 50,
+                Y : 50,
+                Z : 30,
             }
         },
         mounted() {
-            // this.Draw_graph();
-            this.getInitNodes();
-            console.log(this.myChart.getOption());
+            this.Draw_graph(this.new_data,this.new_links);
+            // this.getInitNodes();
+            // console.log(this.myChart.getOption());
         },
         methods:{
             singleNodeSearch:function(){
@@ -184,6 +187,7 @@
                     url:"http://39.108.102.157:8088/queryAllNodesRelationship"
                 }).then(res=>{
                     this.init_links = res.data.data
+
                     // console.log(1111)
                     // console.log(this.init_links)
                     this.X = 20
@@ -258,7 +262,7 @@
                 //         })
                 //     }
                 // }
-                function setLinkData(arr, title,relation) {
+                function setLinkData(arr, title,relation,curveness) {
                     links.push({
                         "source": arr,
                         "target": title,
@@ -269,7 +273,8 @@
                         lineStyle: {
                             normal: {
                                 color: 'source',
-                            }
+                                curveness:curveness,
+                            },
                         }
                     })
                 }
@@ -278,7 +283,7 @@
                     setData(allNodes[i].nodeName, allNodes[i].label, i, this.X, this.Y, this.Z, this.ifUnfold)
                 }
                 for(let i=0,len=allLinks.length;i<len;i++){
-                    setLinkData(allLinks[i].childNode, allLinks[i].fatherNode, i,allLinks[i].nodeRelationType)
+                    setLinkData(allLinks[i].childNode, allLinks[i].fatherNode, allLinks[i].nodeRelationType,0.1*i+0.1)
                 }
                 console.log(listdata)
                 console.log(links)
@@ -292,6 +297,7 @@
                         "name":legendes[i],
                     })
                 }
+
 
                 var Headquarter = []; // 司令部节点
                 Headquarter.push(headquarter);
@@ -318,6 +324,7 @@
                  */
                 function bindChartClickEvent(chart) {
                     chart.on('click', function (params) {
+
                         console.log(params)
                         var category = params.data.category,
                             nodeType = params.data.nodeType;
@@ -460,6 +467,8 @@
                             links: links,
                             categories: texts,
                             roam: false,
+                            edgeSymbol:['circle','arrow'], // 设置连线两端的箭头样式
+                            edgeSymbolSize:[5,15],
                             label: {
                                 normal: {
                                     show: true,
@@ -480,7 +489,12 @@
                     }
                 );
                 this.myChart.setOption(option);
-                bindChartClickEvent(this.myChart);
+                //控制点击的函数
+                this.myChart.on('click', function (params) {
+                    console.log(params);
+                    console.log(params.dataType);
+                });
+                // bindChartClickEvent(this.myChart);
                 // showNodeAttribute(this.myChart);
             },
             goToTextUpload:function(){
