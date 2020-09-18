@@ -32,7 +32,22 @@
                 <el-button id="nodeSearch" style="display: block" class="nodeSearch" icon="el-icon-upload" type="primary" @click="singleNodeSearch">节点查询</el-button>
                 <el-button id="nodeRelationSearch" style="display: none" class="nodeRelationSearch" icon="el-icon-upload" type="primary" @click="relationSearch">节点关系查询</el-button>
                 <div id="myChart" style="position: absolute;top:6%;left: 20%" :style="{width: '60%', height: '80%'}"></div>
-
+<!--                展示节点关系的弹窗-->
+                <el-dialog width="30%" title="节点关系" :visible.sync="NodeRelationVisible">
+                    <el-dialog width="30%" title="请输入修改的内容" :visible.sync="NodeRelationChangeVisible" append-to-body>
+                    </el-dialog>
+                    <div>起始节点: {{source}}</div>
+                    <p></p>
+                    <div>终止节点: {{target}}</div>
+                    <p></p>
+                    <div>关系: {{relation}}</div>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button type="primary" @click="NodeRelationVisible = false">返 回</el-button>
+                        <el-button type="danger">删除关系</el-button>
+                        <el-button type="warning" @click="NodeRelationChangeVisible = true">修改关系</el-button>
+                    </div>
+                </el-dialog>
+<!--                展示节点关系的弹窗-->
                 <el-card class="box-card" id="Player_info" style="display: none">
                     <div slot="header" class="clearfix">
                         <span class="Attribute_item Attribute_text">节点信息</span>
@@ -66,8 +81,17 @@
         name: "Newgraph",
         data (){
             return{
+                // 点击节点之间的连线展示节点关系所需要的变量
+                source:null,
+                target:null,
+                relation:null,
+                NodeRelationVisible: false,
+                NodeRelationChangeVisible:false,
+
+                // 展示当前节点信息
                 currentNode:{
-                }, // 当前节点信息
+                },
+                // 画图变量
                 myChart:'',
                 new_data:[{nodeName:'美军',label:0},{nodeName: '武器',label:1},{nodeName: '基地',label: 2}],
                 new_links:[{fatherNode:'武器',childNode:'美军',nodeRelationType:'拥有'},{fatherNode:'基地',childNode:'美军',nodeRelationType:'属于'},{fatherNode:'美军',childNode:'武器',nodeRelationType:'装备'},
@@ -493,6 +517,13 @@
                 this.myChart.on('click', function (params) {
                     console.log(params);
                     console.log(params.dataType);
+                    console.log(params.data.source)
+                    console.log(params.data.target)
+                    console.log(params.data.label.formatter)
+                    that.source = params.data.source
+                    that.target = params.data.target
+                    that.relation = params.data.label.formatter
+                    that.NodeRelationVisible = true
                 });
                 // bindChartClickEvent(this.myChart);
                 // showNodeAttribute(this.myChart);
