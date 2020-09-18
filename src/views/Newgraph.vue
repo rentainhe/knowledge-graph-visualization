@@ -44,6 +44,7 @@
                         {{key}}:{{val}}
                     </div>
                 </el-card>
+                <el-input-number class = "el-input-number" v-model="num" @change="handleChange" :min="1" :max="5" label="控制显示点的个数"></el-input-number>
                 <el-button type="primary" round=true  @click="goToTextUpload" class="text_upload">文本导入
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
@@ -66,12 +67,15 @@
         name: "Newgraph",
         data (){
             return{
+                num:"5",
                 currentNode:{
                 }, // 当前节点信息
                 myChart:'',
-                new_data:[{nodeName:'美军',label:0},{nodeName: '武器',label:1},{nodeName: '基地',label: 2}],
+                new_data:[{nodeName:'美军',label:0},{nodeName: '武器',label:1},{nodeName: '基地',label: 2},{nodeName:'枪',label:2}
+                ,{nodeName:'炮',label:2}],
                 new_links:[{fatherNode:'武器',childNode:'美军',nodeRelationType:'拥有'},{fatherNode:'基地',childNode:'美军',nodeRelationType:'属于'},{fatherNode:'美军',childNode:'武器',nodeRelationType:'装备'},
-                    {fatherNode:'武器',childNode:'美军',nodeRelationType:'部署'},{fatherNode:'武器',childNode:'美军',nodeRelationType:'部署'}],
+                    {fatherNode:'武器',childNode:'美军',nodeRelationType:'部署'},{fatherNode:'美军',childNode:'枪',nodeRelationType:'使用'},{fatherNode:'炮',childNode:'美军',nodeRelationType:'使用'},{fatherNode:'炮',childNode:'基地',nodeRelationType:'有'},
+                    {fatherNode:'枪',childNode:'武器',nodeRelationType:'包括'},{fatherNode:'炮',childNode:'武器',nodeRelationType:'包括'},{fatherNode:'基地',childNode:'美军',nodeRelationType:'有'},],
                 init_data:[], // 存储初始所有节点的列表
                 init_links:[], // 存储初始所有的relation列表
                 activateName:'first',
@@ -100,6 +104,26 @@
             // console.log(this.myChart.getOption());
         },
         methods:{
+            //计数器变动
+            handleChange(value) {
+                console.log(value);
+                var nodes = this.new_data.slice(0,value);
+                var names = [];
+                for (let i = 0; i < nodes.length; i++){
+                    names.push(nodes[i].nodeName)
+                }
+                console.log(names);
+                var links = this.new_links.filter(ele =>
+                names.includes(ele.fatherNode) && names.includes(ele.childNode)
+                )
+                // for (let i = 0; i < this.new_links.length; i++){
+                //     if (names.find(this.new_links[i].childNode) != null && names.find(this.new_links[i].fatherNode) != null){
+                //         links.push(this.new_links[i])
+                //     }
+                // }
+                console.log(links);
+                this.Draw_graph(nodes,links);
+            },
             singleNodeSearch:function(){
                 this.$axios({
                     method:'get',
@@ -283,7 +307,7 @@
                     setData(allNodes[i].nodeName, allNodes[i].label, i, this.X, this.Y, this.Z, this.ifUnfold)
                 }
                 for(let i=0,len=allLinks.length;i<len;i++){
-                    setLinkData(allLinks[i].childNode, allLinks[i].fatherNode, allLinks[i].nodeRelationType,0.1*i+0.1)
+                    setLinkData(allLinks[i].childNode, allLinks[i].fatherNode, allLinks[i].nodeRelationType,0.5*i+0.1)
                 }
                 console.log(listdata)
                 console.log(links)
@@ -481,8 +505,7 @@
                             lineStyle: {
                                 normal: {
                                     opacity: 0.9,
-                                    width: 1.5,
-                                    curveness: 0
+                                    width: 1.5
                                 }
                             }
                         }]
@@ -515,6 +538,15 @@
 </script>
 
 <style scoped>
+    .el-input-number {
+        position: absolute;
+        top: 35%;
+        left: 5%;
+        /*color: #fff;*/
+        /*background-color: #303252;*/
+        /*border-color: #9593A7;*/
+        /*border-width: 2px;*/
+    }
     .nodeRelationSearch{
         position: absolute;
         top:25%;
