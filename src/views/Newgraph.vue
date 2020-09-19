@@ -86,11 +86,15 @@
                     <p></p>
                     <div id="EditModeNodeInfoChange" style="display:block;">
                         <el-input v-model="EditNodeName" placeholder="输入节点名称" clearable="1"></el-input>
+                        <P></P>
+                        <el-button type="primary" @click="">更改信息</el-button>
                     </div>
                    <div id="EditModeAddNodeRelation" style="display: none">
                        <el-input v-model="EditSourceNode" placeholder="起始节点名称" clearable="1"></el-input>
                        <p></p>
                        <el-input v-model="EditTargetNode" placeholder="终止节点名称" clearable="1"></el-input>
+                       <p></p>
+                       <el-button type="primary" @click="">添加关系</el-button>
                    </div>
                 </div>
                 <el-button id="quitEditMode" type="primary" round=true  @click="QuitEditMode" class="QuitEditMode" style="display: none">退出编辑模式
