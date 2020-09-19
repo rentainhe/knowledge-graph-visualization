@@ -84,10 +84,14 @@
                         <el-radio-button label="添加节点关系"></el-radio-button>
                     </el-radio-group>
                     <p></p>
-                    <el-input id="EditModeNodeInfoChange" style="display: none" v-model="EditNodeName" placeholder="输入节点名称" clearable="1"></el-input>
-                    <el-input id="EditModeSourceNode" style="display: block"  v-model="EditSourceNode" placeholder="起始节点名称" clearable="1"></el-input>
-                    <p></p>
-                    <el-input id="EditModeTargetNode" style="display: block" v-model="EditTargetNode" placeholder="终止节点名称" clearable="1"></el-input>
+                    <div id="EditModeNodeInfoChange" style="display:block;">
+                        <el-input v-model="EditNodeName" placeholder="输入节点名称" clearable="1"></el-input>
+                    </div>
+                   <div id="EditModeAddNodeRelation" style="display: none">
+                       <el-input v-model="EditSourceNode" placeholder="起始节点名称" clearable="1"></el-input>
+                       <p></p>
+                       <el-input v-model="EditTargetNode" placeholder="终止节点名称" clearable="1"></el-input>
+                   </div>
                 </div>
                 <el-button id="quitEditMode" type="primary" round=true  @click="QuitEditMode" class="QuitEditMode" style="display: none">退出编辑模式
                     <i class="el-icon-s-promotion el-icon--right"></i>
@@ -182,8 +186,17 @@
         },
         methods:{
             changeOption(param){
-                console.log(param);
-
+                // console.log(param.type) // undefined
+                // console.log(param)
+                if(param==="更改节点信息"){
+                    console.log(456)
+                    document.getElementById("EditModeNodeInfoChange").style.display='block'
+                    document.getElementById("EditModeAddNodeRelation").style.display='none'
+                } else if(param==="添加节点关系"){
+                    console.log(123)
+                    document.getElementById("EditModeNodeInfoChange").style.display='none'
+                    document.getElementById("EditModeAddNodeRelation").style.display='block'
+                }
             },
             QuitEditMode(){
                 document.getElementById("searchNodeInfo").style.display = 'block'
