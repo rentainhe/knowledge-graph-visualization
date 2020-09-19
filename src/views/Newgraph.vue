@@ -181,16 +181,9 @@
             // console.log(this.myChart.getOption());
         },
         methods:{
-            changeOption(){
-                if(param=="更改节点信息"){
-                    document.getElementById("EditModeNodeInfoChange").style.display='block'
-                    document.getElementById("EditModeSourceNode").style.display='none'
-                    document.getElementById("EditModeTargetNode").style.display='none'
-                } else if(param=="添加节点关系"){
-                    document.getElementById("EditModeNodeInfoChange").style.display='none'
-                    document.getElementById("EditModeSourceNode").style.display='block'
-                    document.getElementById("EditModeTargetNode").style.display='block'
-                }
+            changeOption(param){
+                console.log(param);
+
             },
             QuitEditMode(){
                 document.getElementById("searchNodeInfo").style.display = 'block'
