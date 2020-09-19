@@ -84,9 +84,10 @@
                         <el-radio-button label="添加节点关系"></el-radio-button>
                     </el-radio-group>
                     <p></p>
-                    <el-input v-model="EditNodeName" placeholder="输入节点名称" clearable="1"></el-input>
+                    <el-input id="EditModeNodeInfoChange" style="display: none" v-model="EditNodeName" placeholder="输入节点名称" clearable="1"></el-input>
+                    <el-input id="EditModeSourceNode" style="display: block"  v-model="EditSourceNode" placeholder="起始节点名称" clearable="1"></el-input>
                     <p></p>
-                    <el-input v-model="EditTargetNode" placeholder="终止节点名称" clearable="1"></el-input>
+                    <el-input id="EditModeTargetNode" style="display: block" v-model="EditTargetNode" placeholder="终止节点名称" clearable="1"></el-input>
                 </div>
                 <el-button id="quitEditMode" type="primary" round=true  @click="QuitEditMode" class="QuitEditMode" style="display: none">退出编辑模式
                     <i class="el-icon-s-promotion el-icon--right"></i>
@@ -137,6 +138,7 @@
                 ChosenNodeName: "", //存储所选择节点的名称
                 EditNodeName:'', //需要编辑信息的节点名称
                 EditTargetNode:'',
+                EditSourceNode:'',
 
 
                 // 展示当前节点信息
@@ -179,8 +181,16 @@
             // console.log(this.myChart.getOption());
         },
         methods:{
-            changeOption(param){
-                console.log(1234)
+            changeOption(){
+                if(param=="更改节点信息"){
+                    document.getElementById("EditModeNodeInfoChange").style.display='block'
+                    document.getElementById("EditModeSourceNode").style.display='none'
+                    document.getElementById("EditModeTargetNode").style.display='none'
+                } else if(param=="添加节点关系"){
+                    document.getElementById("EditModeNodeInfoChange").style.display='none'
+                    document.getElementById("EditModeSourceNode").style.display='block'
+                    document.getElementById("EditModeTargetNode").style.display='block'
+                }
             },
             QuitEditMode(){
                 document.getElementById("searchNodeInfo").style.display = 'block'
