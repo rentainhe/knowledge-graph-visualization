@@ -196,13 +196,16 @@
                     console.log(456)
                     document.getElementById("EditModeNodeInfoChange").style.display='block'
                     document.getElementById("EditModeAddNodeRelation").style.display='none'
+                    document.getElementById("Player_info").style.display='block'
                 } else if(param==="添加节点关系"){
                     console.log(123)
                     document.getElementById("EditModeNodeInfoChange").style.display='none'
                     document.getElementById("EditModeAddNodeRelation").style.display='block'
+                    document.getElementById("Player_info").style.display='none'
                 }
             },
             QuitEditMode(){
+                document.getElementById("Player_info").style.display='none'
                 document.getElementById("searchNodeInfo").style.display = 'block'
                 document.getElementById("nodeSearch").style.display = 'block'
                 document.getElementById("quitEditMode").style.display = 'none'
@@ -222,6 +225,7 @@
                 this.mode = 'show'
             },
             EnterEditMode(){
+                document.getElementById("Player_info").style.display='block'
                 document.getElementById("searchNodeInfo").style.display = 'none'
                 document.getElementById("nodeSearch").style.display = 'none'
                 document.getElementById("quitEditMode").style.display = 'block'
