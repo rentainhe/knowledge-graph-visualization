@@ -14,7 +14,7 @@
 <!--                        </el-form-item>-->
 <!--                    </el-form>-->
 <!--                </el-col>-->
-                <el-tabs class="searchNodeInfo" v-model="activateName" type="card" @tab-click="handleClick">
+                <el-tabs id="searchNodeInfo" class="searchNodeInfo" v-model="activateName" type="card" @tab-click="handleClick" style="display: block">
                     <el-tab-pane label="节点信息查询" name="first">
                         <el-col :span="24">
 <!--                            通过el-col+span的组合来限制输入框的宽度-->
@@ -35,6 +35,21 @@
 <!--                展示节点关系的弹窗-->
                 <el-dialog width="30%" title="节点关系" :visible.sync="NodeRelationVisible">
                     <el-dialog width="30%" title="请输入修改的内容" :visible.sync="NodeRelationChangeVisible" append-to-body>
+                        <div>当前关系为: {{relation}}</div>
+                        <p></p>
+                        <div>更改关系为:
+                            <el-select v-model="value" placeholder="请选择一个关系">
+                                <el-option v-for="item in ExistedRelation"
+                                           :key="item.value"
+                                           :label="item.label"
+                                           :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="NodeRelationChangeVisible = false">返 回</el-button>
+                            <el-button type="primary" @click="ChangeRelation">修 改</el-button>
+                        </div>
                     </el-dialog>
                     <div>起始节点: {{source}}</div>
                     <p></p>
@@ -43,7 +58,7 @@
                     <div>关系: {{relation}}</div>
                     <div slot="footer" class="dialog-footer">
                         <el-button type="primary" @click="NodeRelationVisible = false">返 回</el-button>
-                        <el-button type="danger">删除关系</el-button>
+                        <el-button type="danger" @click="DeleteRelation">删除关系</el-button>
                         <el-button type="warning" @click="NodeRelationChangeVisible = true">修改关系</el-button>
                     </div>
                 </el-dialog>
@@ -60,16 +75,30 @@
                     </div>
                 </el-card>
                 <el-input-number class = "el-input-number" v-model="num" @change="handleChange" :min="1" :max="5" label="控制显示点的个数"></el-input-number>
-                <el-button type="primary" round=true  @click="goToTextUpload" class="text_upload">文本导入
+                <div id="changeOption" class="changeOption" style="display: none">
+<!--                    <el-radio v-model="option" label="Information" border>更改节点信息</el-radio>-->
+<!--                    <el-radio v-model="option" label="Relation" border>添加节点关系</el-radio>-->
+                    <el-radio-group v-model="option">
+                        <el-radio-button label="更改节点信息"></el-radio-button>
+                        <el-radio-button label="添加节点关系"></el-radio-button>
+                    </el-radio-group>
+                </div>
+                <el-button id="quitEditMode" type="primary" round=true  @click="QuitEditMode" class="QuitEditMode" style="display: none">退出编辑模式
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
-                <el-button type="primary" round=true  @click="manualCheck" class="manual_check">人工审核
+                <el-button id="enterEditMode" type="primary" round=true  @click="EnterEditMode" class="EditModeButtom">进入编辑模式
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
-                <el-button type="primary" round=true  @click="goToKnowledgeTree" class="to_TreeGraph">知识树展示
+                <el-button id="goToTextUpload" type="primary" round=true  @click="goToTextUpload" class="text_upload">文本导入
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
-                <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
+                <el-button id="manualCheck" type="primary" round=true  @click="manualCheck" class="manual_check">人工审核
+                    <i class="el-icon-s-promotion el-icon--right"></i>
+                </el-button>
+                <el-button id="goToKnowledgeTree" type="primary" round=true  @click="goToKnowledgeTree" class="to_TreeGraph">知识树展示
+                    <i class="el-icon-s-promotion el-icon--right"></i>
+                </el-button>
+                <el-button id="Back_to_homepage" type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
             </div>
@@ -82,12 +111,26 @@
         name: "Newgraph",
         data (){
             return{
+                // 用来控制模式转换 以及 点击的功能
+                mode: "show",
+                option: "更改节点信息",
                 // 点击节点之间的连线展示节点关系所需要的变量
-                source:null,
-                target:null,
-                relation:null,
-                NodeRelationVisible: false,
-                NodeRelationChangeVisible:false,
+                source:null, // 源节点
+                target:null,  // 目标节点
+                relation:null,  // 关系
+                NodeRelationVisible: false, // 是否展示关系
+                NodeRelationChangeVisible:false, // 是否打开关系修改界面
+                TempHash:[], // 为了去除数组中重复的关系，使用一个hash表
+                ExistedRelation:[
+                    {value:'属于',label:'属于'},
+                    {value:'驻扎于',label:'驻扎于'},
+                    {value:'拥有',label:'拥有'},
+                    {value:'使用',label:'使用'},
+                ], // 存放已存在的关系，先用手造的数据，之后需要一个接口返回数据库中存在的所有关系
+                value:null,
+                RelationIndex:null,
+                ChosenNodeName: "", //存储所选择节点的名称
+
 
                 // 展示当前节点信息
 
@@ -118,9 +161,9 @@
                 search_node_relation:[], // 查询到的节点关系列表
                 // 控制graph的参数
                 ifUnfold:false,
-                X : 50,
-                Y : 50,
-                Z : 30,
+                X : 30,
+                Y : 30,
+                Z : 20,
             }
         },
         mounted() {
@@ -129,6 +172,102 @@
             // console.log(this.myChart.getOption());
         },
         methods:{
+            QuitEditMode(){
+                document.getElementById("searchNodeInfo").style.display = 'block'
+                document.getElementById("nodeSearch").style.display = 'block'
+                document.getElementById("quitEditMode").style.display = 'none'
+                document.getElementById("goToTextUpload").style.display = 'block'
+                document.getElementById("manualCheck").style.display = 'block'
+                document.getElementById("Back_to_homepage").style.display = 'block'
+                document.getElementById("goToKnowledgeTree").style.display = 'block'
+                document.getElementById("changeOption").style.display = 'none'
+                if(this.activateName=='second'){
+                    // document.getElementById("nodeSearch").style.display = 'none'
+                    document.getElementById("nodeRelationSearch").style.display = 'block'
+                    document.getElementById("nodeSearch").style.display = 'none'
+                } else{
+                    document.getElementById("nodeSearch").style.display = 'block'
+                    // document.getElementById("nodeRelationSearch").style.display = 'none'
+                }
+                this.mode = 'show'
+            },
+            EnterEditMode(){
+                document.getElementById("searchNodeInfo").style.display = 'none'
+                document.getElementById("nodeSearch").style.display = 'none'
+                document.getElementById("quitEditMode").style.display = 'block'
+                document.getElementById("goToTextUpload").style.display = 'none'
+                document.getElementById("manualCheck").style.display = 'none'
+                document.getElementById("Back_to_homepage").style.display = 'none'
+                document.getElementById("goToKnowledgeTree").style.display = 'none'
+                document.getElementById("changeOption").style.display = 'block'
+                if(this.activateName=='second'){
+                    // document.getElementById("nodeSearch").style.display = 'none'
+                    document.getElementById("nodeRelationSearch").style.display = 'none'
+                } else{
+                    document.getElementById("nodeSearch").style.display = 'none'
+                    // document.getElementById("nodeRelationSearch").style.display = 'none'
+                }
+                this.mode = 'edit'
+            },
+            // 删除关系
+            DeleteRelation(){
+                this.$confirm('是否删除这该关系','提示',{
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type:'warning'
+                }).then(()=>{
+                    this.$message({
+                            type:'success',
+                            message:'修改成功'
+                        })
+                    this.new_links.splice(this.RelationIndex,1)
+                    this.Draw_graph(this.new_data,this.new_links)
+                    this.NodeRelationChangeVisible = false
+                    this.NodeRelationVisible = false
+
+                }).catch(()=>{
+                    this.$message({
+                        type: 'info',
+                        message: '已取消修改'
+                    })
+                })
+            },
+            // 更改关系
+            ChangeRelation(){
+                this.$confirm('此操作将更新该关系为'+'，是否继续','提示',{
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type:'warning'
+                }).then(()=>{
+                    if(this.value==null){
+                        this.$message({
+                            type : 'warning',
+                            message: '所选的属性值不能为空，请选择一个属性值'
+                        })
+                        // this.NodeRelationChangeVisible = false
+                    }
+                    else{
+                        this.$message({
+                            type:'success',
+                            message:'修改成功'
+                        })
+                        this.new_links[this.RelationIndex].nodeRelationType = this.value
+                        this.Draw_graph(this.new_data,this.new_links)
+                        this.NodeRelationChangeVisible = false
+                        this.NodeRelationVisible = false
+                    }
+
+                }).catch(()=>{
+                    this.$message({
+                        type: 'info',
+                        message: '已取消修改'
+                    })
+                })
+            },
+            //找到需要更改的关系的下标
+            findRelationIndex(relation){
+                  return relation.fatherNode == this.target && relation.childNode == this.source && relation.nodeRelationType == this.relation
+            },
             //计数器变动
             handleChange(value) {
                 console.log(value);
@@ -209,10 +348,12 @@
             },
             handleClick(tab,event){
                 if(tab.name==="first"){
+                    this.activateName = 'first'
                     document.getElementById("nodeSearch").style.display='block'
                     document.getElementById("nodeRelationSearch").style.display='none'
                 }
                 else if(tab.name==="second"){
+                    this.activateName = 'second'
                     document.getElementById("nodeSearch").style.display='none'
                     document.getElementById("nodeRelationSearch").style.display='block'
                 }
@@ -332,7 +473,7 @@
                     setData(allNodes[i].nodeName, allNodes[i].label, i, this.X, this.Y, this.Z, this.ifUnfold)
                 }
                 for(let i=0,len=allLinks.length;i<len;i++){
-                    setLinkData(allLinks[i].childNode, allLinks[i].fatherNode, allLinks[i].nodeRelationType,0.5*i+0.1)
+                    setLinkData(allLinks[i].childNode, allLinks[i].fatherNode, allLinks[i].nodeRelationType,0.1*i+0.1)
                 }
                 console.log(listdata)
                 console.log(links)
@@ -539,15 +680,34 @@
                 this.myChart.setOption(option);
                 //控制点击的函数
                 this.myChart.on('click', function (params) {
-                    console.log(params);
-                    console.log(params.dataType);
-                    console.log(params.data.source)
-                    console.log(params.data.target)
-                    console.log(params.data.label.formatter)
-                    that.source = params.data.source
-                    that.target = params.data.target
-                    that.relation = params.data.label.formatter
-                    that.NodeRelationVisible = true
+                    if(that.mode=='show'){
+                        if(params.dataType=='node'){
+                            that.$message({
+                                type: 'info',
+                                message: '这是一个节点'
+                            })
+                        }
+                        else if(params.dataType=='edge'){
+                            that.$message({
+                                type: 'info',
+                                message: '这是一条关系'
+                            })
+                        }
+                    }
+                    // console.log(params);
+                    // console.log(params.dataType);
+                    // console.log(params.data.source)
+                    // console.log(params.data.target)
+                    // console.log(params.data.label.formatter)
+                    else if(that.mode=='edit'){
+                        that.source = params.data.source
+                        that.target = params.data.target
+                        that.relation = params.data.label.formatter
+                        that.RelationIndex = that.new_links.findIndex(that.findRelationIndex)
+                        console.log("对应的元素下标是: ",that.RelationIndex)
+                        that.NodeRelationVisible = true
+                    }
+
                 });
                 // bindChartClickEvent(this.myChart);
                 // showNodeAttribute(this.myChart);
@@ -570,10 +730,15 @@
 </script>
 
 <style scoped>
+    .changeOption{
+        position: absolute;
+        top:5%;
+        left: 2.5%;
+    }
     .el-input-number {
         position: absolute;
-        top: 35%;
-        left: 5%;
+        top: 55%;
+        left: 4.5%;
         /*color: #fff;*/
         /*background-color: #303252;*/
         /*border-color: #9593A7;*/
@@ -581,13 +746,13 @@
     }
     .nodeRelationSearch{
         position: absolute;
-        top:25%;
-        left:7%;
+        top:30%;
+        left:8.3%;
     }
     .nodeSearch{
         position: absolute;
-        left:9%;
-        top:18.5%;
+        left:10.8%;
+        top:22%;
     }
     .searchNodeInfo{
         position: absolute;
@@ -622,6 +787,24 @@
         position: absolute;
         left:3%;
         top: 30%;
+    }
+    .QuitEditMode{
+        position: absolute;
+        top:80%;
+        left:5%;
+        color:#ffffff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
+    }
+    .EditModeButtom{
+        position: absolute;
+        top:70%;
+        left:4.5%;
+        color:#ffffff;
+        background-color: #303252;
+        border-color: #9593A7;
+        border-width: 2px;
     }
     .text_upload{
         position: absolute;
