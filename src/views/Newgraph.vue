@@ -299,62 +299,85 @@
                 this.Draw_graph(nodes,links);
             },
             singleNodeSearch:function(){
-                this.$axios({
-                    method:'get',
-                    url:'http://39.108.102.157:8088/queryNodeLabelByName/'+this.single_node_search_temp
-                }) .then(res=>{
-                    if(res.status===200){
-                        this.single_node_data = res.data.data
-                        console.log(this.single_node_data)
-                        this.$axios({
-                            method:'get',
-                            url:'http://39.108.102.157:8088/queryNodeRelationByName/'+this.single_node_search_temp
-                        }).then(res=>{
-                            this.single_node_links = res.data.data
-                            if(res.data.data.length >= 20){
-                                console.log(this.single_node_links)
-                                this.X = 10
-                                this.Y = 20
-                                this.Z = 6
-                                this.ifUnfold = false
-                            }else{
-                                this.X = 80
-                                this.Y = 80
-                                this.Z = 10
-                                this.ifUnfold = false
-                            }
-                            this.Draw_graph(this.single_node_data,this.single_node_links)
-                        })
-                    }
-                })
+                // this.$axios({
+                //     method:'get',
+                //     url:'http://39.108.102.157:8088/queryNodeLabelByName/'+this.single_node_search_temp
+                // }) .then(res=>{
+                //     if(res.status===200){
+                //         this.single_node_data = res.data.data
+                //         console.log(this.single_node_data)
+                //         this.$axios({
+                //             method:'get',
+                //             url:'http://39.108.102.157:8088/queryNodeRelationByName/'+this.single_node_search_temp
+                //         }).then(res=>{
+                //             this.single_node_links = res.data.data
+                //             if(res.data.data.length >= 20){
+                //                 console.log(this.single_node_links)
+                //                 this.X = 10
+                //                 this.Y = 20
+                //                 this.Z = 6
+                //                 this.ifUnfold = false
+                //             }else{
+                //                 this.X = 80
+                //                 this.Y = 80
+                //                 this.Z = 10
+                //                 this.ifUnfold = false
+                //             }
+                //             this.Draw_graph(this.single_node_data,this.single_node_links)
+                //         })
+                //     }
+                // })
+                console.log('find nodes');
+                console.log(this.single_node_search_temp)
+                var links = this.new_links.filter(ele =>
+                    ele.fatherNode === this.single_node_search_temp || ele.childNode === this.single_node_search_temp)
+                var names = [];
+                for (let i = 0; i < links.length; i++){
+                    names.push(links[i].fatherNode);
+                    names.push(links[i].childNode);
+                }
+                var nodes = this.new_data.filter(ele =>
+                    names.includes(ele.nodeName));
+                this.Draw_graph(nodes,links);
             },
             relationSearch:function(){
-                this.start_node = this.start_node_temp
-                this.end_node = this.end_node_temp
-                console.log("end_node")
-                console.log(this.end_node_temp)
-                this.$axios({
-                    method:'get',
-                    url:'http://39.108.102.157:8088/queryNodeLabelBetweenTwoNodes/'+this.start_node+'/'+this.end_node
-                }).then(res=>{
-                    if(res.status === 200){
-                        console.log(res)
-                        console.log(res.data.data)
-                        this.search_node_data = res.data.data
-                        this.$axios({
-                            method:'get',
-                            url:'http://39.108.102.157:8088/queryNodeRelationBetweenTwoNodes/'+this.start_node+'/'+this.end_node
-                        }).then(response=>{
-                            console.log(response.data.data)
-                            this.search_node_relation = response.data.data
-                            this.X = 30
-                            this.Y = 30
-                            this.Z = 50
-                            this.ifUnfold = false
-                            this.Draw_graph(this.search_node_data,this.search_node_relation)
-                        })
-                    }
-                })
+                // this.start_node = this.start_node_temp
+                // this.end_node = this.end_node_temp
+                // console.log("end_node")
+                // console.log(this.end_node_temp)
+                // this.$axios({
+                //     method:'get',
+                //     url:'http://39.108.102.157:8088/queryNodeLabelBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+                // }).then(res=>{
+                //     if(res.status === 200){
+                //         console.log(res)
+                //         console.log(res.data.data)
+                //         this.search_node_data = res.data.data
+                //         this.$axios({
+                //             method:'get',
+                //             url:'http://39.108.102.157:8088/queryNodeRelationBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+                //         }).then(response=>{
+                //             console.log(response.data.data)
+                //             this.search_node_relation = response.data.data
+                //             this.X = 30
+                //             this.Y = 30
+                //             this.Z = 50
+                //             this.ifUnfold = false
+                //             this.Draw_graph(this.search_node_data,this.search_node_relation)
+                //         })
+                //     }
+                // })
+                console.log('find links');
+                console.log(this.start_node_temp);
+                console.log(this.end_node_temp);
+                let nodes = this.new_data.filter(ele =>
+                    ele.nodeName === this.start_node_temp || ele.nodeName === this.end_node_temp
+                    );
+                console.log(nodes);
+                let links = this.new_links.filter(ele =>
+                    (ele.fatherNode === this.start_node_temp && ele.childNode === this.end_node_temp)
+                || (ele.fatherNode === this.end_node_temp && ele.childNode === this.start_node_temp))
+                this.Draw_graph(nodes,links);
             },
             handleClick(tab,event){
                 if(tab.name==="first"){
