@@ -90,13 +90,36 @@
                         <el-button type="primary" @click="">更改信息</el-button>
                     </div>
                    <div id="EditModeAddNodeRelation" style="display: none">
-                       <el-input v-model="EditSourceNode" placeholder="起始节点名称" clearable="1"></el-input>
+                       <el-input v-model="EditModeAddFormItem.source" placeholder="起始节点名称" clearable="1"></el-input>
                        <p></p>
-                       <el-input v-model="EditTargetNode" placeholder="终止节点名称" clearable="1"></el-input>
+                       <el-input v-model="EditModeAddFormItem.target" placeholder="终止节点名称" clearable="1"></el-input>
                        <p></p>
-                       <el-button type="primary" @click="">添加关系</el-button>
+                       <el-button type="primary" @click="EditModeAddRelation">添加关系</el-button>
                    </div>
                 </div>
+                <el-dialog width="30%" title="添加关系" :visible.sync="EditModeAddRelationVisible">
+<!--                    <div>起始节点: {{EditSourceNode}}</div>-->
+<!--                    <p></p>-->
+<!--                    <div>终止节点: {{EditTargetNode}}</div>-->
+<!--                    <p></p>-->
+<!--                    <div>-->
+<!--                        添加关系:-->
+<!--                        <el-col :span="6">-->
+<!--                            <el-input width="50%" v-model="EditModeAddNewRelation" placeholder="请输入新增关系" clearable=1></el-input>-->
+<!--                        </el-col>-->
+<!--                    </div>-->
+                    <el-form :label-position="left" label-width="80px" :model="EditModeAddFormItem">
+                        <el-form-item label="起始节点:">{{this.EditModeAddFormItem.source}}</el-form-item>
+                        <el-form-item label="终止节点:">{{this.EditModeAddFormItem.target}}</el-form-item>
+                        <el-form-item label="新增关系:">
+                            <el-input v-model="EditModeAddFormItem.relation"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="EditModeAddRelationVisible = false">返 回</el-button>
+                        <el-button type="primary" @click="EditModeAddRelationConfirm()">添 加</el-button>
+                    </div>
+                </el-dialog>
                 <el-button id="quitEditMode" type="primary" round=true  @click="QuitEditMode" class="QuitEditMode" style="display: none">退出编辑模式
                     <i class="el-icon-s-promotion el-icon--right"></i>
                 </el-button>
@@ -147,10 +170,19 @@
                 EditNodeName:'', //需要编辑信息的节点名称
                 EditTargetNode:'',
                 EditSourceNode:'',
-
-
+                EditModeAddRelationVisible:false,
+                EditModeAddNewRelation:'',
+                EditModeAddFormItem:{
+                    source:'',
+                    target:'',
+                    relation:''
+                },
+                AddNewRelation:{
+                    fatherNode:'',
+                    childNode:'',
+                    nodeRelationType:'',
+                },
                 // 展示当前节点信息
-
                 num:"5",
                 currentNode:{
                 },
@@ -189,6 +221,34 @@
             // console.log(this.myChart.getOption());
         },
         methods:{
+            EditModeAddRelationConfirm(){
+                if(this.EditModeAddFormItem.relation===''){
+                    this.$message({
+                        type:'error',
+                        message: '添加的新关系不能为空'
+                    })
+                    // this.EditModeAddRelationVisible = false
+                }
+                else{
+                    this.AddNewRelation.fatherNode = this.EditModeAddFormItem.source
+                    this.AddNewRelation.childNode = this.EditModeAddFormItem.target
+                    this.AddNewRelation.nodeRelationType = this.EditModeAddFormItem.relation
+                    this.new_links.push(this.AddNewRelation)
+                    this.Draw_graph(this.new_data,this.new_links)
+                    this.EditModeAddRelationVisible = false
+                }
+                // this.AddNewRelation.childNode = this.
+            },
+            EditModeAddRelation(){
+                if(this.EditModeAddFormItem.target === '' || this.EditModeAddFormItem.source === ''){
+                    this.$message({
+                        type:'error',
+                        message:'源节点和目标节点不能为空'
+                    })
+                }else{
+                    this.EditModeAddRelationVisible = true
+                }
+            },
             changeOption(param){
                 // console.log(param.type) // undefined
                 // console.log(param)
@@ -752,13 +812,29 @@
                     // console.log(params.data.source)
                     // console.log(params.data.target)
                     // console.log(params.data.label.formatter)
-                    else if(that.mode=='edit'){
-                        that.source = params.data.source
-                        that.target = params.data.target
-                        that.relation = params.data.label.formatter
-                        that.RelationIndex = that.new_links.findIndex(that.findRelationIndex)
-                        console.log("对应的元素下标是: ",that.RelationIndex)
-                        that.NodeRelationVisible = true
+                    else if(that.mode === 'edit'){
+                        if(params.dataType === 'node'){
+                            if(that.option === '更改节点信息'){
+                                that.EditNodeName = params.name
+                                // console.log(params)
+                            }
+                            if(that.option === '添加节点关系'){
+                                if(that.EditModeAddFormItem.source === ''){
+                                    that.EditModeAddFormItem.source = params.name
+                                }
+                                else if(that.EditModeAddFormItem.target === ''){
+                                    that.EditModeAddFormItem.target = params.name
+                                }
+                            }
+                        }
+                        if(params.dataType=='edge'){
+                            that.source = params.data.source
+                            that.target = params.data.target
+                            that.relation = params.data.label.formatter
+                            that.RelationIndex = that.new_links.findIndex(that.findRelationIndex)
+                            console.log("对应的元素下标是: ",that.RelationIndex)
+                            that.NodeRelationVisible = true
+                        }
                     }
 
                 });
