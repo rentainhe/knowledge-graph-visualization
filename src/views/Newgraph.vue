@@ -78,10 +78,15 @@
                 <div id="changeOption" class="changeOption" style="display: none">
 <!--                    <el-radio v-model="option" label="Information" border>更改节点信息</el-radio>-->
 <!--                    <el-radio v-model="option" label="Relation" border>添加节点关系</el-radio>-->
-                    <el-radio-group v-model="option">
+<!--                    这里必须使用 @change 来绑定方法-->
+                    <el-radio-group v-model="option" @change="changeOption">
                         <el-radio-button label="更改节点信息"></el-radio-button>
                         <el-radio-button label="添加节点关系"></el-radio-button>
                     </el-radio-group>
+                    <p></p>
+                    <el-input v-model="EditNodeName" placeholder="输入节点名称" clearable="1"></el-input>
+                    <p></p>
+                    <el-input v-model="EditTargetNode" placeholder="终止节点名称" clearable="1"></el-input>
                 </div>
                 <el-button id="quitEditMode" type="primary" round=true  @click="QuitEditMode" class="QuitEditMode" style="display: none">退出编辑模式
                     <i class="el-icon-s-promotion el-icon--right"></i>
@@ -130,6 +135,8 @@
                 value:null,
                 RelationIndex:null,
                 ChosenNodeName: "", //存储所选择节点的名称
+                EditNodeName:'', //需要编辑信息的节点名称
+                EditTargetNode:'',
 
 
                 // 展示当前节点信息
@@ -172,6 +179,9 @@
             // console.log(this.myChart.getOption());
         },
         methods:{
+            changeOption(param){
+                console.log(1234)
+            },
             QuitEditMode(){
                 document.getElementById("searchNodeInfo").style.display = 'block'
                 document.getElementById("nodeSearch").style.display = 'block'
