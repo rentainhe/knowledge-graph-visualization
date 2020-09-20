@@ -230,10 +230,13 @@
                     // this.EditModeAddRelationVisible = false
                 }
                 else{
+                    console.log(this.new_links)
                     this.AddNewRelation.fatherNode = this.EditModeAddFormItem.source
                     this.AddNewRelation.childNode = this.EditModeAddFormItem.target
                     this.AddNewRelation.nodeRelationType = this.EditModeAddFormItem.relation
+                    console.log(this.AddNewRelation)
                     this.new_links.push(this.AddNewRelation)
+                    console.log(this.new_links)
                     this.Draw_graph(this.new_data,this.new_links)
                     this.EditModeAddRelationVisible = false
                 }
@@ -256,13 +259,16 @@
                     console.log(456)
                     document.getElementById("EditModeNodeInfoChange").style.display='block'
                     document.getElementById("EditModeAddNodeRelation").style.display='none'
+                    document.getElementById("Player_info").style.display='block'
                 } else if(param==="添加节点关系"){
                     console.log(123)
                     document.getElementById("EditModeNodeInfoChange").style.display='none'
                     document.getElementById("EditModeAddNodeRelation").style.display='block'
+                    document.getElementById("Player_info").style.display='none'
                 }
             },
             QuitEditMode(){
+                document.getElementById("Player_info").style.display='none'
                 document.getElementById("searchNodeInfo").style.display = 'block'
                 document.getElementById("nodeSearch").style.display = 'block'
                 document.getElementById("quitEditMode").style.display = 'none'
@@ -282,6 +288,7 @@
                 this.mode = 'show'
             },
             EnterEditMode(){
+                document.getElementById("Player_info").style.display='block'
                 document.getElementById("searchNodeInfo").style.display = 'none'
                 document.getElementById("nodeSearch").style.display = 'none'
                 document.getElementById("quitEditMode").style.display = 'block'
@@ -409,16 +416,25 @@
                 // })
                 console.log('find nodes');
                 console.log(this.single_node_search_temp)
-                var links = this.new_links.filter(ele =>
-                    ele.fatherNode === this.single_node_search_temp || ele.childNode === this.single_node_search_temp)
-                var names = [];
-                for (let i = 0; i < links.length; i++){
-                    names.push(links[i].fatherNode);
-                    names.push(links[i].childNode);
+                if(this.single_node_search_temp) {
+                    var links = this.new_links.filter(ele =>
+                        ele.fatherNode === this.single_node_search_temp || ele.childNode === this.single_node_search_temp)
+                    var names = [];
+                    for (let i = 0; i < links.length; i++) {
+                        names.push(links[i].fatherNode);
+                        names.push(links[i].childNode);
+                    }
+                    var nodes = this.new_data.filter(ele =>
+                        names.includes(ele.nodeName));
+                    this.Draw_graph(nodes, links);
+
                 }
-                var nodes = this.new_data.filter(ele =>
-                    names.includes(ele.nodeName));
-                this.Draw_graph(nodes,links);
+                else{
+                    this.$message({
+                        type:'error',
+                        message: '查询节点不能为空'
+                    })
+                }
             },
             relationSearch:function(){
                 // this.start_node = this.start_node_temp
@@ -447,17 +463,27 @@
                 //         })
                 //     }
                 // })
+
                 console.log('find links');
                 console.log(this.start_node_temp);
+
                 console.log(this.end_node_temp);
-                let nodes = this.new_data.filter(ele =>
-                    ele.nodeName === this.start_node_temp || ele.nodeName === this.end_node_temp
+                if(this.start_node_temp && this.end_node_temp) {
+                    let nodes = this.new_data.filter(ele =>
+                        ele.nodeName === this.start_node_temp || ele.nodeName === this.end_node_temp
                     );
-                console.log(nodes);
-                let links = this.new_links.filter(ele =>
-                    (ele.fatherNode === this.start_node_temp && ele.childNode === this.end_node_temp)
-                || (ele.fatherNode === this.end_node_temp && ele.childNode === this.start_node_temp))
-                this.Draw_graph(nodes,links);
+                    console.log(nodes);
+                    let links = this.new_links.filter(ele =>
+                        (ele.fatherNode === this.start_node_temp && ele.childNode === this.end_node_temp)
+                        || (ele.fatherNode === this.end_node_temp && ele.childNode === this.start_node_temp))
+                    this.Draw_graph(nodes, links);
+                }
+                else{
+                        this.$message({
+                            type:'error',
+                            message: '查询节点不能为空'
+                        })
+                    }
             },
             handleClick(tab,event){
                 if(tab.name==="first"){
