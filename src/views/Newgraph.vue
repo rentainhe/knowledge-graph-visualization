@@ -150,6 +150,7 @@
             return{
                 // 用来控制模式转换 以及 点击的功能
                 mode: "show",
+                flag: 0,
                 option: "更改节点信息",
                 // 点击节点之间的连线展示节点关系所需要的变量
                 source:null, // 源节点
@@ -231,14 +232,27 @@
                 }
                 else{
                     console.log(this.new_links)
-                    this.AddNewRelation.fatherNode = this.EditModeAddFormItem.source
-                    this.AddNewRelation.childNode = this.EditModeAddFormItem.target
-                    this.AddNewRelation.nodeRelationType = this.EditModeAddFormItem.relation
+
+                    // AddRelation.fatherNode = this.EditModeAddFormItem.source
+                    // console.log(AddRelation)
+                    // AddRelation.childNode = this.EditModeAddFormItem.target
+                    // AddRelation.nodeRelationType = this.EditModeAddFormItem.relation
+                    var AddRelation = {
+                        fatherNode : this.EditModeAddFormItem.source,
+                        childNode : this.EditModeAddFormItem.target,
+                        nodeRelationType : this.EditModeAddFormItem.relation
+                    }
+                    // this.AddNewRelation.fatherNode = this.EditModeAddFormItem.source
+                    // this.AddNewRelation.childNode = this.EditModeAddFormItem.target
+                    // this.AddNewRelation.nodeRelationType = this.EditModeAddFormItem.relation
                     console.log(this.AddNewRelation)
-                    this.new_links.push(this.AddNewRelation)
+                    this.new_links.push(AddRelation)
                     console.log(this.new_links)
                     this.Draw_graph(this.new_data,this.new_links)
                     this.EditModeAddRelationVisible = false
+                    this.EditModeAddFormItem.source = ''
+                    this.EditModeAddFormItem.target = ''
+                    this.EditModeAddFormItem.relation = ''
                 }
                 // this.AddNewRelation.childNode = this.
             },
@@ -527,6 +541,7 @@
                 })
             },
             Draw_graph:function(allNodes,allLinks){
+
                 console.log("nodes");
                 console.log(allNodes);
                 console.log("links")
@@ -816,17 +831,18 @@
                         }]
                     }
                 );
-                this.myChart.setOption(option);
+
                 //控制点击的函数
+                this.myChart.off('click')
                 this.myChart.on('click', function (params) {
-                    if(that.mode=='show'){
-                        if(params.dataType=='node'){
+                    if(that.mode==='show'){
+                        if(params.dataType==='node'){
                             that.$message({
                                 type: 'info',
                                 message: '这是一个节点'
                             })
                         }
-                        else if(params.dataType=='edge'){
+                        else if(params.dataType==='edge'){
                             that.$message({
                                 type: 'info',
                                 message: '这是一条关系'
@@ -844,16 +860,17 @@
                                 that.EditNodeName = params.name
                                 // console.log(params)
                             }
+
                             if(that.option === '添加节点关系'){
                                 if(that.EditModeAddFormItem.source === ''){
                                     that.EditModeAddFormItem.source = params.name
                                 }
-                                else if(that.EditModeAddFormItem.target === ''){
+                                else if (that.EditModeAddFormItem.target === ''){
                                     that.EditModeAddFormItem.target = params.name
                                 }
                             }
                         }
-                        if(params.dataType=='edge'){
+                        if(params.dataType==='edge'){
                             that.source = params.data.source
                             that.target = params.data.target
                             that.relation = params.data.label.formatter
@@ -864,6 +881,7 @@
                     }
 
                 });
+                this.myChart.setOption(option);
                 // bindChartClickEvent(this.myChart);
                 // showNodeAttribute(this.myChart);
             },
