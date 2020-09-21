@@ -26,19 +26,19 @@
                         </el-table-column>
                         <el-table-column
                                 prop="extractNode1"
-                                label="球员"
+                                label="N1"
                                 width="120"
                                 align="center">
                         </el-table-column>
                         <el-table-column
                                 prop="extractNode2"
-                                label="球队"
+                                label="N2"
                                 width="120"
                                 align="center">
                         </el-table-column>
                         <el-table-column
                                 prop="content"
-                                label="转会内容"
+                                label="R"
                                 align="center">
                         </el-table-column>
                         <el-table-column
@@ -70,9 +70,25 @@
                     <el-button type="primary" round=true  @click="Back_to_lastpage" class="back_to_lastpage">返回上一页
                         <i class="el-icon-position el-icon--right"></i>
                     </el-button>
-                    <el-button type="primary" round=true  @click="Back_to_TextUpload" class="back_to_textupload">返回文本上传界面
+<!--                    <el-button type="primary" round=true  @click="Back_to_TextUpload" class="back_to_textupload">返回文本上传界面-->
+<!--                        <i class="el-icon-s-order el-icon&#45;&#45;right"></i>-->
+<!--                    </el-button>-->
+                  <el-upload
+                      ref="upload"
+                      action="/"
+                      :show-file-list="false"
+                      :on-change="ExcelUpload"
+                      :auto-upload="false">
+                      <el-button
+                          type="primary"
+                          round=true
+                          slot="trigger"
+                          class="Excelupload">
+                        Excel上传
                         <i class="el-icon-s-order el-icon--right"></i>
-                    </el-button>
+                      </el-button>
+                  </el-upload>
+
                     <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
                         <i class="el-icon-s-promotion el-icon--right"></i>
                     </el-button>
@@ -170,7 +186,7 @@
         border-color: #9593A7;
         border-width: 2px;
     }
-    .back_to_textupload{
+    .Excelupload{
         position: absolute;
         top: 58%;
         left: 20%;
@@ -221,6 +237,8 @@
 
 <!-- 查询框-->
 <script>
+    import XLSX from "xlsx";
+
     /**
      * 展示待审核信息界面
      * @module Check_2
@@ -238,13 +256,16 @@
                 width: 800,
                 height: 800,
                 Node_lenth: 0, // default = 0
-                tableData: []
-            // {
-            //     id:'1',
-            //         extractNode: '卡卡',
-            //     extractTeam: '米兰',
-            //     content: '卡卡转会米兰',
-            // },
+                tableData:[
+                // {
+                //     id:'1',
+                //     extractNode1: '卡卡',
+                //     extractNode2: '米兰',
+                //     content: '卡卡转会米兰',
+                // },
+                  ],
+              fileList: [],
+              sheetDate:[]
         }
         },
         mounted() {
@@ -252,94 +273,154 @@
             console.log()
         },
         methods: {
-            // 删除行
-            deleteRow(index, rows) {
-                console.log(rows[index].id);
-                console.log(rows[index].extractTeam);
-                rows.splice(index, 1);
-                this.Node_lenth-=1;
-                this.$axios({
-                    method:'post',
-                    url:'http://10.24.82.10:8088/updateGraph',
-                    data:{
-                        id:rows[index].id,
-                        status:1,
-                    }
-                }).then(res => {
-                    console.log(res.data)
-                    this.$message("删除成功")
-                // if (!res.data.errno){
-                //     this.$message("查询成功！")
-                //     this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
-                //     // console.log(this.myGraph["nodes"])
-                //     this.$axios({
-                //         method:'get',
-                //         url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
-                //
-                //     }).then(res => {
-                //         this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
-                //         this.initGraph(this.myGraph)
-                //     })
-                // }
-                // else{
-                //     this.$message('无此节点！');
-                })
-                },
-            //获取所有未审核的节点
-            /**
-             * 获取所有未审核的节点
-             * @function getAllTexts
-             */
-            getAllTexts:function(){
-                var _this = this
-                _this.$axios.get("http://10.24.82.10:8088/allText").then(response =>{
-                    var jsonObj = JSON.parse(JSON.stringify(response.data.data));
-                    console.log(jsonObj)
-                    this.tableData = jsonObj
-                    _this.Node_lenth = _this.tableData.length
-                },response=>{
-                    console.log("error")
-                })
-            },
-            //上传文件界面
-            insert_nodes:function(){
-                console.log("这是插入节点")
-            },
-            Skip() {
-                console.log('跳过');
-            },
-            /**
-             * 删除节点
-             * @function Give_up
-             *
-             */
-            Give_up(){
-                console.log('这是放弃节点')
-            },
-            //跳转审核界面
-            /**
-             * 跳转审核界面
-             * @function Back_to_lastpage
-             */
-            Back_to_lastpage:function(){
-                this.$router.push("/Check_1")
-            },
-            /**
-             * 返回主页
-             * @function Back_to_homepage
-             */
-            Back_to_homepage:function () {
-                this.$router.push("/")
-            },
-            //跳回文本审核界面
-            /**
-             * 跳回文本审核界面
-             * @function Back_to_TextUpload
-             */
-            Back_to_TextUpload:function () {
-                this.$router.push("/TextUpload")
-                location.reload()
+          // 删除行
+          deleteRow(index, rows) {
+            console.log(rows[index].id);
+            // console.log(rows[index].extractTeam);
+            rows.splice(index, 1);
+            this.Node_lenth -= 1;
+            //更新序号
+            this.UpdateIndex()
+
+            this.$axios({
+              method: 'post',
+              url: 'http://10.24.82.10:8088/updateGraph',
+              data: {
+                id: rows[index].id,
+                status: 1,
+              }
+            }).then(res => {
+              console.log(res.data)
+              this.$message("删除成功")
+              // if (!res.data.errno){
+              //     this.$message("查询成功！")
+              //     this.myGraph["nodes"] = JSON.parse(JSON.stringify(res.data.data));
+              //     // console.log(this.myGraph["nodes"])
+              //     this.$axios({
+              //         method:'get',
+              //         url:'http://10.24.82.10:8088/getLinksByName/' + this.ask,
+              //
+              //     }).then(res => {
+              //         this.myGraph["links"] = JSON.parse(JSON.stringify(res.data.data));
+              //         this.initGraph(this.myGraph)
+              //     })
+              // }
+              // else{
+              //     this.$message('无此节点！');
+            })
+          },
+          //获取所有未审核的节点
+          /**
+           * 获取所有未审核的节点
+           * @function getAllTexts
+           */
+          getAllTexts: function () {
+            var _this = this
+            _this.$axios.get("http://10.24.82.10:8088/allText").then(response => {
+              var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+              console.log(jsonObj)
+              this.tableData = jsonObj
+              _this.Node_lenth = _this.tableData.length
+            }, response => {
+              console.log("error")
+            })
+          },
+          //上传文件界面
+          insert_nodes: function () {
+            console.log("这是插入节点")
+          },
+          Skip() {
+            console.log('跳过');
+          },
+          /**
+           * 删除节点
+           * @function Give_up
+           *
+           */
+          Give_up() {
+            console.log('这是放弃节点')
+          },
+          //跳转审核界面
+          /**
+           * 跳转审核界面
+           * @function Back_to_lastpage
+           */
+          Back_to_lastpage: function () {
+            this.$router.push("/Check_1")
+          },
+          /**
+           * 返回主页
+           * @function Back_to_homepage
+           */
+          Back_to_homepage: function () {
+            this.$router.push("/")
+          },
+          //跳回文本审核界面
+          /**
+           * 跳回文本审核界面
+           * @function Back_to_TextUpload
+           */
+          Back_to_TextUpload: function () {
+            this.$router.push("/TextUpload")
+            location.reload()
+          },
+          /**
+           * Excel文件上传按钮
+           * @function ExcelUpload
+           */
+          ExcelUpload:function (file) {
+            const types = file.name.split('.')[1]
+            const fileType = ['xlsx', 'xlc', 'xlm', 'xls', 'xlt', 'xlw', 'csv'].some(item => item === types)
+            if (!fileType) {
+              this.$message('格式错误！请重新选择')
+              return
             }
+            this.file2Xce(file).then(tabJson => {
+              if (tabJson && tabJson.length > 0) {
+                this.xlsxJson = tabJson
+                console.log('数据', this.xlsxJson[0].sheet)
+
+              }
+              var sheetDates = this.xlsxJson[0].sheet
+              for (var sd in sheetDates){
+                //先转为数组、再加入tableData
+                this.tableData.push(sheetDates[sd])
+
+
+              }
+            })
+          },
+          file2Xce:function (file) {
+            return new Promise(function (resolve, reject) {
+              const reader = new FileReader()
+              reader.onload = function (e) {
+                const data = e.target.result
+                this.wb = XLSX.read(data, {
+                  type: 'binary'
+                })
+                const result = []
+                this.wb.SheetNames.forEach((sheetName) => {
+                  result.push({
+                    sheetName: sheetName,
+                    sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName])
+                  })
+                })
+                resolve(result)
+              }
+              reader.readAsBinaryString(file.raw)
+              // reader.readAsBinaryString(file) // 传统input方法
+            })
+          },
+
+          /**
+           * 动态更新审核界面的序号*/
+          UpdateIndex:function () {
+            var newId = 1
+            this.tableData.forEach(function (item){
+              item.id = newId
+              newId+=1
+            })
+          }
         }
     }
 </script>
