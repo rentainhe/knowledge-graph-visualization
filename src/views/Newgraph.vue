@@ -74,7 +74,7 @@
                         {{key}}:{{val}}
                     </div>
                 </el-card>
-                <el-input-number class = "el-input-number" v-model="num" @change="handleChange" :min="1" :max="5" label="控制显示点的个数"></el-input-number>
+                <el-input-number class = "el-input-number" v-model="num" @change="handleChange" :min="1" :max=this.maxx label="控制显示点的个数"></el-input-number>
                 <div id="changeOption" class="changeOption" style="display: none">
 <!--                    <el-radio v-model="option" label="Information" border>更改节点信息</el-radio>-->
 <!--                    <el-radio v-model="option" label="Relation" border>添加节点关系</el-radio>-->
@@ -149,6 +149,7 @@
         data (){
             return{
                 // 用来控制模式转换 以及 点击的功能
+                maxx:5,
                 mode: "show",
                 flag: 0,
                 option: "更改节点信息",
@@ -209,6 +210,8 @@
                 end_node:"",
                 search_node_data:[], // 查询到的节点列表
                 search_node_relation:[], // 查询到的节点关系列表
+                ask_nodes : "",
+                ask_links : "",
                 // 控制graph的参数
                 ifUnfold:false,
                 X : 30,
@@ -218,8 +221,8 @@
         },
         mounted() {
             this.Draw_graph(this.new_data,this.new_links);
-            // this.getInitNodes();
-            // console.log(this.myChart.getOption());
+            this.ask_nodes = this.new_data;
+            this.ask_links = this.new_links;
         },
         methods:{
             EditModeAddRelationConfirm(){
@@ -381,14 +384,18 @@
             },
             //计数器变动
             handleChange(value) {
+                this.maxx = this.ask_nodes.length
+                console.log("JI SHU")
+                console.log(this.ask_nodes)
+
                 console.log(value);
-                var nodes = this.new_data.slice(0,value);
+                var nodes = this.ask_nodes.slice(0,value);
                 var names = [];
                 for (let i = 0; i < nodes.length; i++){
                     names.push(nodes[i].nodeName)
                 }
                 console.log(names);
-                var links = this.new_links.filter(ele =>
+                var links = this.ask_links.filter(ele =>
                 names.includes(ele.fatherNode) && names.includes(ele.childNode)
                 )
                 // for (let i = 0; i < this.new_links.length; i++){
@@ -429,19 +436,20 @@
                 //     }
                 // })
                 console.log('find nodes');
+
                 console.log(this.single_node_search_temp)
                 if(this.single_node_search_temp) {
-                    var links = this.new_links.filter(ele =>
+                        this.ask_links = this.new_links.filter(ele =>
                         ele.fatherNode === this.single_node_search_temp || ele.childNode === this.single_node_search_temp)
                     var names = [];
-                    for (let i = 0; i < links.length; i++) {
-                        names.push(links[i].fatherNode);
-                        names.push(links[i].childNode);
+                    for (let i = 0; i < this.ask_links.length; i++) {
+                        names.push(this.ask_links[i].fatherNode);
+                        names.push(this.ask_links[i].childNode);
                     }
-                    var nodes = this.new_data.filter(ele =>
+                    this.ask_nodes = this.new_data.filter(ele =>
                         names.includes(ele.nodeName));
-                    this.Draw_graph(nodes, links);
-
+                    this.Draw_graph(this.ask_nodes, this.ask_links);
+                    this.num = this.ask_nodes.length
                 }
                 else{
                     this.$message({
@@ -483,14 +491,14 @@
 
                 console.log(this.end_node_temp);
                 if(this.start_node_temp && this.end_node_temp) {
-                    let nodes = this.new_data.filter(ele =>
+                        this.ask_nodes = this.new_data.filter(ele =>
                         ele.nodeName === this.start_node_temp || ele.nodeName === this.end_node_temp
                     );
-                    console.log(nodes);
-                    let links = this.new_links.filter(ele =>
+                        this.ask_links = this.new_links.filter(ele =>
                         (ele.fatherNode === this.start_node_temp && ele.childNode === this.end_node_temp)
                         || (ele.fatherNode === this.end_node_temp && ele.childNode === this.start_node_temp))
-                    this.Draw_graph(nodes, links);
+                    this.Draw_graph(this.ask_nodes, this.ask_links);
+                    this.num = this.ask_nodes.length
                 }
                 else{
                         this.$message({
