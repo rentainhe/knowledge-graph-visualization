@@ -121,7 +121,7 @@
         height: 60%;
     }
     .header_text{
-        font-family: "PingFang SC";
+        /*font-family: "PingFang SC";*/
         font-size: 30px;
         letter-spacing: 5px;
         color: #ffffff;
