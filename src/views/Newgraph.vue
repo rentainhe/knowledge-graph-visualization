@@ -190,8 +190,8 @@
                 },
                 // 画图变量
                 myChart:'',
-                new_data:[{nodeName:'美军',label:0},{nodeName: '武器',label:1},{nodeName: '基地',label: 2},{nodeName:'枪',label:2}
-                ,{nodeName:'炮',label:2}],
+                new_data:[{nodeName:'美军',label:0, rank : 1},{nodeName: '武器',label:1, rank : 0},{nodeName: '基地',label: 2, rank : 0},{nodeName:'枪',label:2, rank : 0}
+                ,{nodeName:'炮',label:2, rank : 0}],
                 new_links:[{fatherNode:'武器',childNode:'美军',nodeRelationType:'拥有'},{fatherNode:'基地',childNode:'美军',nodeRelationType:'属于'},{fatherNode:'美军',childNode:'武器',nodeRelationType:'装备'},
                     {fatherNode:'武器',childNode:'美军',nodeRelationType:'部署'},{fatherNode:'美军',childNode:'枪',nodeRelationType:'使用'},{fatherNode:'炮',childNode:'美军',nodeRelationType:'使用'},{fatherNode:'炮',childNode:'基地',nodeRelationType:'有'},
                     {fatherNode:'枪',childNode:'武器',nodeRelationType:'包括'},{fatherNode:'炮',childNode:'武器',nodeRelationType:'包括'},{fatherNode:'基地',childNode:'美军',nodeRelationType:'有'},],
@@ -384,7 +384,12 @@
             },
             //计数器变动
             handleChange(value) {
-                this.maxx = this.ask_nodes.length
+                this.ask_nodes.sort(function (a, b) {
+                    return b.rank - a.rank;
+                })
+                console.log('after_sort')
+                console.log(this.ask_nodes);
+                // this.maxx = this.ask_nodes.length
                 console.log("JI SHU")
                 console.log(this.ask_nodes)
 
@@ -448,8 +453,17 @@
                     }
                     this.ask_nodes = this.new_data.filter(ele =>
                         names.includes(ele.nodeName));
+                    console.log("length")
+                    console.log(this.ask_nodes.length)
+                    this.num = this.ask_nodes.length.toString()
+                    this.maxx = this.ask_nodes.length
+                    // this.$forceUpdate();
+                    // this.$set(this.num,this.ask_nodes.length.toString())
+                    // this.$set(this.max,this.ask_nodes.length.toString())
+                    console.log(this.maxx)
                     this.Draw_graph(this.ask_nodes, this.ask_links);
-                    this.num = this.ask_nodes.length
+                    this.ask_nodes.map(ele => ele.rank = 0);
+                    this.ask_nodes.find(ele => ele.nodeName === this.single_node_search_temp).rank = 1;
                 }
                 else{
                     this.$message({
@@ -499,6 +513,8 @@
                         || (ele.fatherNode === this.end_node_temp && ele.childNode === this.start_node_temp))
                     this.Draw_graph(this.ask_nodes, this.ask_links);
                     this.num = this.ask_nodes.length
+
+
                 }
                 else{
                         this.$message({
