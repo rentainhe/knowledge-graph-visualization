@@ -72,11 +72,17 @@
             <el-form-item label="起始节点:">{{this.EditModeAddFormItem.source}}</el-form-item>
             <el-form-item label="终止节点:">{{this.EditModeAddFormItem.target}}</el-form-item>
             <el-form-item label="新增关系:">
-              <el-input v-model="EditModeAddFormItem.relation"></el-input>
+<!--              <el-input v-model="EditModeAddFormItem.relation" clearable></el-input>-->
+              <el-autocomplete
+                  v-model="EditModeAddFormItem.relation"
+                  :fetch-suggestions="querySearchAsync"
+                  placeholder="请输入内容"
+                  @select="handleSelect"
+              ></el-autocomplete>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="EditModeAddRelationVisible = false">返 回</el-button>
+            <el-button @click="canleAddRealation()">返 回</el-button>
             <el-button type="primary" @click="EditModeAddRelationConfirm()">添 加</el-button>
           </div>
         </el-dialog>
@@ -111,7 +117,7 @@
               <el-button @click.prevent="removeAttrib(key)">删除</el-button>
             </el-form-item>
 
-            <div v-for="(att,key, index) in newNodeAttribute">
+            <div v-for="(att,key, index) in   newNodeAttribute">
               <el-input class="editNodeAttrib1" v-model="att.attName"></el-input>
               <el-input class="editNodeAttrib" v-model="att.value"></el-input>
               <el-button @click.prevent="removenewAttrib(att)">删除</el-button>
@@ -149,13 +155,14 @@
             <div>当前关系为: {{relation}}</div>
             <p></p>
             <div>更改关系为:
-              <el-select v-model="value" placeholder="请选择一个关系">
-                <el-option v-for="item in ExistedRelation"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-              </el-select>
+<!--              <el-select v-model="value" placeholder="请选择一个关系">-->
+<!--                <el-option v-for="item in ExistedRelation"-->
+<!--                           :key="item.value"-->
+<!--                           :label="item.label"-->
+<!--                           :value="item.value">-->
+<!--                </el-option>-->
+<!--              </el-select>-->
+                <el-input class="modify_relation" v-model="new_relation_value" placeholder="更改的关系"></el-input>
             </div>
             <div slot="footer" class="dialog-footer">
               <el-button @click="NodeRelationChangeVisible = false">返 回</el-button>
@@ -214,34 +221,50 @@ export default {
   data (){
     return{
 
-      // 用来控制模式转换 以及 点击的功能
-      maxx:5,
+      // 控制最多显示节点数量
+      maxx:5,     // TODO 新视图时更新
+
+      //控制模式切换 show/edit
       mode: "show",
-      flag: 0,
-      option: "更改节点信息",
+      // flag: 0,
+
+      /**************************
+      对视图进行点击时的一些变量******
+       **************************/
+
+      option: "更改节点信息",    //控制修改模式下面板的切换
+
       // 点击节点之间的连线展示节点关系所需要的变量
       source:null, // 源节点
       target:null,  // 目标节点
       relation:null,  // 关系
+      fatherId:"",
+      childId: "",
+
       NodeRelationVisible: false, // 是否展示关系
       NodeRelationChangeVisible:false, // 是否打开关系修改界面
-      TempHash:[], // 为了去除数组中重复的关系，使用一个hash表
+      // TempHash:[], // 为了去除数组中重复的关系，使用一个hash表
+
+      // TODO 存放已存在的关系用于新增关系
       ExistedRelation:[
         {value:'属于',label:'属于'},
         {value:'驻扎于',label:'驻扎于'},
         {value:'拥有',label:'拥有'},
         {value:'使用',label:'使用'},
-      ], // 存放已存在的关系，先用手造的数据，之后需要一个接口返回数据库中存在的所有关系
-      value:null,
+      ],
+      new_relation_value:null,
+      new_relation_chooses:null,
+
       RelationIndex:null,
 
-
       // ChosenNodeName: "", //存储所选择节点的名称
+
+
       EditNodeName:'', //需要编辑信息的节点名称
       EditNodeVisible:false,
       //动态保存当点节点的属性
       EditNodeAttribute:{},
-      newNodeAttribute:[],
+      newNodeAttribute:[],//保存新增节点的属性
 
       EditTargetNode:'',
       EditSourceNode:'',
@@ -254,19 +277,25 @@ export default {
       },
       AddNewRelation:{
         fatherNode:'',
-        childNode:'',
+          childNode:'',
         nodeRelationType:'',
       },
-      // 展示当前节点信息
-      num:"5",
 
-      //存储当前节点的信息
+
+      // 展示当前节点信息
+      num:"5",  //TODO 还需在每次查询时更新
+
+      //存储当前节点的属性信息
       currentNode:{
 
       },
+
+      currentNodeInfo:[],
+
       // 画图变量
       myChart:'',
-      new_data:[
+
+      new_data1:[
           {nodeName:'美军',
             label:0,
             attributlist:{
@@ -303,8 +332,8 @@ export default {
           }
         }
         ],
-
-      new_links:[
+      new_data:[],
+      new_links1:[
           {fatherNode:'武器',childNode:'美军',nodeRelationType:'拥有'},
         {fatherNode:'基地',childNode:'美军',nodeRelationType:'属于'},
         {fatherNode:'美军',childNode:'武器',nodeRelationType:'装备'},
@@ -316,9 +345,17 @@ export default {
         {fatherNode:'炮',childNode:'武器',nodeRelationType:'包括'},
         {fatherNode:'基地',childNode:'美军',nodeRelationType:'有'},
       ],
+      new_links:[],
+
       init_data:[], // 存储初始所有节点的列表
       init_links:[], // 存储初始所有的relation列表
+
+      // init_node_Name:"",
+      init_node_Id:"DW1",
+
+      //控制两个搜索面板的切换
       activateName:'first',
+
       single_node_search_temp:"", // 如果不设置default_a sk 与 input的v-model 绑定的话，在前端ui部分无法输入
       single_node_search:"",
 
@@ -338,15 +375,24 @@ export default {
       X : 30,
       Y : 30,
       Z : 20,
+
+      search_nodes:[],
+      search_links:[],
+      search_node_Name:"",
+      search_node_Id:"",
     }
   },
   mounted() {
-    this.Draw_graph(this.new_data,this.new_links);
-    this.ask_nodes = this.new_data;
-    this.ask_links = this.new_links;
+    this.InitGraph()
+    // this.getInitRelation()
+    // this.Draw_graph(this.init_data,this.init_links);
+
   },
   methods:{
-    EditModeAddRelationConfirm(){
+    //===========================关系编辑====================================
+
+    // √编辑模式添加节点关系的提交按钮，符合要求则将数据添加到数据库并刷新视图
+    EditModeAddRelationConfirm: async function(){
       if(this.EditModeAddFormItem.relation===''){
         this.$message({
           type:'error',
@@ -355,31 +401,82 @@ export default {
         // this.EditModeAddRelationVisible = false
       }
       else{
-        console.log(this.new_links)
+        //找两个节点对应的ID
+        //TODO 现在是认为没有同名节点
+        await this.$axios({
+          method:'get',
+          url:"http://10.24.82.10:8088/getNodeAttributeByName/" + this.EditModeAddFormItem.source
+        }).then(res => {
+          var Object_key = Object.keys(res.data.data)
+          console.log(res.data.data)
+          for (var i = 0; i < Object_key.length; i++){
+            if(res.data.data[Object_key[i]].length > 0){
+              switch (Object_key[i]) {
+                case 'unitSequenceList':
+                  this.EditModeAddFormItem['sourceId'] = res.data.data[Object_key[i]][0]['unitId']
+                  break
+                case 'characterList':
+                  this.EditModeAddFormItem['sourceId'] = res.data.data[Object_key[i]][0]['personId']
+                  break
+                case 'equipmentTree':
+                  this.EditModeAddFormItem['sourceId'] = res.data.data[Object_key[i]][0]['equipmentId']
+              }
+            }
+          }
+        })
 
-        // AddRelation.fatherNode = this.EditModeAddFormItem.source
-        // console.log(AddRelation)
-        // AddRelation.childNode = this.EditModeAddFormItem.target
-        // AddRelation.nodeRelationType = this.EditModeAddFormItem.relation
-        var AddRelation = {
-          fatherNode : this.EditModeAddFormItem.source,
-          childNode : this.EditModeAddFormItem.target,
-          nodeRelationType : this.EditModeAddFormItem.relation
-        }
-        // this.AddNewRelation.fatherNode = this.EditModeAddFormItem.source
-        // this.AddNewRelation.childNode = this.EditModeAddFormItem.target
-        // this.AddNewRelation.nodeRelationType = this.EditModeAddFormItem.relation
-        console.log(this.AddNewRelation)
-        this.new_links.push(AddRelation)
-        console.log(this.new_links)
-        this.Draw_graph(this.new_data,this.new_links)
-        this.EditModeAddRelationVisible = false
-        this.EditModeAddFormItem.source = ''
-        this.EditModeAddFormItem.target = ''
-        this.EditModeAddFormItem.relation = ''
+        await this.$axios({
+          method:'get',
+          url:"http://10.24.82.10:8088/getNodeAttributeByName/" + this.EditModeAddFormItem.target
+        }).then(res => {
+          var Object_key = Object.keys(res.data.data)
+          console.log(res.data.data)
+          for (var i = 0; i < Object_key.length; i++){
+            if(res.data.data[Object_key[i]].length > 0){
+              switch (Object_key[i]) {
+                case 'unitSequenceList':
+                  this.EditModeAddFormItem['targetId'] = res.data.data[Object_key[i]][0]['unitId']
+                  break
+                case 'characterList':
+                  this.EditModeAddFormItem['targetId'] = res.data.data[Object_key[i]][0]['personId']
+                  break
+                case 'equipmentTree':
+                  this.EditModeAddFormItem['targetId'] = res.data.data[Object_key[i]][0]['equipmentId']
+              }
+            }
+          }
+
+        })
+
+        console.log(this.EditModeAddFormItem)
+
+        // 传入数据库新增加的关系
+        await this.$axios({
+          method:'post',
+          data:{
+            "fatherName":this.EditModeAddFormItem['source'],
+            "fatherId":this.EditModeAddFormItem['sourceId'],
+            "childName":this.EditModeAddFormItem['target'],
+            "childId":this.EditModeAddFormItem['targetId'],
+            "relationName":this.EditModeAddFormItem.relation
+          },
+          url:'http://10.24.82.10:8088/addRelationTuple'
+        }).then(res=>{
+          console.log("关系添加结果",res.data)
+          this.EditModeAddRelationVisible = false
+          this.EditModeAddFormItem.source = ''
+          this.EditModeAddFormItem.target = ''
+          this.EditModeAddFormItem.relation = ''
+          this.EditModeAddFormItem.sourceId = ''
+          this.EditModeAddFormItem.targetId = ''
+          this.InitGraph()
+        })
+
       }
-      // this.AddNewRelation.childNode = this.
+
     },
+
+    // √编辑模式下的“添加关系”按钮（相当于搜索节点），target、source不为空则显示添加关系面板
     EditModeAddRelation(){
       if(this.EditModeAddFormItem.target === '' || this.EditModeAddFormItem.source === ''){
         this.$message({
@@ -388,40 +485,155 @@ export default {
         })
       }else{
         this.EditModeAddRelationVisible = true
+
+        //查找相对应的节点
+        //TODO 这里可能存在多个同名，但ID不相同的节点，节点间的已有关系也需要显示，后续做
       }
     },
+
+    // √编辑模式下的删除关系
+    DeleteRelation: function(){
+      this.$confirm('是否删除这该关系','提示',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type:'warning'
+      }).then(()=>{
+
+
+        this.$axios({
+          method:'post',
+          data:{
+            "fatherName":this.source,
+            "fatherId":this.fatherId,
+            "childName":this.target,
+            "childId":this.childId,
+            "relationName":this.relation
+          },
+          url:"http://10.24.82.10:8088/deleteRelationTuple"
+        }).then(res=>{
+          console.log("关系删除结果",res.data)
+          //TODO 这里要判断删除是否成功
+          this.$message({
+            type:'success',
+            message:'修改成功'
+          })
+          this.InitGraph()
+          this.NodeRelationChangeVisible = false
+          this.NodeRelationVisible = false
+          // console.log(this.source,this.childId,this.target,this.fatherId,this.relation)
+        })
+
+
+      }).catch(()=>{
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        })
+      })
+    },
+
+
+    // √编辑模式下的更改关系
+    ChangeRelation(){
+      this.$confirm('此操作将更新该关系为'+'，是否继续','提示',{
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type:'warning'
+      }).then(()=>{
+        if(this.new_relation_value==null){
+          this.$message({
+            type : 'warning',
+            // message: '所选的属性值不能为空，请选择一个属性值'
+            message:'输入的属性不能为空'
+          })
+          // this.NodeRelationChangeVisible = false
+        }
+        else{
+          this.$message({
+            type:'success',
+            message:'修改成功'
+          })
+          console.log(this.new_relation_value, this.source, this.target)
+          // this.new_links[this.RelationIndex].nodeRelationType = this.value
+          // this.Draw_graph(this.new_data,this.new_links)
+
+          // 将修改的关系传入后台数据库
+          this.$axios({
+            method:'post',
+            data:{
+              "fatherName":this.source,
+              "fatherId":this.fatherId,
+              "childName":this.target,
+              "childId":this.childId,
+              "relationName":this.relation
+            },
+            url:"http://10.24.82.10:8088/changeRelation/" + this.new_relation_value
+          }).then(res=>{
+            console.log("关系修改结果",res.data)
+            this.InitGraph()
+            this.NodeRelationChangeVisible = false
+            this.NodeRelationVisible = false
+            this.new_relation_value = null
+          })
+
+        }
+
+      }).catch(()=>{
+        this.$message({
+          type: 'info',
+          message: '已取消修改'
+        })
+      })
+    },
+
+
+    //√找到需要更改的关系的下标
+    findRelationIndex(relation){
+      return relation.fatherName == this.source && relation.childName == this.target && relation.relationName == this.relation
+    },
+
+    //取消“添加关系”的返回按钮
+    canleAddRealation(){
+      this.EditModeAddRelationVisible = false
+      this.EditModeAddFormItem.relation = ''
+    },
+
+    //=======================节点编辑========================
+    // 编辑模式修改节点信息的提交按钮，符合要求则将数据添加到数据库并刷新视图
     EditModeAddNodeAttribConfirm(){
       var isEmpty=false  //判断是否存在为空的新增属性
       for (var item in this.newNodeAttribute){
         if(this.newNodeAttribute[item].attName ==='' || this.newNodeAttribute[item].value ===''){
           isEmpty= true
-          }
+        }
       }
       if (isEmpty){
-      this.$message({
-        type:'error',
-        message: '添加的新关系不能为空'
-      })}
+        this.$message({
+          type:'error',
+          message: '添加的新属性不能为空'
+        })}
       else {
         //将新增属性添加到EditNodeAttribute
         for(let index in this.newNodeAttribute){
           this.$set(this.EditNodeAttribute,this.newNodeAttribute[index].attName,this.newNodeAttribute[index].value)
         }
-        //将EditNodeAttribute更新到原数组中
+        //TODO 将新增节点属性更新到数据库中
         this.new_data.filter(ele => ele.nodeName === this.EditNodeName)[0].attributlist = this.EditNodeAttribute
         this.EditNodeVisible = false
         // console.log(this.EditNodeAttribute)
-        console.log(this.new_data.filter(ele => ele.nodeName === this.EditNodeName)[0])
-        this.Draw_graph(this.new_data,this.new_links)
+        // console.log(this.new_data.filter(ele => ele.nodeName === this.EditNodeName)[0])
+        this.Draw_graph(this.new_data,this.new_links)  //TODO 更新视图
         this.currentNode = this.new_data.filter(ele => ele.nodeName === this.EditNodeName)[0].attributlist
-        //情况临时数据
+        //TODO 目前节点信息中没有属性列表，都设置为{}
+        //清空临时数据
         this.EditNodeAttribute = {}
         this.newNodeAttribute =[]
         this.EditNodeName=''
       }
 
     },
-    //显示节点编辑对话框
+
+    // √编辑模式下的“更改信息”按钮，不为空显示节点编辑对话框√
     EditNode(){
       if(this.EditNodeName === ''){
         this.$message({
@@ -432,20 +644,19 @@ export default {
         this.EditNodeVisible = true
 
         //找到这个节点的相关属性信息
-        var nodeTemp = this.new_data.filter(ele => ele.nodeName===this.EditNodeName)
+        var nodeTemp = this.init_data.filter(ele => ele.nodeName===this.EditNodeName)  //TODO 现在是从init_data中找，可以改成从数据库中找
         this.EditNodeAttribute=JSON.parse(JSON.stringify(nodeTemp[0].attributlist))
-
-        //动态添加相关组件
 
       }
     },
-
-    //编辑节点信息中的删除按钮
+    //√编辑节点信息面板中的原有属性删除按钮√
     removeAttrib(item) {
       //删除相应元素
       this.$delete(this.EditNodeAttribute,item)
 
     },
+
+    //√编辑节点信息面板中的新属性的删除√
     removenewAttrib(item) {
 
       var index = this.newNodeAttribute.indexOf(item)
@@ -453,21 +664,183 @@ export default {
         this.newNodeAttribute.splice(index, 1)
       }
     },
+
+    //√编辑节点面板中的新增属性，新增了一个空白属性√
     addAttrib(){
       this.newNodeAttribute.push({
         attName: '',
         value: ''
       });
     },
+
+    //√取消编辑节点的属性：返回按钮√
     cancleEditNodeAttrib(){
       this.EditNodeVisible = false
       //重新获得原有节点
-      var nodeTemp = this.new_data.filter(ele => ele.nodeName===this.EditNodeName)
+      var nodeTemp = this.new_data.filter(ele => ele.nodeName===this.EditNodeName)  //TODO 从后台数据库中获取
       this.EditNodeAttribute=JSON.parse(JSON.stringify(nodeTemp[0].attributlist))
 
       this.newNodeAttribute = []
     },
 
+    //=====================节点查询===========================
+    //√节点查询
+    singleNodeSearch:async function(){
+      console.log('find nodes');
+
+      console.log(this.single_node_search_temp)  //输入框中的内容
+      if(this.single_node_search_temp) {
+        //如果输入框中有数据
+        //关闭“节点查询”
+        document.getElementById("nodeSearch").style.display = 'none'
+        //打开“取消”按钮
+        document.getElementById("canclenodeSearch").style.display = 'block'
+
+        //获得根节点
+        await this.$axios({
+          method:'get',
+          url:'http://10.24.82.10:8088/getNodeAttributeByName/'+this.single_node_search_temp
+        }).then(res=>{
+          console.log("查询结果",res.data.data)
+
+          //获得查询节点ID
+          var Object_key = Object.keys(res.data.data)
+          for (var i = 0; i < Object_key.length; i++){
+            if(res.data.data[Object_key[i]].length > 0){
+              switch (Object_key[i]) {
+                case 'unitSequenceList':
+                  this.search_node_Name = res.data.data[Object_key[i]][0]['unitName']
+                  this.search_node_Id = res.data.data[Object_key[i]][0]['unitId']
+                  break
+                case 'characterList':
+                  // console.log(search_node_data)
+                  this.search_node_Name = res.data.data[Object_key[i]][0]['personName']
+                  this.search_node_Id = res.data.data[Object_key[i]][0]['personId']
+                  break
+                case 'equipmentTree':
+                  this.search_node_Name = res.data.data[Object_key[i]][0]['equipmentName']
+                  this.search_node_Id = res.data.data[Object_key[i]][0]['equipmentId']
+              }
+            }
+          }
+          console.log(this.search_node_Name, this.search_node_Id)
+        })
+
+        //根据ID获得一阶关系
+        await this.$axios({
+          method:'get',
+          url:"http://10.24.82.10:8088/getOneStageNodeRelationTupleById/" + this.search_node_Id
+        }).then(res=>{
+          this.search_links = []
+          this.search_links = res.data.data
+        })
+
+        // 找到与查询节点有关的所有节点信息
+        await this.get_related_nodes(this.search_links).then(res=>{
+          this.search_nodes = res
+        })
+
+        this.Draw_graph(this.search_nodes, this.search_links)
+
+        this.maxx = this.search_nodes.length
+        this.num = this.maxx
+      }
+      else{
+        this.$message({
+          type:'error',
+          message: '查询节点不能为空'
+        })
+      }
+    },
+
+    //√取消节点搜索
+    cancleNodeSearch:function(){
+      //改变计数器
+      this.num = this.init_data.length
+      //关闭“取消”按钮
+      document.getElementById("canclenodeSearch").style.display = 'none'
+      //显示“节点查询”按钮
+      document.getElementById("nodeSearch").style.display = 'block'
+      //显示初始节点视图
+      this.InitGraph()
+      //清空输入框
+      this.single_node_search_temp = ""
+    },
+
+    //=====================关系查询=============================
+    //√关系查询
+    relationSearch:async function(){
+      console.log('find links');
+      console.log(this.start_node_temp);
+      console.log(this.end_node_temp);
+
+      if(this.start_node_temp && this.end_node_temp)  {
+        //关闭“节点关系查询”
+        document.getElementById("nodeRelationSearch").style.display = 'none'
+        //打开“取消”按钮
+        document.getElementById("canclenodeRelationSearch").style.display = 'block'
+        //从后台获取关系--找到这些关系中包含的所有节点
+        //根据两个节点名找关系
+        await this.$axios({
+          method:'get',
+          url:'http://10.24.82.10:8088/queryRelationTupleByTwoName/'+this.start_node_temp + '/' + this.end_node_temp
+        }).then(res=>{
+          console.log("关系查询结果："+res.data.data)
+          this.ask_links = []
+          this.ask_links = res.data.data
+        })
+
+        //找到关系中包含的所有节点
+        this.ask_nodes = []
+        await this.get_related_nodes(this.ask_links).then(res=>{
+          this.ask_nodes = res
+        })
+        this.Draw_graph(this.ask_nodes, this.ask_links)
+
+        this.maxx = this.ask_nodes.length
+        this.num = this.maxx
+      }
+      else{
+        this.$message({
+          type:'error',
+          message: '查询节点不能为空'
+        })
+      }
+    },
+
+    //√取消关系搜索
+    canclerelationSearch:function(){
+      //关闭“取消”按钮
+      document.getElementById("canclenodeRelationSearch").style.display = 'none'
+      //显示“节点查询”按钮
+      document.getElementById("nodeRelationSearch").style.display = 'block'
+      //显示全部节点信息
+      this.InitGraph()
+      //清空输入框
+      this.start_node_temp = ""
+      this.end_node_temp = ""
+
+      this.num = this.init_data.length
+    },
+
+    //===================界面显示===============================
+    //√查询模式下的面板切换
+    handleClick(tab,event){
+      if(tab.name==="first"){
+        this.activateName = 'first'
+        document.getElementById("nodeSearch").style.display='block'
+        document.getElementById("nodeRelationSearch").style.display='none'
+        document.getElementById("canclenodeRelationSearch").style.display='none'
+      }
+      else if(tab.name==="second"){
+        this.activateName = 'second'
+        document.getElementById("nodeSearch").style.display='none'
+        document.getElementById("canclenodeSearch").style.display='none'
+        document.getElementById("nodeRelationSearch").style.display='block'
+      }
+    },
+
+    //√编辑模式下“更改节点信息”与“添加节点关系”面板的显示√
     changeOption(param){
       // console.log(param.type) // undefined
       // console.log(param)
@@ -483,6 +856,8 @@ export default {
         document.getElementById("Player_info").style.display='none'
       }
     },
+
+    //√退出编辑模式：操作各组件的显示与否√
     QuitEditMode(){
       document.getElementById("Player_info").style.display='none'
       document.getElementById("searchNodeInfo").style.display = 'block'
@@ -504,6 +879,8 @@ export default {
       }
       this.mode = 'show'
     },
+
+    //√进入编辑模式：操作各组件的显示与否 √
     EnterEditMode(){
       // document.getElementById("Player_info").style.display='block'
       document.getElementById("searchNodeInfo").style.display = 'none'
@@ -524,80 +901,23 @@ export default {
       }
       this.mode = 'edit'
     },
-    // 删除关系
-    DeleteRelation(){
-      this.$confirm('是否删除这该关系','提示',{
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type:'warning'
-      }).then(()=>{
-        this.$message({
-          type:'success',
-          message:'修改成功'
-        })
-        this.new_links.splice(this.RelationIndex,1)
-        this.Draw_graph(this.new_data,this.new_links)
-        this.NodeRelationChangeVisible = false
-        this.NodeRelationVisible = false
 
-      }).catch(()=>{
-        this.$message({
-          type: 'info',
-          message: '已取消修改'
-        })
-      })
-    },
-    // 更改关系
-    ChangeRelation(){
-      this.$confirm('此操作将更新该关系为'+'，是否继续','提示',{
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type:'warning'
-      }).then(()=>{
-        if(this.value==null){
-          this.$message({
-            type : 'warning',
-            message: '所选的属性值不能为空，请选择一个属性值'
-          })
-          // this.NodeRelationChangeVisible = false
-        }
-        else{
-          this.$message({
-            type:'success',
-            message:'修改成功'
-          })
-          this.new_links[this.RelationIndex].nodeRelationType = this.value
-          this.Draw_graph(this.new_data,this.new_links)
-          this.NodeRelationChangeVisible = false
-          this.NodeRelationVisible = false
-        }
 
-      }).catch(()=>{
-        this.$message({
-          type: 'info',
-          message: '已取消修改'
-        })
-      })
-    },
-    //找到需要更改的关系的下标
-    findRelationIndex(relation){
-      return relation.fatherNode == this.target && relation.childNode == this.source && relation.nodeRelationType == this.relation
-    },
-    //计数器变动
+    //TODO 计数器变动，要改成阶数的显示
     handleChange(value) {
       this.maxx = this.ask_nodes.length
       console.log("JI SHU")
       console.log(this.ask_nodes)
 
-      console.log(value);
-      var nodes = this.ask_nodes.slice(0,value);
+      console.log(value);    //这里的value应该是this.num
+      var nodes = this.ask_nodes.slice(0,value);   //显示前value个节点
       var names = [];
       for (let i = 0; i < nodes.length; i++){
         names.push(nodes[i].nodeName)
       }
       console.log(names);
       var links = this.ask_links.filter(ele =>
-          names.includes(ele.fatherNode) && names.includes(ele.childNode)
+          names.includes(ele.fatherName) && names.includes(ele.childName)
       )
       // for (let i = 0; i < this.new_links.length; i++){
       //     if (names.find(this.new_links[i].childNode) != null && names.find(this.new_links[i].fatherNode) != null){
@@ -607,196 +927,48 @@ export default {
       console.log(links);
       this.Draw_graph(nodes,links);
     },
-    singleNodeSearch:function(){
-      // this.$axios({
-      //     method:'get',
-      //     url:'http://39.108.102.157:8088/queryNodeLabelByName/'+this.single_node_search_temp
-      // }) .then(res=>{
-      //     if(res.status===200){
-      //         this.single_node_data = res.data.data
-      //         console.log(this.single_node_data)
-      //         this.$axios({
-      //             method:'get',
-      //             url:'http://39.108.102.157:8088/queryNodeRelationByName/'+this.single_node_search_temp
-      //         }).then(res=>{
-      //             this.single_node_links = res.data.data
-      //             if(res.data.data.length >= 20){
-      //                 console.log(this.single_node_links)
-      //                 this.X = 10
-      //                 this.Y = 20
-      //                 this.Z = 6
-      //                 this.ifUnfold = false
-      //             }else{
-      //                 this.X = 80
-      //                 this.Y = 80
-      //                 this.Z = 10
-      //                 this.ifUnfold = false
-      //             }
-      //             this.Draw_graph(this.single_node_data,this.single_node_links)
-      //         })
-      //     }
-      // })
 
-      console.log('find nodes');
+    //√初始视图
+    InitGraph:async function(){
+      this.init_data = []
+      this.init_links = []
 
-      console.log(this.single_node_search_temp)  //输入框中的内容
-      if(this.single_node_search_temp) {//如果输入框中有数据
-        //关闭“节点查询”
-        document.getElementById("nodeSearch").style.display = 'none'
-        //打开“取消”按钮
-        document.getElementById("canclenodeSearch").style.display = 'block'
-        //显示筛选后的节点
-        this.ask_links = this.new_links.filter(ele =>  //保留出点或者入点为该数据的关系
-            ele.fatherNode === this.single_node_search_temp || ele.childNode === this.single_node_search_temp)
-        var names = [];
-        for (let i = 0; i < this.ask_links.length; i++) {  //存所有需要显示的节点(有重复)
-          names.push(this.ask_links[i].fatherNode);
-          names.push(this.ask_links[i].childNode);
-        }
-        this.ask_nodes = this.new_data.filter(ele =>
-            names.includes(ele.nodeName));  //asknodes存所有要显示的节点（无重复）
-        this.Draw_graph(this.ask_nodes, this.ask_links);   //显示
-        this.num = this.ask_nodes.length   //更改节点计数器的最大值
-      }
-      else{
-        this.$message({
-          type:'error',
-          message: '查询节点不能为空'
-        })
-      }
-    },
-
-    cancleNodeSearch:function(){
-      //改变计数器
-      this.num = this.new_data.length
-      //关闭“取消”按钮
-      document.getElementById("canclenodeSearch").style.display = 'none'
-      //显示“节点查询”按钮
-      document.getElementById("nodeSearch").style.display = 'block'
-      //显示全部节点信息
-      this.Draw_graph(this.new_data,this.new_links);
-      //清空输入框
-      this.single_node_search_temp = ""
-
-    },
-
-    relationSearch:function(){
-      // this.start_node = this.start_node_temp
-      // this.end_node = this.end_node_temp
-      // console.log("end_node")
-      // console.log(this.end_node_temp)
-      // this.$axios({
-      //     method:'get',
-      //     url:'http://39.108.102.157:8088/queryNodeLabelBetweenTwoNodes/'+this.start_node+'/'+this.end_node
+      // await this.$axios({
+      //   method:'get',
+      //   url:"http://10.24.82.10.8088/queryAllRelationTyp"
       // }).then(res=>{
-      //     if(res.status === 200){
-      //         console.log(res)
-      //         console.log(res.data.data)
-      //         this.search_node_data = res.data.data
-      //         this.$axios({
-      //             method:'get',
-      //             url:'http://39.108.102.157:8088/queryNodeRelationBetweenTwoNodes/'+this.start_node+'/'+this.end_node
-      //         }).then(response=>{
-      //             console.log(response.data.data)
-      //             this.search_node_relation = response.data.data
-      //             this.X = 30
-      //             this.Y = 30
-      //             this.Z = 50
-      //             this.ifUnfold = false
-      //             this.Draw_graph(this.search_node_data,this.search_node_relation)
-      //         })
-      //     }
+      //   console.log(res.data.data)
       // })
 
-      console.log('find links');
-      console.log(this.start_node_temp);
-
-      console.log(this.end_node_temp);
-      if(this.start_node_temp && this.end_node_temp) {
-        //关闭“节点关系查询”
-        document.getElementById("nodeRelationSearch").style.display = 'none'
-        //打开“取消”按钮
-        document.getElementById("canclenodeRelationSearch").style.display = 'block'
-        //显示
-        this.ask_nodes = this.new_data.filter(ele =>
-            ele.nodeName === this.start_node_temp || ele.nodeName === this.end_node_temp
-        );
-        this.ask_links = this.new_links.filter(ele =>
-            (ele.fatherNode === this.start_node_temp && ele.childNode === this.end_node_temp)
-            || (ele.fatherNode === this.end_node_temp && ele.childNode === this.start_node_temp))
-        this.Draw_graph(this.ask_nodes, this.ask_links);
-        this.num = this.ask_nodes.length
-      }
-      else{
-        this.$message({
-          type:'error',
-          message: '查询节点不能为空'
-        })
-      }
-    },
-    canclerelationSearch:function(){
-      //关闭“取消”按钮
-      document.getElementById("canclenodeRelationSearch").style.display = 'none'
-      //显示“节点查询”按钮
-      document.getElementById("nodeRelationSearch").style.display = 'block'
-      //显示全部节点信息
-      this.Draw_graph(this.new_data,this.new_links);
-      //清空输入框
-      this.start_node_temp = ""
-      this.end_node_temp = ""
-
-      this.num = this.new_data.length
-    },
-
-    handleClick(tab,event){
-      if(tab.name==="first"){
-        this.activateName = 'first'
-        document.getElementById("nodeSearch").style.display='block'
-        document.getElementById("nodeRelationSearch").style.display='none'
-      }
-      else if(tab.name==="second"){
-        this.activateName = 'second'
-        document.getElementById("nodeSearch").style.display='none'
-        document.getElementById("nodeRelationSearch").style.display='block'
-      }
-    },
-    getInitNodes:function(){
-      this.$axios({
+      //获得初始节点的一阶关系
+      await this.$axios({
         method:'get',
-        // url:"http://39.108.102.157:8088/queryAllNodesWithLabel"
-        url:"http://39.108.102.157:8088/queryAllNodesWithLabel"
+        url:"http://10.24.82.10:8088/getOneStageNodeRelationTupleById/" + this.init_node_Id
       }).then(res=>{
-        console.log("get data")
-        this.init_data = res.data.data
-        // console.log(this.init_data)
-        this.getInitRelation()
-      })
-    },
-    getInitRelation:function(){
-      this.$axios({
-        method:'get',
-        // url:"http://39.108.102.157:8088/queryAllNodesRelationship"
-        url:"http://39.108.102.157:8088/queryAllNodesRelationship"
-      }).then(res=>{
+        console.log('get links of init node')
         this.init_links = res.data.data
-
-        // console.log(1111)
-        // console.log(this.init_links)
-        this.X = 20
-        this.Y = 20
-        this.Z = 30
-        this.ifUnfold = false
-        this.Draw_graph(this.init_data,this.init_links);
       })
+
+      //获得与初始节点有关的节点信息
+      await this.get_related_nodes(this.init_links).then(res=>{
+        this.init_data = res
+      })
+
+      this.Draw_graph(this.init_data, this.init_links)
+      this.maxx = this.init_data.length
+      this.num = this.maxx
+
     },
+
+    //√绘图
     Draw_graph:function(allNodes,allLinks){
 
-      console.log("nodes");
+      console.log("当前视图所有节点");
       console.log(allNodes);
-      console.log("links")
+      console.log("当前视图所有关系")
       console.log(allLinks);
 
-      var size = 60;
+      var size = 50;
       var size1 = 30;
       var yy = 200;
       var yy1 = 250;
@@ -804,8 +976,8 @@ export default {
       var listdata = [];
       var links = [];
 
-      var newdata=[];
-      newdata = this.init_links
+      // var newdata=[];
+      // newdata = this.init_links
 
       // function setData(arr, n) {
       //     for (var i = 0; i < arr.length; i++) {
@@ -822,18 +994,30 @@ export default {
       //     }
       // }
 
-      function setData(arr, al,n,i,X,Y,Z,Unfold) {
+      function setData(nodeName, label,i,X,Y,Z,Unfold) {
+        // 更改nodeType的值
+        // if (nodeType === 'A'){
+        //   nodeType = 1
+        // }
+        // else if (nodeType === 'B'){
+        //   nodeType = 2
+        // }
+        // else {
+        //   nodeType = 3
+        // }
+        // console.log(nodeAttributes,nodeType)
+        // console.log(nodeName,nodeAttributes,label)
         if(Unfold === false){
-          n = -n
+          label = -parseInt(label)
         }
-        const flag = arr === "disease"
+        const flag = nodeName === "disease"   //TODO ???
         listdata.push({
           x: X*i,
           y: Y + Z*i,
-          attributlist:al,
-          "name":arr, // 各个节点的name参数不能重复
+          // attributlist:nodeAttributes,
+          "name":nodeName, // 各个节点的name参数不能重复
           "symbolSize":size, // 该类目节点标记的大小
-          "category": -n, // 该节点所在类目的index
+          "category": -label, // 该节点所在类目的index
           "nodeType": flag, //
           "draggable": "true",
           "open" : "true"
@@ -856,13 +1040,13 @@ export default {
       //         })
       //     }
       // }
-      function setLinkData(arr, title,relation,curveness) {
+      function setLinkData(chileId, fatherId,relationName,curveness) {
         links.push({
-          "source": arr,
-          "target": title,
+          "source": fatherId,
+          "target": chileId,
           label:{
             show: true,
-            formatter:relation // 在formatter中添加文字可以实现将文字显示在关系上
+            formatter:relationName // 在formatter中添加文字可以实现将文字显示在关系上
           },
           lineStyle: {
             normal: {
@@ -874,13 +1058,14 @@ export default {
       }
 
       for(let i=0,len=allNodes.length;i<len;i++){
-        setData(allNodes[i].nodeName,allNodes[i].attributlist, allNodes[i].label, i, this.X, this.Y, this.Z, this.ifUnfold)
+        setData(allNodes[i].nodeName, allNodes[i].label, i, this.X, this.Y, this.Z, this.ifUnfold)
       }
+      // console.log(listdata)
       for(let i=0,len=allLinks.length;i<len;i++){
-        setLinkData(allLinks[i].childNode, allLinks[i].fatherNode, allLinks[i].nodeRelationType,0.1*i+0.1)
+        setLinkData(allLinks[i].childName, allLinks[i].fatherName, allLinks[i].relationName,0.1*i+0.1)
       }
-      console.log(listdata)
-      console.log(links)
+      // console.log(listdata)
+      // console.log(links)
       // 需要设定4个参数
       // 设总部名称
       var headquarter = "太平洋舰队\n司令部"
@@ -899,7 +1084,7 @@ export default {
       let that = this
       function showNodeAttribute(chart) { // 展示节点属性
         chart.on('mouseover',function (params) {
-          console.log(params.name)
+          // console.log(params.name)
           this.$axios({
             method:'get',
             url:'http://39.108.102.157:8088/getAttributeValueByNodeName/' + params.name
@@ -1017,15 +1202,16 @@ export default {
               }
             },
             tooltip: { // 提示框浮层内容格式器
-              formatter: function (params) {
-                // 鼠标悬浮在节点上，所显示的内容
-                // console.log(params.data.attributlist)
-                var showAttrib = ''
-                for(var attr in params.data.attributlist){
-                  showAttrib += attr + '：' + params.data.attributlist[attr] + '<br/>'
-                }
-                return showAttrib
-              }
+              formatter:'{b}'
+              //     function (params) {
+              //   // 鼠标悬浮在节点上，所显示的内容
+              //   // console.log(params.data.attributlist)
+              //   var showAttrib = ''
+              //   for(var attr in params.data.attributlist){
+              //     showAttrib += attr + '：' + params.data.attributlist[attr] + '<br/>'
+              //   }
+              //   return showAttrib
+              // }
             },
             toolbox: { // 工具栏，可以在里面添加，导出图片，数据视图等功能
               show: true,
@@ -1132,11 +1318,15 @@ export default {
             that.currentNode = params.data.attributlist
           }
           if(params.dataType==='edge'){
+            console.log("params",params.data)
             that.source = params.data.source
             that.target = params.data.target
             that.relation = params.data.label.formatter
-            that.RelationIndex = that.new_links.findIndex(that.findRelationIndex)
-            console.log("对应的元素下标是: ",that.RelationIndex)
+            that.RelationIndex = that.init_links.findIndex(that.findRelationIndex)
+            that.fatherId = that.init_links[that.RelationIndex]["fatherId"]
+            that.childId = that.init_links[that.RelationIndex]["childId"]
+            console.log("对应的关系下标是: ",that.RelationIndex)
+            console.log(that.init_links[that.RelationIndex])
             that.NodeRelationVisible = true
           }
         }
@@ -1146,6 +1336,69 @@ export default {
       // bindChartClickEvent(this.myChart);
       // showNodeAttribute(this.myChart);
     },
+
+    //=================数据处理=======================
+    //根据属性列表组织用于显示的节点数据结构{节点名、label、属性列表}
+    get_node:function(node_attr_data){
+      var node_data = {}
+      var Object_key = Object.keys(node_attr_data)
+
+      if (Object_key.indexOf('unitId') !== -1 && Object_key.indexOf('equipmentId') === -1){
+        // console.log(res.data.data['unitName'])
+        node_data["nodeName"] = node_attr_data['unitName']
+        node_data["label"] = 0
+        node_data["attributlist"] = node_attr_data
+      }
+      else if(Object_key.indexOf('personId') !== -1){
+        // console.log(res.data.data['personName'])
+        node_data["nodeName"] = node_attr_data['personName']
+        node_data["label"] = 1
+        node_data["attributlist"] = node_attr_data
+      }
+      else if(Object_key.indexOf('equipmentId')!== -1){
+        // console.log(res.data.data)
+        node_data["nodeName"] = node_attr_data['equipmentName']
+        node_data["label"] = 2
+        node_data["attributlist"] = node_attr_data
+      }
+      return node_data
+    },
+
+    //获得某节点一阶关系中包含的所有节点
+    get_related_nodes:async function(links){
+      var nodes = []
+      //得到这些节点得到ID
+      var nodes_temp = []
+      for(var i = 0; i< links.length;i++){
+        nodes_temp.push(links[i]['childId'])
+        nodes_temp.push(links[i]['fatherId'])
+      }
+      //去重
+      nodes_temp = this.unique(nodes_temp)
+      console.log(nodes_temp)
+
+      //根据ID组织数据结构
+      for(var j = 0; j<nodes_temp.length; j++){
+        await this.$axios({
+              method:'get',
+              url:"http://10.24.82.10:8088/getNodeAttributeById/" + nodes_temp[j]
+            }).then(res=>{
+              // console.log(res.data.data)
+          nodes.push(this.get_node(res.data.data))
+        })
+      }
+      return nodes
+    },
+
+    //数组去重
+    unique: function (arr){
+      return Array.from(new Set(arr))
+    },
+
+
+
+    //=================页面跳转=======================
+
     goToTextUpload:function(){
       this.$router.push("/TextUpload")
     },
@@ -1294,5 +1547,8 @@ export default {
 }
 .editNodeAttrib1{
   width: 20%;
+}
+.modify_relation{
+  width: 60%;
 }
 </style>
