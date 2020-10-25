@@ -5,10 +5,11 @@ import Check_2 from "~/views/Check_2";
 import Knowledge_tree from "~/views/Knowledge_tree";
 import Newgraph from "~/views/Newgraph";
 import newTreeGraph from "~/views/newTreeGraph";
+import excel_upload from "~/views/excel_upload";
 export const routes = [
     {
         path:'/Home',
-        component:Home
+        component:Newgraph
     },
     {
         path: '/TextUpload',
@@ -33,5 +34,9 @@ export const routes = [
     {
         path: '/newTreeGraph',
         component: newTreeGraph
+    },
+    {
+        path: '/excel_upload',
+        component: excel_upload
     },
 ]
