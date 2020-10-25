@@ -14,9 +14,6 @@
                             <el-button type="primary" round=true @click="begin_to_check" class="el-button–begin_check">开始审核
                                 <i class="el-icon-caret-right el-icon--right"></i>
                             </el-button>
-<!--                            <el-button type="primary" round=true @click="user_Check" class="el-button-save">保存-->
-<!--                                <i class="el-icon-success el-icon&#45;&#45;right"></i>-->
-<!--                            </el-button>-->
 
                             <el-button type="primary" round=true @click="excel_upload" class="el-button–excel_upload">Excel上传
                               <i class="el-icon-caret-right el-icon--right"></i>
@@ -24,7 +21,7 @@
 
                             <el-button type="primary" round=true  @click="return_home" class="el-button–go_back">返回
                                 <i class="el-icon-position el-icon--right"></i>
-                            </el-button><!--              <el-row class="col1"></el-row>-->
+                            </el-button>
                         </div>
                     </div>
                 </div>
@@ -48,51 +45,26 @@
             }
         },
         mounted() {
-            // this.getAllTexts()
+            this.getAllUnchecked()
         },
         methods: {
             /**
+             * 页面打开时执行
              * 获取所有未审核的节点关系
              * @function getAllTexts
              */
-            // getAllTexts:function() {
-            //     var _this = this
-            //     _this.$axios.get("http://10.24.82.10:8088/allText").then(response => {
-            //         var jsonObj = JSON.parse(JSON.stringify(response.data.data));
-            //         // console.log(jsonObj)
-            //         this.tableData = jsonObj
-            //         _this.Node_lenth = _this.tableData.length
-            //     }, response => {
-            //         console.log("error")
-            //     })
-            // },
-            // // 上传成功
-            // successMessage() {
-            //     this.$message('上传成功')
-            // },
-            // // 上传失败
-            // errorMessage() {
-            //     this.$message('上传失败')
-            // },
-            // // 上传文本
-            // begin_upload: function () {
-            //     this.$axios({
-            //         method: 'post',
-            //         url: 'http://10.24.82.10:8088/uploadText',
-            //         data: {
-            //             content: this.textarea
-            //         }
-            //     }).then(res => {
-            //         if (!res.data.ennro) {
-            //             this.successMessage()
-            //         } else {
-            //             this.errorMessage()
-            //         }
-            //         console.log(res)
-            //     })
-            // },
+            getAllUnchecked:function() {
+              this.$axios({
+                method:'get',
+                url:'http://10.24.82.10:8088/getAllUncheckedRelation'
+              }).then(res=>{
+                console.log("待审核关系数目",res.data.data)
+                this.Node_lenth = res.data.data.length
+              })
+            },
             //点击回主界面
-            /**
+
+          /**
              * 返回主页面
              * @function return_home
              */
@@ -100,9 +72,9 @@
                 this.$router.push("/")
                 location.reload()
             },
-            //点击开始审核
+
             /**
-             * 跳转到文本审核界面
+             * 跳转到审核界面
              * @function begin_to_check
              */
             begin_to_check: function () {
@@ -110,8 +82,11 @@
                 location.reload()
             },
 
+          /**
+           * 跳转到Excel上传界面
+           */
             excel_upload: function () {
-              this.$router.push("/Check_2")
+              this.$router.push("/excel_upload")
               location.reload()
             }
 
@@ -186,7 +161,7 @@
     .el-button–begin_check{
         color: #fff;
         position: absolute;
-        left: 45%;
+        left: 46%;
         bottom: 30%;
         background-color: #303252;
         border-color: #9593A7;
