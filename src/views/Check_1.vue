@@ -17,6 +17,11 @@
 <!--                            <el-button type="primary" round=true @click="user_Check" class="el-button-save">保存-->
 <!--                                <i class="el-icon-success el-icon&#45;&#45;right"></i>-->
 <!--                            </el-button>-->
+
+                            <el-button type="primary" round=true @click="excel_upload" class="el-button–excel_upload">Excel上传
+                              <i class="el-icon-caret-right el-icon--right"></i>
+                            </el-button>
+
                             <el-button type="primary" round=true  @click="return_home" class="el-button–go_back">返回
                                 <i class="el-icon-position el-icon--right"></i>
                             </el-button><!--              <el-row class="col1"></el-row>-->
@@ -43,49 +48,49 @@
             }
         },
         mounted() {
-            this.getAllTexts()
+            // this.getAllTexts()
         },
         methods: {
             /**
              * 获取所有未审核的节点关系
              * @function getAllTexts
              */
-            getAllTexts:function() {
-                var _this = this
-                _this.$axios.get("http://10.24.82.10:8088/allText").then(response => {
-                    var jsonObj = JSON.parse(JSON.stringify(response.data.data));
-                    // console.log(jsonObj)
-                    this.tableData = jsonObj
-                    _this.Node_lenth = _this.tableData.length
-                }, response => {
-                    console.log("error")
-                })
-            },
-            // 上传成功
-            successMessage() {
-                this.$message('上传成功')
-            },
-            // 上传失败
-            errorMessage() {
-                this.$message('上传失败')
-            },
-            // 上传文本
-            begin_upload: function () {
-                this.$axios({
-                    method: 'post',
-                    url: 'http://10.24.82.10:8088/uploadText',
-                    data: {
-                        content: this.textarea
-                    }
-                }).then(res => {
-                    if (!res.data.ennro) {
-                        this.successMessage()
-                    } else {
-                        this.errorMessage()
-                    }
-                    console.log(res)
-                })
-            },
+            // getAllTexts:function() {
+            //     var _this = this
+            //     _this.$axios.get("http://10.24.82.10:8088/allText").then(response => {
+            //         var jsonObj = JSON.parse(JSON.stringify(response.data.data));
+            //         // console.log(jsonObj)
+            //         this.tableData = jsonObj
+            //         _this.Node_lenth = _this.tableData.length
+            //     }, response => {
+            //         console.log("error")
+            //     })
+            // },
+            // // 上传成功
+            // successMessage() {
+            //     this.$message('上传成功')
+            // },
+            // // 上传失败
+            // errorMessage() {
+            //     this.$message('上传失败')
+            // },
+            // // 上传文本
+            // begin_upload: function () {
+            //     this.$axios({
+            //         method: 'post',
+            //         url: 'http://10.24.82.10:8088/uploadText',
+            //         data: {
+            //             content: this.textarea
+            //         }
+            //     }).then(res => {
+            //         if (!res.data.ennro) {
+            //             this.successMessage()
+            //         } else {
+            //             this.errorMessage()
+            //         }
+            //         console.log(res)
+            //     })
+            // },
             //点击回主界面
             /**
              * 返回主页面
@@ -103,7 +108,13 @@
             begin_to_check: function () {
                 this.$router.push("/Check_2")
                 location.reload()
+            },
+
+            excel_upload: function () {
+              this.$router.push("/Check_2")
+              location.reload()
             }
+
         }
     }
 </script>
@@ -175,13 +186,34 @@
     .el-button–begin_check{
         color: #fff;
         position: absolute;
-        left: 35%;
+        left: 45%;
         bottom: 30%;
         background-color: #303252;
         border-color: #9593A7;
         border-width: 2px;
     }
-    /*保存按钮样式*/
+
+    .el-button–excel_upload{
+      color: #fff;
+      position: absolute;
+      left: 30%;
+      bottom: 30%;
+      background-color: #303252;
+      border-color: #9593A7;
+      border-width: 2px;
+    }
+
+    /*返回按钮设置*/
+    .el-button–go_back {
+      color: #fff;
+      background-color: #303252;
+      border-color: #9593A7;
+      border-width: 2px;
+      position: absolute;
+      left: 60%;
+      bottom: 30%;
+    }
+    /*保存按钮样式
     .el-button-save {
         color: #fff;
         background-color: #303252;
@@ -190,17 +222,8 @@
         position: absolute;
         left: 46%;
         bottom: 30%;
-    }
-    /*返回按钮设置*/
-    .el-button–go_back {
-        color: #fff;
-        background-color: #303252;
-        border-color: #9593A7;
-        border-width: 2px;
-        position: absolute;
-        right: 35%;
-        bottom: 30%;
-    }
+    }*/
+
 
     .el-container {
         /*margin-bottom: 40px;*/
