@@ -1,107 +1,147 @@
 <template>
   <el-container style="height : 100%">
     <el-header height="8%" class="header_text">
-      知识图谱展示
+      Excel上传
     </el-header>
     <el-container>
-      <el-aside width="10%">
+      <el-aside width="5%">
 
       </el-aside>
       <!--            数据审核表格区域-->
-      <el-col :span="17" class="table_cell">
-        <div class="table_header">
-          <h1 class="tablehead">剩余上传数据{{tableData.length}}条</h1>
-        </div>
-        <div class="main_table">
-          <el-table
-              ref="multipleTable"
-              stripe=true
-              :data="tableData"
-              height="500px"
-              border
-              style="width: 100%;"
-              tooltip-effect="dark"
-              @selection-change="handleSelectionChange">
-            <el-table-column
-                type="selection"
-                width="55">
-            </el-table-column>
-            <el-table-column
-                prop="startNodeName"
-                label="节点1"
-                width="120"
-                align="center">
-            </el-table-column>
-            <el-table-column
-                prop="startNodeType"
-                label="节点1类型"
-                width="120"
-                align="center">
-            </el-table-column>
-            <el-table-column
-                prop="endNodeName"
-                label="节点2"
-                width="120"
-                align="center">
-            </el-table-column>
-            <el-table-column
-                prop="endNodeType"
-                label="节点2类型"
-                width="120"
-                align="center">
-            </el-table-column>
-            <el-table-column
-                prop="relation"
-                label="关系"
-                align="center">
-            </el-table-column>
-            <el-table-column
-                label="操作"
-                width="120"
-                align="center">
-              <template slot-scope="scope">
-                <el-button @click="addUnchecked([scope.row],[scope.$index])" type="text" size="small">添加</el-button>
-                <!--                                <el-button type="text" size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>-->
-                <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-        <el-button type="primary" round=true  @click="addUnchecked(multipleSelection,multipleSelectionIndex)" class="el-button–save">批量添加
-<!--          <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
-        </el-button>
+      <el-col :span="20" class="table_cell">
+        <div class="upload_main" v-show="showTable">
+          <div class="table_header">
+            <h1 class="tablehead">剩余上传数据{{tableData.length}}条</h1>
+          </div>
+          <div class="main_table">
+            <el-table
+                ref="multipleTable"
+                stripe=true
+                :data="tableData"
+                height="570px"
+                border
+                style="width: 100%;"
+                tooltip-effect="dark"
+                @selection-change="handleSelectionChange">
+              <el-table-column
+                  type="selection"
+                  width="55">
+              </el-table-column>
+              <el-table-column
+                  sortable
+                  v-for="item in tableColumnList"
+                  :label="item"
+                  :prop= "item"
+                  align="center">
+              </el-table-column>
+              <el-table-column
+                  label="操作"
+                  width="150"
+                  align="center">
+                <template slot-scope="scope">
+                  <el-button @click="updateUnchecked(tableData[scope.$index])" type="text" size="small">编辑</el-button>
+                  <el-button @click="addUnchecked([scope.row],[scope.$index])" type="text" size="small">添加</el-button>
+                  <!--                                <el-button type="text" size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>-->
+                  <el-button type="text" size="small" @click="deleteRow(scope.$index, tableData)">删除</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-dialog width="30%" title="编辑当前关系" :visible.sync="showUpdateUnchecked" center>
+              <el-form :label-position="left" label-width="190px" :model="updateUncheckedItem">
+                <el-form-item class="UncheckedItemInput"
+                              prop="startNodeName"
+                              label="起始节点名称:"
+                >
+                  <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['startNodeName']"></el-input>
+                </el-form-item>
 
-        <el-button type="primary" round=true  @click="deleteMultiRow" class="el-button–multidelete">批量删除
-          <!--          <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
-        </el-button>
+                <el-form-item class="UncheckedItemInput"
+                              prop="startNodeType"
+                              label="起始节点类型:"
+                >
+                  <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['startNodeType']"></el-input>
+                </el-form-item>
 
-        <el-button type="primary" round=true  @click="cancelMultiSelection" class="el-button–cancel">取消选择
-<!--          <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
-        </el-button>
+                <el-form-item class="UncheckedItemInput"
+                              prop="endNodeName"
+                              label="终止节点名称:"
+                >
+                  <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['endNodeName']"></el-input>
+                </el-form-item>
+
+                <el-form-item class="UncheckedItemInput"
+                              prop="endNodeType"
+                              label="终止节点类型:"
+                >
+                  <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['endNodeType']"></el-input>
+                </el-form-item>
+
+                <el-form-item class="UncheckedItemInput"
+                              prop="relation"
+                              label="关系:"
+                >
+                  <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['relation']"></el-input>
+                </el-form-item>
+
+              </el-form>
+
+              <div slot="footer" class="dialog-footer_for_update">
+                <el-button @click="cancleUpdateRelation">返 回</el-button>
+                <el-button type="primary" @click="updateRelation">确定</el-button>
+              </div>
+            </el-dialog>
+          </div>
+          <div class="table_buttons">
+            <el-button type="primary" round=true  @click="addUnchecked(multipleSelection,multipleSelectionIndex)" class="el-button–save">批量添加
+              <!--          <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
+            </el-button>
+
+            <el-button type="primary" round=true  @click="deleteMultiRow" class="el-button–multidelete">批量删除
+              <!--          <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
+            </el-button>
+
+            <el-button type="primary" round=true  @click="cancelMultiSelection" class="el-button–cancel">取消选择
+            <!--          <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
+          </el-button>
+
+          <el-button type="primary" round=true  @click="reUpload" class="el-button–reUpload">重新上传
+            <!--          <i class="el-icon-coin el-icon&#45;&#45;right"></i>-->
+          </el-button>
+          </div>
+        </div>
+
+        <div v-show="showUploadButton">
+          <el-upload
+              ref="upload"
+              drag
+              action="/"
+              :show-file-list="false"
+              :on-change="ExcelUpload"
+              :auto-upload="false">
+            <div class="upload_button_text">
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">将Excel文件拖到此处，或<em>点击上传</em></div>
+            </div>
+
+  <!--          <el-button-->
+  <!--              type="primary"-->
+  <!--              round=true-->
+  <!--              slot="trigger"-->
+  <!--              class="Excelupload">-->
+  <!--            Excel上传-->
+  <!--            <i class="el-icon-s-order el-icon&#45;&#45;right"></i>-->
+  <!--          </el-button>-->
+          </el-upload>
+        </div>
 
       </el-col>
       <el-col :span="7" class="right-side" >
         <!-- 基本功能按钮区域-->
         <div class="buttons">
-          <el-upload
-              ref="upload"
-              action="/"
-              :show-file-list="false"
-              :on-change="ExcelUpload"
-              :auto-upload="false">
-            <el-button
-                type="primary"
-                round=true
-                slot="trigger"
-                class="Excelupload">
-              Excel上传
-              <i class="el-icon-s-order el-icon--right"></i>
-            </el-button>
-          </el-upload>
 
-          <el-button type="primary" round=true  @click="Back_to_lastpage" class="back_to_lastpage">返回上一页
-            <i class="el-icon-position el-icon--right"></i>
-          </el-button>
+<!--          <el-button type="primary" round=true  @click="Back_to_lastpage" class="back_to_lastpage">返回上一页-->
+<!--            <i class="el-icon-position el-icon&#45;&#45;right"></i>-->
+<!--          </el-button>-->
 
 
           <el-button type="primary" round=true  @click="Back_to_homepage" class="back_to_homepage">返回首页
@@ -118,6 +158,16 @@
 </template>
 
 <style>
+.upload_button_text{
+  padding-top: 60px;
+}
+.el-upload-dragger{
+  margin-top: 250px;
+  margin-left: 300px;
+  background-color: #15161F;
+  width: 600px;
+  height: 300px;
+}
 .table_cell{
   background-color: #15161F;
 }
@@ -177,18 +227,26 @@
 /*放弃按钮设置*/
 .el-button–save {
   position: absolute;
-  top: 83%;
-  left: 33%;
+  top: 80%;
+  left: 30%;
   color: #fff;
   background-color: #303252;
   border-color: #9593A7;
   border-width: 2px;
 }
-
+.el-button–reUpload{
+  position: absolute;
+  top: 80%;
+  left: 60%;
+  color: #fff;
+  background-color: #303252;
+  border-color: #9593A7;
+  border-width: 2px;
+}
 .el-button–multidelete{
   position: absolute;
-  top: 83%;
-  left: 45%;
+  top: 80%;
+  left: 40%;
   color: #fff;
   background-color: #303252;
   border-color: #9593A7;
@@ -197,8 +255,8 @@
 
 .el-button–cancel{
   position: absolute;
-  top: 83%;
-  left: 57%;
+  top: 80%;
+  left: 50%;
   color: #fff;
   background-color: #303252;
   border-color: #9593A7;
@@ -282,10 +340,66 @@ export default {
   name:"excel_upload",
   data() {
     return {
+      showUploadButton:false, // todo
+      showTable:true,
+      //表格中要显示的数据
       tableData:[
+        {endNodeName: "The root Unit",
+          endNodeType: "B",
+          relation: "sdsc",
+          startNodeName: "The DW2th Unit",
+          startNodeType: "A"},
+        {
+          endNodeName: "啊",
+          endNodeType: "B",
+          relation: 15,
+          startNodeName: "H",
+          startNodeType: "A"
+        },
+        {
+          endNodeName: "是的",
+          endNodeType: "B",
+          relation: 13,
+          startNodeName: "S",
+          startNodeType: "A"
+        },
+        {
+          endNodeName: "是",
+          endNodeType: "B",
+          relation: 3,
+          startNodeName: "Q",
+          startNodeType: "A"
+        },
+        {
+          endNodeName: "The root Unit",
+          endNodeType: "B",
+          relation: "fgfdgfdg",
+          startNodeName: "The DW2th Unit",
+          startNodeType: "A"
+        },
+        {
+          endNodeName: "fh",
+          endNodeType: "B",
+          relation: "sdsc",
+          startNodeName: "The DW2th Unit",
+          startNodeType: "A"
+        },
+        {
+          endNodeName: "The root Unit",
+          endNodeType: "B",
+          relation: "sdsc",
+          startNodeName: "ghgf",
+          startNodeType: "A"
+        }
       ],
+      //动态表头
+      tableColumnList:["endNodeName", "endNodeType", "relation", "startNodeName", "startNodeType"],
+      //选择的项
       multipleSelection:[],
-      multipleSelectionIndex:[]
+      //选择项的序号
+      multipleSelectionIndex:[],
+      showUpdateUnchecked:false,
+      updateUncheckedItem:{},
 
     }
   },
@@ -304,8 +418,23 @@ export default {
       this.$router.push("/")
     },
 
+    reUpload:function(){
+      //组件显示控制
+      this.showUploadButton = true
+      this.showTable = false
+
+      //数据清零
+      this.tableColumnList = []
+      this.tableData = []
+      this.multipleSelection = []
+      this.multipleSelectionIndex = []
+    },
+
     //Excel上传
     ExcelUpload:function (file) {
+      //组件显示控制
+      this.showUploadButton = false
+      this.showTable = true
       const types = file.name.split('.')[1]
       const fileType = ['xlsx', 'xlc', 'xlm', 'xls', 'xlt', 'xlw', 'csv'].some(item => item === types)
       if (!fileType) {
@@ -319,6 +448,11 @@ export default {
 
         }
         var sheetDates = this.xlsxJson[0].sheet
+        this.tableColumnList = []
+        for (var sh in this.xlsxJson[0].sheetHeader){
+          this.tableColumnList.push(this.xlsxJson[0].sheetHeader[sh])
+        }
+
         for (var sd in sheetDates){
           //先转为数组、再加入tableData
           this.tableData.push(sheetDates[sd])
@@ -337,7 +471,8 @@ export default {
           this.wb.SheetNames.forEach((sheetName) => {
             result.push({
               sheetName: sheetName,
-              sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName])
+              sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName]),
+              sheetHeader : Object.keys(XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName])[0])
             })
           })
           resolve(result)
@@ -348,6 +483,33 @@ export default {
     },
 
     //=================表格中的操作==============
+    // 编辑数据
+    updateUnchecked(data){
+      console.log(data)
+      this.showUpdateUnchecked = true
+      this.updateUncheckedItem = data
+    },
+    //取消编辑关系
+    cancleUpdateRelation(){
+      this.showUpdateUnchecked = false
+      this.updateUncheckedItem = {}
+    },
+
+    //确认修改
+    updateRelation: function(){
+      console.log(this.updateUncheckedItem)
+      // await this.$axios({
+      //   method:'post',
+      //   url:'http://10.24.82.10:8088/updateUncheckedRelationById',
+      //   data: [this.updateUncheckedItem]
+      // }).then(res=>{
+      //   console.log(res.data)
+      // })
+      console.log("这里的修改要改成本地改数据，不需要通过数据库")
+      this.updateUncheckedItem = {}
+      this.showUpdateUnchecked =false
+    },
+
     // 删除行（本地）
     deleteRow(index) {
       console.log("删除的元素索引", index)
