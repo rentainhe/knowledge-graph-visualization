@@ -1,7 +1,7 @@
 <template>
   <el-container style="height : 100%">
     <el-header height="8%" class="header_text">
-      知识图谱展示
+      Excel上传
     </el-header>
     <el-container>
       <el-aside width="10%">
@@ -57,9 +57,10 @@
             </el-table-column>
             <el-table-column
                 label="操作"
-                width="120"
+                width="160"
                 align="center">
               <template slot-scope="scope">
+                <el-button @click="updateUnchecked(tableData[scope.$index])" type="text" size="small">编辑</el-button>
                 <el-button @click="addIntoDatabase(tableData[scope.$index])" type="text" size="small">添加</el-button>
                 <!--                                <el-button type="text" size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>-->
                 <el-button type="text" size="small" @click="deleteRow(tableData[scope.$index])">删除</el-button>
@@ -97,6 +98,53 @@
             <el-button @click="deleteBeforeRealation" v-if="checkboxGroup.length !==0">删除已有关系</el-button>
             <el-button @click="canleAddRealation">返 回</el-button>
             <el-button type="primary" @click="addRelationConfirm">添 加</el-button>
+          </div>
+        </el-dialog>
+
+        <el-dialog width="30%" title="编辑当前关系" :visible.sync="showUpdateUnchecked" center>
+          <el-form :label-position="left" label-width="190px" :model="updateUncheckedItem">
+            <el-form-item class="UncheckedItemInput"
+                prop="startNodeName"
+                label="起始节点名称:"
+            >
+              <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['startNodeName']"></el-input>
+            </el-form-item>
+
+            <el-form-item class="UncheckedItemInput"
+                prop="startNodeType"
+                label="起始节点类型:"
+            >
+              <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['startNodeType']"></el-input>
+            </el-form-item>
+
+            <el-form-item class="UncheckedItemInput"
+                prop="endNodeName"
+                label="终止节点名称:"
+            >
+              <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['endNodeName']"></el-input>
+            </el-form-item>
+
+            <el-form-item class="UncheckedItemInput"
+                prop="endNodeType"
+                label="终止节点类型:"
+            >
+              <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['endNodeType']"></el-input>
+            </el-form-item>
+
+            <el-form-item class="UncheckedItemInput"
+                prop="relation"
+                label="关系:"
+            >
+              <el-input class="updateUncheckedItemInput" v-model="this.updateUncheckedItem['relation']"></el-input>
+            </el-form-item>
+
+          </el-form>
+
+          <div slot="footer" class="dialog-footer_for_update">
+            <el-button @click="cancleUpdateRelation">返 回</el-button>
+            <el-button type="primary" @click="updateRelation">确定</el-button>
+
+
           </div>
         </el-dialog>
 
@@ -138,6 +186,12 @@
 </template>
 
 <style>
+.UncheckedItemInput{
+  padding-bottom: 15px;
+}
+.updateUncheckedItemInput{
+  width: 80%;
+}
 .el-checkbox-button__inner {
   border: 1px solid #DCDFE6;
   border-radius: 4px;
@@ -336,14 +390,17 @@ export default {
       multipleSelectionIndex: [],
       relationsBefore:[],
       showRelationsForCheckRelation:false,
+      showUpdateUnchecked:false,
 
       addStartNodeName:'',
       addEndNodeName:'',
       addStartNodeId:'',
       addEndNodeId:'',
-
       addRelation:'',
-      checkboxGroup:[]
+
+      checkboxGroup:[],
+
+      updateUncheckedItem:{}
     }
   },
   mounted() {
@@ -406,13 +463,40 @@ export default {
     },
 
     //=================表格中的操作==============
+    // 编辑数据
+    updateUnchecked(data){
+      console.log(data)
+      this.showUpdateUnchecked = true
+      this.updateUncheckedItem = data
+    },
+
+    //取消编辑关系
+    cancleUpdateRelation(){
+      this.showUpdateUnchecked = false
+      this.updateUncheckedItem = {}
+    },
+
+    //确认修改
+    updateRelation:async function(){
+      console.log(this.updateUncheckedItem)
+      await this.$axios({
+        method:'post',
+        url:'http://10.24.82.10:8088/updateUncheckedRelationById',
+        data: [this.updateUncheckedItem]
+      }).then(res=>{
+        console.log(res.data)
+      })
+      this.updateUncheckedItem = {}
+      this.showUpdateUnchecked =false
+    },
+
     // 删除行（与后端数据交流）
     deleteRow(data) {
       console.log(data)
       var unCheckedId = data['unCheckedId']
       // console.log("接口bug待修复，跨源问题")
       this.$axios({
-        method: 'post',
+        method: 'get',
         url: 'http://10.24.82.10:8088/deleteUncheckedRelation/' + unCheckedId
       }).then(res => {
         console.log(res.data)
@@ -482,11 +566,11 @@ export default {
           //TODO 删除这条数据
           console.log("删除这条数据  待完成")
           // 清空缓存数据
-          fatherName=''
-          fatherId=''
-          childName=''
-          childId=''
-          relationName=''
+          this.addStartNodeName = ''
+          this.addStartNodeId=''
+          this.addEndNodeName=''
+          this.addEndNodeId=''
+          this.addRelation=''
 
         }else {
           this.$message({
@@ -614,7 +698,7 @@ export default {
         console.log(this.addStartNodeId,this.addEndNodeId)
 
       }else {
-        if (isExistFatherNode === 0){
+        if (isExistFatherNode === 0 && isExistchildNode === 1 ){
           //父节点不存在，确认添加新节点
           this.$confirm('父节点不存在，确认添加新节点?', '提示', {
             confirmButtonText: '确定',
@@ -622,7 +706,13 @@ export default {
             type: 'warning'
           }).then(() => {
             //添加新节点
-
+            this.addNodeAndRelation('father',data['startNodeType'])
+            // 清空缓存数据
+            this.addStartNodeName = ''
+            this.addStartNodeId=''
+            this.addEndNodeName=''
+            this.addEndNodeId=''
+            this.addRelation=''
 
             this.$message({
               type: 'success',
@@ -638,14 +728,21 @@ export default {
           //   type:'error',
           //   message: '父节点不存在'
           // })
-        }else if (isExistchildNode === 0){
+        }
+        if(isExistchildNode === 0 && isExistFatherNode === 1){
           //子节点不存在，确认添加新节点
           this.$confirm('子节点不存在，确认添加新节点?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-
+            this.addNodeAndRelation('father')
+            // 清空缓存数据
+            this.addStartNodeName = ''
+            this.addStartNodeId=''
+            this.addEndNodeName=''
+            this.addEndNodeId=''
+            this.addRelation=''
 
             this.$message({
               type: 'success',
@@ -663,7 +760,36 @@ export default {
           //   message: '子节点不存在'
           // })
         }
-        else {
+
+        if(isExistchildNode === 0 && isExistFatherNode === 0){
+          //子节点不存在，确认添加新节点
+          this.$confirm('父子节点均不存在，确认添加新节点?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.addNodeAndRelation('both')
+            // 清空缓存数据
+            this.addStartNodeName = ''
+            this.addStartNodeId=''
+            this.addEndNodeName=''
+            this.addEndNodeId=''
+            this.addRelation=''
+
+            this.$message({
+              type: 'success',
+              message: '关系添加成功!'
+            });
+          }).catch(() => {
+            this.$message({
+
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }
+
+        if (isExistFatherNode && isExistchildNode){
           console.log("父子节点均存在，可以直接添加关系")
           console.log(this.addStartNodeName,this.addStartNodeId,this.addEndNodeName,this.addEndNodeId,this.addRelation)
           await this.$axios({
@@ -685,17 +811,21 @@ export default {
             //TODO 删除这条数据
             console.log("删除这条数据  待完成")
             // 清空缓存数据
-            fatherName='',
-            fatherId='',
-            childName='',
-            childId='',
-            relationName=''
+            this.addStartNodeName = ''
+            this.addStartNodeId=''
+            this.addEndNodeName=''
+            this.addEndNodeId=''
+            this.addRelation=''
           })
         }
       }
 
     },
 
+    //添加节点及关系
+    addNodeAndRelation(node, nodetype){
+      console.log(this.addStartNodeName,this.addStartNodeId,this.addEndNodeName,this.addEndNodeId,this.addRelation)
+    },
     //获取多选的行中的数据
     handleSelectionChange(rows) {
       this.multipleSelection = rows;
