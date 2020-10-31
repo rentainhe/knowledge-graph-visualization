@@ -98,7 +98,7 @@
           <!--                            <el-input width="50%" v-model="EditModeAddNewRelation" placeholder="请输入新增关系" clearable=1></el-input>-->
           <!--                        </el-col>-->
           <!--                    </div>-->
-          <el-form :label-position="left" label-width="80px" :model="EditNodeName">
+          <el-form :label-position="left" label-width="120px" :model="EditNodeName">
             <el-form-item
                 prop="nodeName"
                 label="节点名称:"
@@ -1406,10 +1406,10 @@ export default {
       this.$router.push("/newTreeGraph")
     },
     manualCheck:function(){
-      this.$router.push("/Check_1")
+      this.$router.push("/excel_upload")
     },
     Back_to_homepage:function () {
-      this.$router.push("/Home")
+      this.$router.push("/Check_2")
     }
   }
 }
