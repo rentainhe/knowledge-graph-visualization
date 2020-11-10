@@ -826,6 +826,7 @@ export default {
     addNodeAndRelation(node, nodetype){
       console.log(this.addStartNodeName,this.addStartNodeId,this.addEndNodeName,this.addEndNodeId,this.addRelation)
     },
+
     //获取多选的行中的数据
     handleSelectionChange(rows) {
       this.multipleSelection = rows;
