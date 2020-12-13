@@ -6,6 +6,7 @@ import Knowledge_tree from "~/views/Knowledge_tree";
 import Newgraph from "~/views/Newgraph";
 import newTreeGraph from "~/views/newTreeGraph";
 import excel_upload from "~/views/excel_upload";
+import init_database from "~/views/init_database";
 export const routes = [
     {
         path:'/Home',
@@ -28,7 +29,7 @@ export const routes = [
         component: Knowledge_tree
     },
     {
-        path: '/',
+        path: '/Newgraph',
         component: Newgraph
     },
     {
@@ -39,4 +40,8 @@ export const routes = [
         path: '/excel_upload',
         component: excel_upload
     },
+    {
+        path: '/',
+        component: init_database
+    }
 ]
