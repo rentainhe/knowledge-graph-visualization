@@ -6,15 +6,12 @@ import Knowledge_tree from "~/views/Knowledge_tree";
 import Newgraph from "~/views/Newgraph";
 import newTreeGraph from "~/views/newTreeGraph";
 import excel_upload from "~/views/excel_upload";
-import init_database from "~/views/init_database";
+import init_database from "~/views/initDatabase";
+import uploadInitData from "~/views/uploadInitData";
 export const routes = [
     {
         path:'/Home',
         component:Newgraph
-    },
-    {
-        path: '/TextUpload',
-        component: TextUpload
     },
     {
         path: '/Check_1',
@@ -25,16 +22,8 @@ export const routes = [
         component: Check_2
     },
     {
-        path: '/Knowledge_tree',
-        component: Knowledge_tree
-    },
-    {
         path: '/Newgraph',
         component: Newgraph
-    },
-    {
-        path: '/newTreeGraph',
-        component: newTreeGraph
     },
     {
         path: '/excel_upload',
@@ -43,5 +32,9 @@ export const routes = [
     {
         path: '/',
         component: init_database
-    }
+    },
+    {
+        path: '/uploadInitData',
+        component: uploadInitData
+    },
 ]

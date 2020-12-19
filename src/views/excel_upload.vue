@@ -314,26 +314,26 @@
 .el-upload-dragger{
   margin-top: 250px;
   margin-left: 300px;
-  background-color: #15161F;
+  background-color: #0b2838;
   width: 600px;
   height: 300px;
 }
 .table_cell{
-  background-color: #15161F;
+  background-color: #0b2838;
 }
 .tablehead{
   float: left;
   color: #ffffff;
 }
 .table_header{
-  background-color: #15161F;
+  background-color: #0b2838;
   float: right;
   width: 80%;
   height: 10%;
 }
 /*表格的主体区域*/
 .main_table{
-  background-color: #15161F;
+  background-color: #0b2838;
   float: right;
   width: 80%;
   /*height: 60%;*/
@@ -349,7 +349,7 @@
 }
 /* 按钮区域 */
 .buttons {
-  background-color: #15161F;
+  background-color: #0b2838;
   height: 100%;
   position: relative;
 }
@@ -359,8 +359,8 @@
   top:15%;
   left:22%;
   color: #fff;
-  background-color: #303252;
-  border-color: #9593A7;
+  background-color: rgb(84, 92, 100);
+  border-color: rgb(84, 92, 100);
   border-width: 2px;
 }
 /*跳过按钮样式*/
@@ -370,8 +370,8 @@
   left:20%;
 
   color: #fff;
-  background-color: #303252;
-  border-color: #9593A7;
+  background-color: rgb(84, 92, 100);
+  border-color: rgb(84, 92, 100);
   border-width: 2px;
 }
 /*放弃按钮设置*/
@@ -380,8 +380,8 @@
   top: 80%;
   left: 30%;
   color: #fff;
-  background-color: #303252;
-  border-color: #9593A7;
+  background-color: rgb(84, 92, 100);
+  border-color: rgb(84, 92, 100);
   border-width: 2px;
 }
 .el-button–reUpload{
@@ -389,8 +389,8 @@
   top: 80%;
   left: 60%;
   color: #fff;
-  background-color: #303252;
-  border-color: #9593A7;
+  background-color: rgb(84, 92, 100);
+  border-color: rgb(84, 92, 100);
   border-width: 2px;
 }
 .el-button–multidelete{
@@ -398,8 +398,8 @@
   top: 80%;
   left: 40%;
   color: #fff;
-  background-color: #303252;
-  border-color: #9593A7;
+  background-color: rgb(84, 92, 100);
+  border-color: rgb(84, 92, 100);
   border-width: 2px;
 }
 
@@ -408,8 +408,8 @@
   top: 80%;
   left: 50%;
   color: #fff;
-  background-color: #303252;
-  border-color: #9593A7;
+  background-color: rgb(84, 92, 100);
+  border-color: rgb(84, 92, 100);
   border-width: 2px;
 }
 /*返回上一页按钮设置*/
@@ -418,20 +418,21 @@
   top: 58%;
   left: 20%;
   color: #fff;
-  background-color: #303252;
-  border-color: #9593A7;
+  background-color: rgb(84, 92, 100);
+  border-color: rgb(84, 92, 100);
   border-width: 2px;
 }
 /*返回首页按钮设置*/
 .back_to_homepage {
   position: absolute;
-  top: 73%;
+  top: 91%;
   left: 20%;
   color: #fff;
-  background-color: #303252;
-  border-color: #9593A7;
+  background-color: rgb(84, 92, 100);
+  border-color: rgb(84, 92, 100);
   border-width: 2px;
 }
+
 .Excelupload{
   position: absolute;
   top: 43%;
@@ -443,14 +444,14 @@
   border-width: 2px;
 }
 .el-header, .el-footer {
-  background-color: #15161F;
+  background-color: #0b2838;
   color: #ffffff;
   text-align: center;
   line-height: 60px;
 }
 
 .el-aside {
-  background-color: #15161F;
+  background-color: #0b2838;
   color: #333;
   position: relative;
   text-align: center;
@@ -783,7 +784,7 @@ export default {
       this.multipleSelection = []
       this.multipleSelectionIndex = []
       this.allKeys = []
-      this.options = JSON.parse(JSON.stringify(this.options_origin))
+      this.options = JSON.parse(JSON.stringify(this.options_origin))   // todo 动态options
     },
     //=================Excel上传=========
     //Excel上传
@@ -1306,7 +1307,7 @@ export default {
 
       console.log("本项数据对应的key表头",Object.keys(data))
       console.log('上面表头对应的对象映射关系',this.allKeys)
-      //根据映射关系创建对象，分别调用不同的接口
+      //根据映射关系创建对象，分别调用不同的接口 todo
       this.allKeys.forEach((item,idx)=>{
         //unit
         if (item[0] === 'unit'){
@@ -1341,7 +1342,7 @@ export default {
       return errno
     },
 
-    //找节点是否存在ById
+    //找节点是否存在（ById方式）
     isExitForNodes:async function(nodeId){
       var errno = 0
       await this.$axios({

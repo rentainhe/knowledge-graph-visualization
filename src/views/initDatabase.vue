@@ -25,10 +25,10 @@
                 <el-input v-model="tkw.tableName" style="width: 85%"></el-input>
               </el-form-item>
               <el-form-item
-                  v-for="(kw, idx) in tkw.Keyword"
-                  :label="'Keyword ' + (idx+1)"
+                  v-for="(kw, idx) in tkw.keyWords"
+                  :label="'keyWords ' + (idx+1)"
                   :key="kw.key"
-                  :prop="'Keyword.' + idx + '.value'"
+                  :prop="'keyWords.' + idx + '.value'"
                   :rules="{
                     required: true, message: 'Please input the keyword', trigger: 'blur'}"
               >
@@ -44,7 +44,7 @@
           </el-form>
           <div style="height: 100px"></div>
         </div>
-        <el-button @click="submitForm" type="primary">确定</el-button>
+        <el-button @click="submitForm" type="primary">创建数据库</el-button>
         <div style="height: 100px"></div>
       </div>
 
@@ -53,6 +53,20 @@
       <el-button @click="addTable" type="primary" icon="el-icon-plus" circle></el-button>
       <el-button @click="showTabelList" type="primary" icon="el-icon-tickets" circle></el-button>
     </div>
+<!--    <div id="dialog">-->
+<!--      <el-dialog-->
+<!--          title="上传成功"-->
+<!--          :visible.sync="centerDialogVisible"-->
+<!--          width="30%"-->
+<!--          center>-->
+<!--        <span>是否继续创建新表？</span>-->
+<!--        <span slot="footer" class="dialog-footer">-->
+<!--    <el-button @click="continueInit">继续创建</el-button>-->
+<!--    <el-button type="primary" @click="uploadInitData">上传数据</el-button>-->
+<!--  </span>-->
+<!--      </el-dialog>-->
+
+<!--    </div>-->
 
   </div>
 
@@ -64,57 +78,82 @@ export default {
   name: "init_database",
   data() {
     return {
-      //Table List
-      tabelName: [
-          '人员',
-          '装备',
-          '关系'
-      ],
-
       //Form
       TableKeyWords: [{
-        Keyword: [{
+        keyWords: [{
+          value: ''
+        }],
+        tableName: ''
+      }],
+      centerDialogVisible: false,
+    };
+  },
+  methods: {
+    uploadInitData(){
+      this.centerDialogVisible = false
+      this.$router.push('/uploadInitData')
+    },
+    continueInit(){
+      this.centerDialogVisible = false
+      this.TableKeyWords = [{
+        keyWords: [{
           value: ''
         }],
         tableName: ''
       }]
-    };
-  },
-  methods: {
+    },
     submitForm() {
+      var val_table = 0
       for (var i = 0; i < this.TableKeyWords.length; i++){
+        // 依次验证所有表单
         var formName = 'TableKeyWords' + i
         // console.log(formName)
         this.$refs[formName][0].validate((valid) => {
           if (valid) {
-            alert('submit!');
-            console.log(this.TableKeyWords)
+            // console.log(this.TableKeyWords[i])
+            // alert('submit!');
+            val_table ++
           } else {
+            alert('error submit!! ');
             console.log('error submit!!');
             return false;
           }
         });
       }
+      //所有表单通过验证才上传数据
+      if (val_table === this.TableKeyWords.length){
+        console.log("上传空表字段信息")
+        this.$axios({
+          method: 'post',
+          url:'http://10.24.82.10:8088/addListNewNodeType',
+          data: this.TableKeyWords
+        }).then(res=>{
+          console.log('空表上传结果：',res.data)
+          if(res.data.errno ===0){
+            this.$router.push('/excel_upload')
+          }
+        })
 
+      }
     },
     resetForm(formName) {
       this.$refs[formName][0].resetFields();
     },
     removeItem(idx, item) {
-      var index = this.TableKeyWords[idx].Keyword.indexOf(item)
+      var index = this.TableKeyWords[idx].keyWords.indexOf(item)
       if (index !== -1) {
-        this.TableKeyWords[idx].Keyword.splice(index, 1)
+        this.TableKeyWords[idx].keyWords.splice(index, 1)
       }
     },
     addItem(index) {
-      this.TableKeyWords[index].Keyword.push({
+      this.TableKeyWords[index].keyWords.push({
         value: '',
         key: Date.now()
       });
     },
     addTable(){
       this.TableKeyWords.push({
-        Keyword: [{
+        keyWords: [{
           value: ''
         }],
         tableName: '',

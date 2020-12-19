@@ -969,9 +969,9 @@ export default {
       console.log(allLinks);
 
       var size = 50;
-      var size1 = 30;
-      var yy = 200;
-      var yy1 = 250;
+      // var size1 = 30;
+      // var yy = 200;
+      // var yy1 = 250;
 
       var listdata = [];
       var links = [];
@@ -1077,118 +1077,117 @@ export default {
         })
       }
 
-
       var Headquarter = []; // 司令部节点
       Headquarter.push(headquarter);
 
       let that = this
-      function showNodeAttribute(chart) { // 展示节点属性
-        chart.on('mouseover',function (params) {
-          // console.log(params.name)
-          this.$axios({
-            method:'get',
-            url:'http://39.108.102.157:8088/getAttributeValueByNodeName/' + params.name
-          }).then(response=>{
-            that.currentNode = response.data.data // 这里不能用this, 必须用that，否则数据传输不到currentNode
-            console.log(this.currentNode)
-            document.getElementById("Node_Attribute_Info").style.display = 'block'
-          })
-        })
+      // function showNodeAttribute(chart) { // 展示节点属性
+      //   chart.on('mouseover',function (params) {
+      //     // console.log(params.name)
+      //     this.$axios({
+      //       method:'get',
+      //       url:'http://39.108.102.157:8088/getAttributeValueByNodeName/' + params.name
+      //     }).then(response=>{
+      //       that.currentNode = response.data.data // 这里不能用this, 必须用that，否则数据传输不到currentNode
+      //       console.log(this.currentNode)
+      //       document.getElementById("Node_Attribute_Info").style.display = 'block'
+      //     })
+      //   })
+      //
+      // }
 
-      }
-
-      /**
-       * 绑定图表的点击事件
-       * @param chart
-       */
-      function bindChartClickEvent(chart) {
-        chart.on('click', function (params) {
-
-          console.log(params)
-          var category = params.data.category,
-              nodeType = params.data.nodeType;
-          // console.log(nodeType);
-          toggleShowNodes(chart, params);
-          // if (category === 0 || nodeType === 1) {
-          //     toggleShowNodes(chart, params);
-          // }
-        });
-      }
-
-      /**
-       * 展开或关闭节点
-       * @param chart
-       * @param params
-       */
-      function toggleShowNodes(chart, params) {
-        var open = !!params.data.open,
-
-            options = chart.getOption(),
-            seriesIndex = params.seriesIndex,
-            srcLinkName = params.name,
-            serieLinks = options.series[seriesIndex].links,
-            serieData = options.series[seriesIndex].data,
-            serieDataMap = new Map(),
-            serieLinkArr = [];
-        // console.log("open:" + open);
-        console.log(options);
-        // 当前根节点是展开的，那么就需要关闭所有的根节点
-        if (open) {
-          // 递归找到所有的link节点的target的值
-          findLinks(serieLinkArr, srcLinkName, serieLinks, true);
-          if (serieLinkArr.length) {
-            serieData.forEach(sd => serieDataMap.set(sd.name, sd));
-            for (var i = 0; i < serieLinkArr.length; i++) {
-              if (serieDataMap.has(serieLinkArr[i])) {
-                var currentData = serieDataMap.get(serieLinkArr[i]);
-                currentData.category = -Math.abs(currentData.category);
-                if (currentData.nodeType === 1) {
-                  currentData.open = false;
-                }
-              }
-            }
-            serieDataMap.get(srcLinkName).open = false;
-            chart.setOption(options);
-          }
-        } else {
-          // 当前根节点是关闭的，那么就需要展开第一层根节点
-          // console.log(open);
-          findLinks(serieLinkArr, srcLinkName, serieLinks, false);
-          if (serieLinkArr.length) {
-            serieData.forEach(sd => serieDataMap.set(sd.name, sd));
-            for (var j = 0; j < serieLinkArr.length; j++) {
-              if (serieDataMap.has(serieLinkArr[j])) {
-                var currentData = serieDataMap.get(serieLinkArr[j]);
-                currentData.category = Math.abs(currentData.category);
-              }
-            }
-            serieDataMap.get(srcLinkName).open = true;
-            chart.setOption(options);
-          }
-        }
-      }
-
-      /**
-       * 查找连接关系
-       * @param links 返回的节点放入此集合
-       * @param srcLinkName 源线的名称
-       * @param serieLinks 需要查找的集合
-       * @param deep 是否需要递归进行查找
-       */
-      function findLinks(links, srcLinkName, serieLinks, deep) {
-        var targetLinks = [];
-        serieLinks.filter(link => link.target === srcLinkName).forEach(link => {
-          targetLinks.push(link.source);
-          links.push(link.source)
-        });
-        console.log(targetLinks);
-        if (deep) {
-          for (var i = 0; i < targetLinks.length; i++) {
-            findLinks(links, targetLinks[i], serieLinks, deep);
-          }
-        }
-        console.log(targetLinks);
-      }
+      // /**
+      //  * 绑定图表的点击事件
+      //  * @param chart
+      //  */
+      // function bindChartClickEvent(chart) {
+      //   chart.on('click', function (params) {
+      //
+      //     console.log(params)
+      //     var category = params.data.category,
+      //         nodeType = params.data.nodeType;
+      //     // console.log(nodeType);
+      //     toggleShowNodes(chart, params);
+      //     // if (category === 0 || nodeType === 1) {
+      //     //     toggleShowNodes(chart, params);
+      //     // }
+      //   });
+      // }
+      //
+      // /**
+      //  * 展开或关闭节点
+      //  * @param chart
+      //  * @param params
+      //  */
+      // function toggleShowNodes(chart, params) {
+      //   var open = !!params.data.open,
+      //
+      //       options = chart.getOption(),
+      //       seriesIndex = params.seriesIndex,
+      //       srcLinkName = params.name,
+      //       serieLinks = options.series[seriesIndex].links,
+      //       serieData = options.series[seriesIndex].data,
+      //       serieDataMap = new Map(),
+      //       serieLinkArr = [];
+      //   // console.log("open:" + open);
+      //   console.log(options);
+      //   // 当前根节点是展开的，那么就需要关闭所有的根节点
+      //   if (open) {
+      //     // 递归找到所有的link节点的target的值
+      //     findLinks(serieLinkArr, srcLinkName, serieLinks, true);
+      //     if (serieLinkArr.length) {
+      //       serieData.forEach(sd => serieDataMap.set(sd.name, sd));
+      //       for (var i = 0; i < serieLinkArr.length; i++) {
+      //         if (serieDataMap.has(serieLinkArr[i])) {
+      //           var currentData = serieDataMap.get(serieLinkArr[i]);
+      //           currentData.category = -Math.abs(currentData.category);
+      //           if (currentData.nodeType === 1) {
+      //             currentData.open = false;
+      //           }
+      //         }
+      //       }
+      //       serieDataMap.get(srcLinkName).open = false;
+      //       chart.setOption(options);
+      //     }
+      //   } else {
+      //     // 当前根节点是关闭的，那么就需要展开第一层根节点
+      //     // console.log(open);
+      //     findLinks(serieLinkArr, srcLinkName, serieLinks, false);
+      //     if (serieLinkArr.length) {
+      //       serieData.forEach(sd => serieDataMap.set(sd.name, sd));
+      //       for (var j = 0; j < serieLinkArr.length; j++) {
+      //         if (serieDataMap.has(serieLinkArr[j])) {
+      //           var currentData = serieDataMap.get(serieLinkArr[j]);
+      //           currentData.category = Math.abs(currentData.category);
+      //         }
+      //       }
+      //       serieDataMap.get(srcLinkName).open = true;
+      //       chart.setOption(options);
+      //     }
+      //   }
+      // }
+      //
+      // /**
+      //  * 查找连接关系
+      //  * @param links 返回的节点放入此集合
+      //  * @param srcLinkName 源线的名称
+      //  * @param serieLinks 需要查找的集合
+      //  * @param deep 是否需要递归进行查找
+      //  */
+      // function findLinks(links, srcLinkName, serieLinks, deep) {
+      //   var targetLinks = [];
+      //   serieLinks.filter(link => link.target === srcLinkName).forEach(link => {
+      //     targetLinks.push(link.source);
+      //     links.push(link.source)
+      //   });
+      //   console.log(targetLinks);
+      //   if (deep) {
+      //     for (var i = 0; i < targetLinks.length; i++) {
+      //       findLinks(links, targetLinks[i], serieLinks, deep);
+      //     }
+      //   }
+      //   console.log(targetLinks);
+      // }
 
       this.myChart = this.$echarts.init(document.getElementById('myChart'))
       console.log(legendes)
