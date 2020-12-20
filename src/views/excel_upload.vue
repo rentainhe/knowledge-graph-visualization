@@ -553,13 +553,24 @@ export default {
       allKeys:[],
       //所有实体的所有key
       options: [],
+      table_name:'',
+      table_column:[],
+      option_base_format:{
+        value:'',
+        label:''
+      },
+      option_final_format:{
+        value:'',
+        label:'',
+        children:[]
+      },
 
       options_origin: [{
         value:'person',
         label:"人物资料",
         children:[{
           value:'personId',
-          label:'人员ID'
+          label:'personId'
         },{
           value: "personName",
           label: "人员姓名"
@@ -870,10 +881,31 @@ export default {
         this.allKeys.push([])
       }
 
+      this.$axios({
+        method:"get",
+        url:"http://10.24.82.10:8088/getAllDataBaseAndAttribute"
+      }).then(res=>{
+        // 一定要用深拷贝！！！
+        for (var i = 0; i < res.data.data.length; i++) {
+          this.option_final_format.label = JSON.parse(JSON.stringify(res.data.data[i].tableName))
+          this.option_final_format.value = JSON.parse(JSON.stringify(res.data.data[i].tableName))
+          for(var j = 0; j < res.data.data[i].keyWords.length; j++){
+
+            this.option_base_format.label = JSON.parse(JSON.stringify(res.data.data[i].keyWords[j].value))
+            this.option_base_format.value = JSON.parse(JSON.stringify(res.data.data[i].keyWords[j].value))
+            this.option_final_format.children.push(JSON.parse(JSON.stringify(this.option_base_format)))
+          }
+
+          this.options.push(JSON.parse(JSON.stringify(this.option_final_format)))
+          this.option_final_format.children = []
+        }
+
+      })
 
       console.log(this.allKeys)
       //现在用的是自己手工添加的
-      this.options = JSON.parse(JSON.stringify(this.options_origin))  //深拷贝
+      // this.options = JSON.parse(JSON.stringify(this.options_origin))  //深拷贝
+      // console.log(this.options)
       // this.$axios({
       //   method:"get",
       //   url:"http://10.24.82.10:8088/showAllTableColumns"

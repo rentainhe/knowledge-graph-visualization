@@ -6,8 +6,8 @@ import Knowledge_tree from "~/views/Knowledge_tree";
 import Newgraph from "~/views/Newgraph";
 import newTreeGraph from "~/views/newTreeGraph";
 import excel_upload from "~/views/excel_upload";
-import init_database from "~/views/initDatabase";
-import uploadInitData from "~/views/uploadInitData";
+import init_database from "~/views/initDatabase"
+// import uploadInitData from "~/views/uploadInitData";
 export const routes = [
     {
         path:'/Home',
@@ -33,8 +33,8 @@ export const routes = [
         path: '/',
         component: init_database
     },
-    {
-        path: '/uploadInitData',
-        component: uploadInitData
-    },
+    // {
+    //     path: '/uploadInitData',
+    //     component: uploadInitData
+    // },
 ]
