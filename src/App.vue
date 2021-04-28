@@ -10,11 +10,11 @@
         active-text-color="#ffd04b"
         router
     >
-      <el-menu-item index="/" class="item1">初始化</el-menu-item>
+      <el-menu-item index="/Newgraph" class="item1">首页</el-menu-item>
       <el-menu-item index="/excel_upload" class="item2">Excel上传</el-menu-item>
-      <el-menu-item index="/2" class="item2">xx</el-menu-item>
-      <el-menu-item index="/3" class="item2">xx</el-menu-item>
-      <el-menu-item index="/4" class="item2">xx</el-menu-item>
+      <el-menu-item index="/init_database" class="item2">创建数据库</el-menu-item>
+<!--      <el-menu-item index="/2" class="item2">人工审核</el-menu-item>-->
+<!--      <el-menu-item index="/3" class="item2">知识树展示</el-menu-item>-->
     </el-menu>
       <router-view></router-view>
   </div>
@@ -27,7 +27,7 @@ export default {
   name: "App",
   data(){
     return{
-      activeIndex: '/',
+      activeIndex: '/Newgraph',
 
     }
   },

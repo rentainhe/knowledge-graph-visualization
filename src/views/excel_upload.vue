@@ -551,6 +551,8 @@ export default {
       selectkeysName:[],
       // 保存所有key
       allKeys:[],
+      //options对应的所有表名
+      allTableName:[],
       //所有实体的所有key
       options: [],
       table_name:'',
@@ -781,9 +783,10 @@ export default {
 
     //返回主页
     Back_to_homepage: function () {
-      this.$router.push("/")
+      this.$router.push("/Newgraph")
     },
 
+    //重新上传
     reUpload:function(){
       //组件显示控制
       this.showUploadButton = true
@@ -795,7 +798,8 @@ export default {
       this.multipleSelection = []
       this.multipleSelectionIndex = []
       this.allKeys = []
-      this.options = JSON.parse(JSON.stringify(this.options_origin))   // todo 动态options
+      this.options = []
+      // this.options = JSON.psarse(JSON.stringify(this.options_origin))   // todo 动态options
     },
     //=================Excel上传=========
     //Excel上传
@@ -855,6 +859,7 @@ export default {
       })
     },
 
+    //成功上传后关闭提示窗口
     successUploadHandleClose:function (){
       this.$confirm('确认关闭？')
           .then(_ => {
@@ -871,6 +876,7 @@ export default {
 
     },
 
+    //动态读取数据库中的节点属性关键字及关系属性关键字，用于动态匹配
     matchKeys:function (){
       //关闭提示面板 显示新面板
       this.showSuccessUpload =false
@@ -902,6 +908,27 @@ export default {
 
       })
 
+      this.$axios({
+        method:"get",
+        url:"http://10.24.82.10:8088/getAllRelationTypeAndAttribute"
+      }).then(res=>{
+        console.log(res.data.data)
+        // 一定要用深拷贝！！！
+        for (var i = 0; i < res.data.data.length; i++) {
+          this.option_final_format.label = JSON.parse(JSON.stringify(res.data.data[i].tableName))
+          this.option_final_format.value = JSON.parse(JSON.stringify(res.data.data[i].tableName))
+          for(var j = 0; j < res.data.data[i].keyWords.length; j++){
+
+            this.option_base_format.label = JSON.parse(JSON.stringify(res.data.data[i].keyWords[j].value))
+            this.option_base_format.value = JSON.parse(JSON.stringify(res.data.data[i].keyWords[j].value))
+            this.option_final_format.children.push(JSON.parse(JSON.stringify(this.option_base_format)))
+          }
+
+          this.options.push(JSON.parse(JSON.stringify(this.option_final_format)))
+          this.option_final_format.children = []
+        }
+      })
+
       console.log(this.allKeys)
       //现在用的是自己手工添加的
       // this.options = JSON.parse(JSON.stringify(this.options_origin))  //深拷贝
@@ -914,6 +941,7 @@ export default {
       // })
     },
 
+    //表头动态匹配中候选关键字变更
     handleChangeForMatching:function (changedkey,index){
       this.selectkeysName[index] = this.$refs['cascader'][index].getCheckedNodes()[0].label
       console.log("keysName",this.selectkeysName)
@@ -951,13 +979,16 @@ export default {
              this.showTable = false
              this.showMatching = false
              this.allKeys = []
-             this.options = JSON.parse(JSON.stringify(this.options_origin))
+             // this.options = JSON.parse(JSON.stringify(this.options_origin))
+             this.options = []
              this.selectkeysName = []
            })
            .catch(_ => {});
 
     },
-    matchingConfirm:function (){
+
+    //提交匹配并检查
+    matchingConfirm:async function (){
       //要判断所有的key不能为空才算匹配完成========不用判断了，已保存属性 返回成功信息即可
       // var nullkey = []
       // //所有为空的表头
@@ -983,24 +1014,61 @@ export default {
       //判断是否有表头没有匹配
       //判断为空
       var i = 0
+      //要上传key的字典
+      var checkKeys = []
       for (i; i < this.allKeys.length; i++){
         console.log(this.allKeys[i])
         if(this.allKeys[i].length === 0){
-          this.$message({
+          await this.$message({
             type:'error',
             message: this.tableColumnList[i]+"没有进行匹配，请匹配后提交！"
           })
-          break
+          return
+        }else {
+          if (checkKeys.indexOf(this.allKeys[i][0])===-1){
+            checkKeys.push(this.allKeys[i][0])
+          }
         }
       }
-      if (i===this.allKeys.length){
+      //判断是否上传主键
+      //checkKeys 要上传的所有表名
+      //要上传表名对应的主键
+      var tabelKeyForUp = {}
+      checkKeys.forEach(k=>{
+        tabelKeyForUp[k] = ''
+      })
+      this.options.forEach(opt=>{
+        if (checkKeys.indexOf(opt.value) !== -1){
+          tabelKeyForUp[opt.value] = opt.children[0].value
+        }
+      })
+      console.log('需要检查的主键名称：',tabelKeyForUp)
+      console.log(checkKeys)
+
+      var checkKey = 0
+      this.allKeys.forEach(keys=>{
+        if (tabelKeyForUp[keys[0]]===keys[1]){
+          checkKey ++
+        }
+      })
+      console.log('存在主键上传数目：', checkKey)
+      //提示主键缺失
+      if (checkKey !== Object.keys(tabelKeyForUp).length){
+        await this.$message({
+          type:'error',
+          message: "缺少主键，请重新上传或匹配"
+        })
+        return
+      }
+
+
+      if ((i===this.allKeys.length)&&(checkKey === Object.keys(tabelKeyForUp).length)){
         this.$message({
           type:'success',
           message: "匹配完成"
         })
         this.showMatching = false
         console.log(this.allKeys)
-
       }
     },
 
@@ -1240,88 +1308,109 @@ export default {
           let cl_idx = unchecked_data.indexOf(data);
           //调用表格对象分离函数
           var objectList = this.splitObjects(data)
-          //分对象上传, splitObjects函数返回的对象类别是固定的，根据这个来传
-          for (const obj of objectList) {
-            let idx = objectList.indexOf(obj);
-            if (Object.keys(obj).length > 0){
-              console.log(obj,'类型序号',idx)
-              //返回上传结果状态，这一步主要针对添加关系时可能会出现节点不存在的情况
-              await this.uploadForDifObj(obj,idx).then(errno=>{
-                this.errno_detail_list.push(errno)
-                if (errno === 0){
-                  //删除该行数据
-                  var minNum = 0; //待删除列表中，当前元素左侧小于该元素的元素的个数，没有比当前元素小的直接删，有小的要减去个数，不然会删错
-                  for (var j = 0; j<cl_idx;j++){
-                    if (indexs[j]< indexs[cl_idx]){
-                      minNum+=1
-                    }
-                  }
-                  this.deleteRow(indexs[cl_idx]-minNum)
-                }
-              })
-            }
-          }
-        }
-        console.log("errno_list", this.errno_detail_list)
-
-        //找有无上传失败的关系（节点不存在）
-        let errno_idxes = []
-
-        for (let i = 0; i <this.errno_detail_list.length;i++){
-          //找父子节点哪个不存在
-          var fatherExit = 0
-          var childExit = 0
-          if (this.errno_detail_list[i] === -1){
-            errno_idxes.push(i)
-            //找父节点是否存在
-            await this.isExitForNodes(unchecked_data[i]["startNodeId"]).then(e=>{
-              fatherExit = e
-            })
-            await this.isExitForNodes(unchecked_data[i]["endNodeId"]).then(e=>{
-              childExit = e
-            })
-            console.log("父子节点的存在性",unchecked_data[i]["startNodeId"],unchecked_data[i]["endNodeId"],fatherExit,childExit)
-          }
-          if (fatherExit + childExit === -2){
-            //父子节点均不存在
-            this.errno_detail_list[i] = 2
-          }
-          else {
-            if (childExit === -1){
-              this.errno_detail_list[i] = 1
-            }
-          }
-        }
-
-        if (errno_idxes.length>0){
-          console.log("选择上传的数据中存在错误的数据行：",errno_idxes)
-          console.log("选择的上传数据各行的上传状态：",this.errno_detail_list)
-          // 弹出对话框提示各行上传状态
-          //各行数据
-          this.selectData = unchecked_data
-          this.selectDataIdx = indexs
-          this.selectErrorlist = errno_idxes
-          this.showError = true
-
-        }else {
-
-          this.cancelMultiSelection()
-          this.multipleSelection = []
-          this.multipleSelectionIndex = []
-
-          this.$message({
-            type:'success',
-            message: '上传成功！'
+          console.log('对象分离：',objectList)
+          //上传本行数据
+          await this.$axios({
+            method: 'post',
+            url:'http://10.24.82.10:8088/addListNewNodeEntity',
+            data:objectList
+          }).then(res=>{
+            console.log(res.data)
           })
-          // var i =0 //当前元素索引
-          // indexs.forEach(idx=>{
-          //   //找出当前元素左侧小于该元素的元素的个数
-          //   //从tableData中删除
+          // 删除该行数据
+          var minNum = 0; //待删除列表中，当前元素左侧小于该元素的元素的个数，没有比当前元素小的直接删，有小的要减去个数，不然会删错
+          for (var j = 0; j<cl_idx;j++){
+            if (indexs[j]< indexs[cl_idx]){
+              minNum+=1
+            }
+          }
+          this.deleteRow(indexs[cl_idx]-minNum)
+
+          // //分对象上传
+          // for (const obj of objectList) {
+          //   let idx = objectList.indexOf(obj);
+          //   if (Object.keys(obj).length > 0){
+          //     console.log(obj,'类型序号',idx)
+          //     //返回上传结果状态，这一步主要针对添加关系时可能会出现节点不存在的情况
           //
-          //   i +=1
-          // })
+          //     await this.uploadForDifObj(obj,idx).then(errno=>{
+          //       this.errno_detail_list.push(errno)
+          //       if (errno === 0){
+          //         //删除该行数据
+          //         var minNum = 0; //待删除列表中，当前元素左侧小于该元素的元素的个数，没有比当前元素小的直接删，有小的要减去个数，不然会删错
+          //         for (var j = 0; j<cl_idx;j++){
+          //           if (indexs[j]< indexs[cl_idx]){
+          //             minNum+=1
+          //           }
+          //         }
+          //         this.deleteRow(indexs[cl_idx]-minNum)
+          //       }
+          //     })
+          //   }
+          // }
         }
-      }else {
+        // console.log("errno_list", this.errno_detail_list)
+        //
+        // //找有无上传失败的关系（节点不存在）
+        // let errno_idxes = []
+        //
+        // for (let i = 0; i <this.errno_detail_list.length;i++){
+        //   //找父子节点哪个不存在
+        //   var fatherExit = 0
+        //   var childExit = 0
+        //   if (this.errno_detail_list[i] === -1){
+        //     errno_idxes.push(i)
+        //     //找父节点是否存在
+        //     await this.isExitForNodes(unchecked_data[i]["startNodeId"]).then(e=>{
+        //       fatherExit = e
+        //     })
+        //     await this.isExitForNodes(unchecked_data[i]["endNodeId"]).then(e=>{
+        //       childExit = e
+        //     })
+        //     console.log("父子节点的存在性",unchecked_data[i]["startNodeId"],unchecked_data[i]["endNodeId"],fatherExit,childExit)
+        //   }
+        //   if (fatherExit + childExit === -2){
+        //     //父子节点均不存在
+        //     this.errno_detail_list[i] = 2
+        //   }
+        //   else {
+        //     if (childExit === -1){
+        //       this.errno_detail_list[i] = 1
+        //     }
+        //   }
+        // }
+        //
+        // if (errno_idxes.length>0){
+        //   console.log("选择上传的数据中存在错误的数据行：",errno_idxes)
+        //   console.log("选择的上传数据各行的上传状态：",this.errno_detail_list)
+        //   // 弹出对话框提示各行上传状态
+        //   //各行数据
+        //   this.selectData = unchecked_data
+        //   this.selectDataIdx = indexs
+        //   this.selectErrorlist = errno_idxes
+        //   this.showError = true
+        //
+        // }
+        // else {
+        //
+        //   this.cancelMultiSelection()
+        //   this.multipleSelection = []
+        //   this.multipleSelectionIndex = []
+        //
+        //   this.$message({
+        //     type:'success',
+        //     message: '上传成功！'
+        //   })
+        //   // var i =0 //当前元素索引
+        //   // indexs.forEach(idx=>{
+        //   //   //找出当前元素左侧小于该元素的元素的个数
+        //   //   //从tableData中删除
+        //   //
+        //   //   i +=1
+        //   // })
+        // }
+      }
+      else {
         this.$message({
           type:'error',
           message: '请选择需要上传的待审核数据'
@@ -1331,47 +1420,114 @@ export default {
     },
     //上传数据之表格对象分离
     splitObjects:function (data) {
-      //先创建几种对象，最后返回key不为空的
-      var unit = {}
-      var person = {}
-      var relation = {}
-      var EquipmentTree = {}
-
+      //创建所有表的对象，返回这个列表
+      var allDataObects = []
+      this.allTableName = []
+      console.log(this.options)
+      this.options.forEach(opt=>{
+        allDataObects.push({})
+        this.allTableName.push(opt.value)
+      })
+      // console.log(allDataObects, allTableName)
+      // var unit = {}
+      // var person = {}
+      // var relation = {}
+      // var EquipmentTree = {}
+      //
       console.log("本项数据对应的key表头",Object.keys(data))
       console.log('上面表头对应的对象映射关系',this.allKeys)
-      //根据映射关系创建对象，分别调用不同的接口 todo
-      this.allKeys.forEach((item,idx)=>{
-        //unit
-        if (item[0] === 'unit'){
-          unit[item[1]] = data[Object.keys(data)[idx]]
-        }
-        else if (item[0]==='person'){
-          person[item[1]] = data[Object.keys(data)[idx]]
-        }
-        else if (item[0]==='EquipmentTree'){
-          EquipmentTree[item[1]] = data[Object.keys(data)[idx]]
-        }
-        else {
-          relation[item[1]] = data[Object.keys(data)[idx]]
+      // //根据映射关系创建对象，分别调用不同的接口 todo
+      // this.allKeys.forEach((item,idx)=>{
+      //   //unit
+      //   if (item[0] === 'unit'){
+      //     unit[item[1]] = data[Object.keys(data)[idx]]
+      //   }
+      //   else if (item[0]==='person'){
+      //     person[item[1]] = data[Object.keys(data)[idx]]
+      //   }
+      //   else if (item[0]==='EquipmentTree'){
+      //     EquipmentTree[item[1]] = data[Object.keys(data)[idx]]
+      //   }
+      //   else {
+      //     relation[item[1]] = data[Object.keys(data)[idx]]
+      //   }
+      // })
+      // return [unit,person,EquipmentTree,relation]
+
+      //根据映射关系将属性分别赋值给相应的对象
+      this.allKeys.forEach((attrib, idx)=>{
+        var objIndex = this.allTableName.indexOf(attrib[0])
+        //给相应对象赋值
+        allDataObects[objIndex][attrib[1]] = data[Object.keys(data)[idx]]
+      })
+      //组织数据格式
+      var upData = []
+      allDataObects.forEach((data, idx)=>{
+        if (Object.keys(data).length > 0){
+          var d = {}
+          // 组织tableName
+          d['tableName'] = this.allTableName[idx]
+
+          // 组织keyWords
+          var kws = []
+          Object.keys(data).forEach((data_key, idx) =>{
+            var kw = {}
+            kw[data_key.toString()]= data[data_key]
+            kws.push(kw)
+          })
+          d['keyWords'] = kws
+          upData.push(d)
         }
       })
-      return [unit,person,EquipmentTree,relation]
+      //如果上传了关系，那么就在数组的第三个位置加入关系类型名
+      // if (upData.length === 3){
+      //   upData.splice(2,0,upData[2].tableName)
+      // }
+      // return allDataObects
+      var uploadDataTuple = [{}]
+      upData.forEach((d,idx)=>{
+        if (idx === 0){
+          uploadDataTuple[0]['fathernode'] = d
+        }
+        else if (idx === 1){
+          uploadDataTuple[0]['childnode'] = d
+        }
+        else {
+          uploadDataTuple[0]['relation'] = d
+        }
+      })
+      return uploadDataTuple
     },
 
     // 上传数据之分对象上传
     uploadForDifObj:async function (obj,idx){
-      var funcs = ["addUnitSequenceNode", "addCharacterDataNode","addEquipmentTreeNode","addRelationTuple"]
-      var errno = 0
-      // 根据idx调用相应的接口
+      // console.log(this.allTableName)
+      console.log(obj)
+
+      // var funcs = ["addUnitSequenceNode", "addCharacterDataNode","addEquipmentTreeNode","addRelationTuple"]
+      // var errno = 0
+      // // 根据idx调用相应的接口
+      // await this.$axios({
+      //   method:"post",
+      //   data:obj,
+      //   url:"http://10.24.82.10:8088/"+funcs[idx]
+      // }).then(res=>{
+      //   console.log("分对象数据上传结果",res.data)
+      //   errno = res.data.errno
+      // })
       await this.$axios({
-        method:"post",
-        data:obj,
-        url:"http://10.24.82.10:8088/"+funcs[idx]
+        method: 'post',
+        url:'http://10.24.82.10:8088/addListNewNodeEntity")',
+        data: [{
+          keyWords: [{
+            value: ''
+          }],
+          tableName: ''
+        }]
       }).then(res=>{
-        console.log("分对象数据上传结果",res.data)
-        errno = res.data.errno
+        console.log(res.data)
       })
-      return errno
+      return 0
     },
 
     //找节点是否存在（ById方式）

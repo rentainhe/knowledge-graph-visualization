@@ -7,10 +7,9 @@ import Newgraph from "~/views/Newgraph";
 import newTreeGraph from "~/views/newTreeGraph";
 import excel_upload from "~/views/excel_upload";
 import init_database from "~/views/initDatabase"
-// import uploadInitData from "~/views/uploadInitData";
 export const routes = [
     {
-        path:'/Home',
+        path:'/',
         component:Newgraph
     },
     {
@@ -30,11 +29,7 @@ export const routes = [
         component: excel_upload
     },
     {
-        path: '/',
+        path: '/init_database',
         component: init_database
     },
-    // {
-    //     path: '/uploadInitData',
-    //     component: uploadInitData
-    // },
 ]
